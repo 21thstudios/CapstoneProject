@@ -25,9 +25,6 @@
 
 # OS/platform generated files.
 
-#Unreal ignores
-Content/__ExternalObjects__/FirstPerson/Maps/
-Content/__ExternalActores__/FirstPerson/Maps/
 
 # Windows
 ehthumbs.db
