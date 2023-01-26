@@ -1,26 +1,41 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "AmmoState.generated.h"
 
-USTRUCT(BlueprintType)
-struct FAmmoState
+UCLASS(BlueprintType)
+class UAmmoState : public UObject
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
-    FAmmoState()        // this is your default constructor which is required for a USTRUCT definition
-    {
-        // initialize things here if desired or required
-    }
+public:
+    UAmmoState();
+    UAmmoState(int32 NewAmmoCurrent, int32 NewAmmoMax, int32 NewClipSize);
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetAmmoCurrent, BlueprintSetter=SetAmmoCurrent)
     int32 AmmoCurrent;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetAmmoMax, BlueprintSetter=SetAmmoMax)
     int32 AmmoMax;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetClipSize, BlueprintSetter=SetClipSize)
     int32 ClipSize;
+
+    UFUNCTION(BlueprintCallable, BlueprintGetter)
+    int32 GetAmmoCurrent();
+
+    UFUNCTION(BlueprintCallable, BlueprintSetter)
+    void SetAmmoCurrent(int32 NewAmmoCurrent);
+
+    UFUNCTION(BlueprintCallable, BlueprintGetter)
+    int32 GetAmmoMax();
+
+    UFUNCTION(BlueprintCallable, BlueprintSetter)
+    void SetAmmoMax(int32 NewAmmoMax);
+
+    UFUNCTION(BlueprintCallable, BlueprintGetter)
+    int32 GetClipSize();
+
+    UFUNCTION(BlueprintCallable, BlueprintSetter)
+    void SetClipSize(int32 NewClipSize);
 };
