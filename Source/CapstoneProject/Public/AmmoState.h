@@ -16,5 +16,11 @@ struct FAmmoState
     }
 
     UPROPERTY(BlueprintReadWrite)
-    int32 SomeNumber;
+    int32 AmmoCurrent;
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 AmmoMax;
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 ClipSize;
 };
