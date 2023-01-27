@@ -3,39 +3,20 @@
 #include "CoreMinimal.h"
 #include "DamageProps.generated.h"
 
-UCLASS(BlueprintType)
-class UDamageProps : public UObject
+USTRUCT(BlueprintType)
+struct FDamageProps
 {
 	GENERATED_BODY()
 
 public:
-	UDamageProps();
-    UDamageProps(float NewDamage, float NewFireRate, bool NewIsAutomatic);
+	FDamageProps();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetDamage, BlueprintSetter=SetDamage)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Damage;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetFireRate, BlueprintSetter=SetFireRate)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float FireRate;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetIsAutomatic, BlueprintSetter=SetIsAutomatic)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool IsAutomatic;
-
-	UFUNCTION(BlueprintCallable, BlueprintGetter)
-    float GetDamage();
-
-    UFUNCTION(BlueprintCallable, BlueprintSetter)
-    void SetDamage(float NewDamage);
-
-    UFUNCTION(BlueprintCallable, BlueprintGetter)
-    float GetFireRate();
-
-    UFUNCTION(BlueprintCallable, BlueprintSetter)
-    void SetFireRate(float NewFireRate);
-
-    UFUNCTION(BlueprintCallable, BlueprintGetter)
-    bool GetIsAutomatic();
-
-    UFUNCTION(BlueprintCallable, BlueprintSetter)
-    void SetIsAutomatic(bool NewIsAutomatic);
 };
