@@ -8,15 +8,9 @@ class CAPSTONEPROJECT_API UWeaponCosmetics : public UObject
 {
 	GENERATED_BODY()
 
-    // AttackSounds - Sound Base array
-    // ReloadSounds - Sound Base array
-    // AttackAnimations - Anim Sequence
-    // ReloadAnimations - Anim Sequence
 public:
 	UWeaponCosmetics();
-	UWeaponCosmetics(UAnimSequence* NewAttackAnimation, UAnimSequence* NewReloadAnimation);
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetAttackSounds, BlueprintSetter=SetAttackSounds)
+	UWeaponCosmetics(UAnimSequence* NewAttackAnimation, UAnimSequence* NewReloadAnimation, TArray<USoundBase*> NewAttackSounds, TArray<USoundBase*> NewReloadSounds);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetAttackAnimation, BlueprintSetter=SetAttackAnimation)
 	UAnimSequence* AttackAnimation;
@@ -24,6 +18,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetReloadAnimation, BlueprintSetter=SetReloadAnimation)
 	UAnimSequence* ReloadAnimation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetAttackSounds, BlueprintSetter=SetAttackSounds)
+	TArray<USoundBase*> AttackSounds;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter=GetReloadSounds, BlueprintSetter=SetReloadSounds)
+	TArray<USoundBase*> ReloadSounds;
 
 	UFUNCTION(BlueprintCallable, BlueprintGetter)
     UAnimSequence* GetAttackAnimation();
@@ -36,4 +35,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintSetter)
     void SetReloadAnimation(UAnimSequence* NewReloadAnimation);
+
+	UFUNCTION(BlueprintCallable, BlueprintGetter)
+    TArray<USoundBase*> GetAttackSounds();
+
+	UFUNCTION(BlueprintCallable, BlueprintSetter)
+    void SetAttackSounds(TArray<USoundBase*> NewAttackSounds);
+
+	UFUNCTION(BlueprintCallable, BlueprintGetter)
+    TArray<USoundBase*> GetReloadSounds();
+
+	UFUNCTION(BlueprintCallable, BlueprintSetter)
+    void SetReloadSounds(TArray<USoundBase*> NewReloadSounds);
 };
