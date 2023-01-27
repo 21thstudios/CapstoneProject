@@ -1,22 +1,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AmmoState.generated.h"
+#include "DamageProps.generated.h"
 
 USTRUCT(BlueprintType)
-struct FAmmoState
+struct FDamageProps
 {
 	GENERATED_BODY()
 
 public:
-    FAmmoState();
+	FDamageProps();
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 AmmoCurrent;
+    float Damage;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 AmmoMax;
+    float FireRate;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 ClipSize;
+    bool IsAutomatic;
 };
