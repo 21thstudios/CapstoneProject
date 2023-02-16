@@ -9,7 +9,7 @@ public class CapstoneProjectTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-
+		bUsesSteam = true;
 		ExtraModuleNames.AddRange( new string[] { "CapstoneProject" } );
 	}
 }
