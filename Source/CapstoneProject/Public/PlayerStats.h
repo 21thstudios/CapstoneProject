@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "PlayerStats.generated.h"
 
+
 UCLASS(BlueprintType)
 /**
  * 
@@ -21,6 +22,8 @@ public:
   int PlayerKills;
   UPROPERTY(EditAnywhere, BlueprintReadWrite)
   int PlayerDeaths;
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  FName PlayerName;
 
   UFUNCTION(BlueprintCallable)
   void AddKill();
@@ -38,4 +41,8 @@ public:
   void SetPlayerKills(int Kills);
   UFUNCTION(BlueprintCallable)
   void SetPlayerDeaths(int Deaths);
+  UFUNCTION(BlueprintCallable)
+  void SetPlayerName(FName Name);
+  UFUNCTION(BlueprintCallable)
+  FName GetPlayerName();
 };

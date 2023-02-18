@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+// Source: https://forums.unrealengine.com/t/print-to-screen-using-c/357351/3 
+#define D(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
 
 #include "PlayerStats.h"
 #include "../CapstoneProject.h"
@@ -28,6 +30,8 @@ void UPlayerStats::HandleDeath(UPlayerStats* Actor)
 {
   this->AddDeath();
   Actor->AddKill();
+  auto PlayerNamea = Actor->GetPlayerName().ToString();
+  D("Player " + PlayerNamea + " killed " + this->GetPlayerName().ToString() + "!");
 }
 
 void UPlayerStats::SetPlayerKills(int Kills)
@@ -48,4 +52,14 @@ int UPlayerStats::GetPlayerKills()
 int UPlayerStats::GetPlayerDeaths()
 {
   return this->PlayerDeaths;
+}
+
+FName UPlayerStats::GetPlayerName()
+{
+  return this->PlayerName;
+}
+
+void UPlayerStats::SetPlayerName(FName Name)
+{
+  this->PlayerName = Name;
 }
