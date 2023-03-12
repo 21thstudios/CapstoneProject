@@ -1,0 +1,13 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ddrive\\capstone\\capstoneproject\\plugins\\advancedsessions\\intermediate\\build\\win64\\unrealeditor\\inc\\advancedsessions\\uht\\advancedsessions.init.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ddrive\\capstone\\capstoneproject\\intermediate\\build\\win64\\capstoneprojecteditor\\development\\engine\\sharedpch.engine.shadowerrors.inclorderunreal5_0.h.pch",
+        "Includes": [
+            "d:\\ddrive\\capstone\\capstoneproject\\plugins\\advancedsessions\\intermediate\\build\\win64\\unrealeditor\\development\\advancedsessions\\definitions.advancedsessions.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
