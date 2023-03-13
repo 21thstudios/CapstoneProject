@@ -5,12 +5,21 @@
 #include "Online.h"
 #include "SessionListing.generated.h"
 
+USTRUCT(BlueprintType)
+struct FSessionListingInfo
+{
+	GENERATED_BODY()
+	FName SessionName;
+	FOnlineSessionSearchResult& SessionResult;
+};
 
 UCLASS(Abstract)
 class CAPSTONEPROJECT_API USessionListing : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void NativeConstruct() override;
 
 public:
 	void SetServerName(FText ServerName) const;
@@ -19,9 +28,13 @@ public:
 
 	void SetPingMs(int32 PingInMs) const;
 
-	void OnClickJoinSessionButton(FName SessionName, FOnlineSessionSearchResult& SessionResult);
+	void OnClickJoinSessionButton();
 
 	void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
+
+	void SetSessionName(FName SessionName);
+
+	void SetOnlineSessionSearchResult(FOnlineSessionSearchResult& SearchResult);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;
@@ -36,4 +49,7 @@ public:
 	class UButton* JoinSessionButton;
 	
 	FDelegateHandle JoinSessionDelegateHandle;
+
+	UPROPERTY(BlueprintReadOnly)
+	FSessionListingInfo SessionListingInfo;
 };

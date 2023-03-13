@@ -4,6 +4,14 @@
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 
+void USessionListing::NativeConstruct()
+{
+    Super::NativeConstruct();
+    if (JoinSessionButton)
+    {
+        JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
+    }
+}
 
 void USessionListing::SetServerName(FText ServerName) const
 {
@@ -35,7 +43,7 @@ void USessionListing::SetPingMs(int32 PingInMs) const
     }
 }
 
-void USessionListing::OnClickJoinSessionButton(FName SessionName, FOnlineSessionSearchResult& SessionResult)
+void USessionListing::OnClickJoinSessionButton()
 {
     IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
     IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
@@ -47,9 +55,9 @@ void USessionListing::OnClickJoinSessionButton(FName SessionName, FOnlineSession
 
         // Register the HandleJoinSessionComplete event handler
         this->JoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
-            FOnJoinSessionComplete::FDelegate::CreateUObject(this,&USessionListing::HandleJoinSessionComplete));
-        
-        if (Session->JoinSession(UniqueNetId, SessionName, SessionResult))
+            FOnJoinSessionComplete::FDelegate::CreateUObject(this, &USessionListing::HandleJoinSessionComplete));
+
+        if (Session->JoinSession(UniqueNetId, SessionListingInfo.SessionName, SessionListingInfo.SessionResult))
         {
             // Call successfully started 
         } else
@@ -79,4 +87,14 @@ void USessionListing::HandleJoinSessionComplete(const FName SessionName, const E
     // JoinSession Delegate should no longer be associated with this event
     Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
     this->JoinSessionDelegateHandle.Reset();
+}
+
+void USessionListing::SetSessionName(FName SessionName)
+{
+    this->SessionListingInfo.SessionName = SessionName;
+}
+
+void USessionListing::SetOnlineSessionSearchResult(FOnlineSessionSearchResult& SearchResult)
+{
+    this->SessionListingInfo.SessionResult = SearchResult;
 }
