@@ -29,8 +29,6 @@ public:
 	void ClearSessionListings();
 
 	void AddSessionListing(USessionListing* SessionListing);
-	
-	void BindOnClicked();
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LANCheckBox;

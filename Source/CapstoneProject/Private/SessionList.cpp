@@ -7,6 +7,10 @@ void USessionList::NativeConstruct()
 {
 	Super::NativeConstruct();
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionList::OnFindSessionsComplete);
+	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
+	{
+		RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
+	}
 }
 
 void USessionList::NativeDestruct()
@@ -15,14 +19,6 @@ void USessionList::NativeDestruct()
 	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
 	{
 		RefreshButton->OnClicked.RemoveDynamic(this, &USessionList::OnClickRefreshButton);
-	}
-}
-
-void USessionList::BindOnClicked()
-{
-	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
-	{
-		RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
 	}
 }
 
