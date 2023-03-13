@@ -77,6 +77,14 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
 					USessionListing* SessionListing = NewObject<USessionListing>(this, USessionListing::StaticClass());
+
+					// Create session listing, populate, and add to the ScrollBox
+					FOnlineSessionSearchResult const SearchResult = SessionSearch->SearchResults[SearchIdx];
+					int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+					int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
+					SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
+					SessionListing->SetPingMs(SearchResult.PingInMs);
+					SessionListing->SetServerName(FText::FromString(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
 					AddSessionListing(SessionListing);
 				}
 			}
