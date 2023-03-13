@@ -1,5 +1,6 @@
 #include "SessionListing.h"
 #include "Components/TextBlock.h"
+#include "Components/Button.h"
 
 void USessionListing::SetServerName(FText ServerName)
 {
@@ -11,7 +12,8 @@ void USessionListing::SetServerName(FText ServerName)
 
 void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers)
 {
-    if (PlayerCountTextBlock) {
+    if (PlayerCountTextBlock) 
+    {
         FString CurrentPlayersAsString = FString::FromInt(CurrentPlayers);
         FString MaxPlayersAsString = FString::FromInt(MaxPlayers);
         FString FormattedPlayerCount = CurrentPlayersAsString.Append("/").Append(MaxPlayersAsString);
@@ -22,9 +24,18 @@ void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers)
 
 void USessionListing::SetPingMs(int32 PingInMs)
 {
-    if (PingInMsTextBlock) {
+    if (PingInMsTextBlock) 
+    {
         FString FormattedPing = FString::FromInt(PingInMs).Append("ms");
         FText FormattedPingAsText = FText::FromString(FormattedPing);
         PingInMsTextBlock->SetText(FormattedPingAsText);        
+    }
+}
+
+void USessionListing::OnClickJoinSessionButton()
+{
+    if (JoinSessionButton)
+    {
+        APlayerController* PlayerController = this->GetOwningPlayer();
     }
 }

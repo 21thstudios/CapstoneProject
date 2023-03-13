@@ -18,6 +18,8 @@ public:
 
 	void SetPingMs(int32 PingInMs);
 
+	void OnClickJoinSessionButton();
+
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;
 
@@ -26,4 +28,7 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* PingInMsTextBlock;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* JoinSessionButton;
 };
