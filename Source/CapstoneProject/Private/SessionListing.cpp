@@ -1,7 +1,5 @@
 #include "SessionListing.h"
-#include <iostream>
 #include "Components/TextBlock.h"
-#include "Internationalization/Text.h"
 
 void USessionListing::SetServerName(FText ServerName)
 {
