@@ -22,5 +22,8 @@ public:
 	class UTextBlock* ServerNameTextBlock;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* PlayerCountTextBlock;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* PingInMsTextBlock;
 };

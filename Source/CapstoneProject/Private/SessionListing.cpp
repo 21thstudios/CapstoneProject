@@ -13,7 +13,13 @@ void USessionListing::SetServerName(FText ServerName)
 
 void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers)
 {
-    std::cout << "Player count: " << CurrentPlayers << "/" << MaxPlayers << "\n";
+    if (PlayerCountTextBlock) {
+        FString CurrentPlayersAsString = FString::FromInt(CurrentPlayers);
+        FString MaxPlayersAsString = FString::FromInt(MaxPlayers);
+        FString FormattedPlayerCount = CurrentPlayersAsString.Append("/").Append(MaxPlayersAsString);
+        FText FormattedPlayersAsText = FText::FromString(FormattedPlayerCount);
+        PlayerCountTextBlock->SetText(FormattedPlayersAsText);
+    }
 }
 
 void USessionListing::SetPingMs(int32 PingInMs)
