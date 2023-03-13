@@ -22,10 +22,9 @@ void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers)
 
 void USessionListing::SetPingMs(int32 PingInMs)
 {
-    FString FormattedPing = FString::FromInt(PingInMs).Append("ms");
-    FText FormattedPingAsText = FText::FromString(FormattedPing);
-    if (PingInMsTextBlock)
-    {
-        PingInMsTextBlock->SetText(FormattedPingAsText);
+    if (PingInMsTextBlock) {
+        FString FormattedPing = FString::FromInt(PingInMs).Append("ms");
+        FText FormattedPingAsText = FText::FromString(FormattedPing);
+        PingInMsTextBlock->SetText(FormattedPingAsText);        
     }
 }
