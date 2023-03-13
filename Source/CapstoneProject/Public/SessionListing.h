@@ -19,7 +19,7 @@ public:
 
 	void SetPingMs(int32 PingInMs) const;
 
-	void OnClickJoinSessionButton(FName GameSessionName, FOnlineSessionSearchResult& SessionResult);
+	void OnClickJoinSessionButton(FName SessionName, FOnlineSessionSearchResult& SessionResult);
 
 	void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
 

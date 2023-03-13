@@ -35,7 +35,7 @@ void USessionListing::SetPingMs(int32 PingInMs) const
     }
 }
 
-void USessionListing::OnClickJoinSessionButton(FName GameSessionName, FOnlineSessionSearchResult& SessionResult)
+void USessionListing::OnClickJoinSessionButton(FName SessionName, FOnlineSessionSearchResult& SessionResult)
 {
     IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
     IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
@@ -49,7 +49,7 @@ void USessionListing::OnClickJoinSessionButton(FName GameSessionName, FOnlineSes
         this->JoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
             FOnJoinSessionComplete::FDelegate::CreateUObject(this,&USessionListing::HandleJoinSessionComplete));
         
-        if (Session->JoinSession(UniqueNetId, GameSessionName, SessionResult))
+        if (Session->JoinSession(UniqueNetId, SessionName, SessionResult))
         {
             // Call successfully started 
         } else
