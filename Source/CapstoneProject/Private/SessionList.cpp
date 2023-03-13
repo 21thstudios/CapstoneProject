@@ -48,10 +48,6 @@ void USessionList::OnClickRefreshButton()
 			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
 			
 			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
-	
-	
-
-			
 		}
 	}
 	else
@@ -63,6 +59,29 @@ void USessionList::OnClickRefreshButton()
 void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 {
 	// Search results are made as buttons and added to the SessionListingsScrollBox
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OFindSessionsComplete bSuccess: %d"), bWasSuccessful));
+
+	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
+		if (Session.IsValid())
+		{
+			// Clear the delegate handle now that we have finished the OnFindSessions call
+			Session->ClearOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegateHandle);
+
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Num Search Results: %d"), SessionSearch->SearchResults.Num()));
+
+			if (SessionSearch->SearchResults.Num() > 0)
+			{
+				for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
+					USessionListing* SessionListing = NewObject<USessionListing>(this, USessionListing::StaticClass());
+					AddSessionListing(SessionListing);
+				}
+			}
+		}
+	}
 }
  
 
