@@ -67,7 +67,7 @@ void USessionListing::OnClickJoinSessionButton(FName GameSessionName, FOnlineSes
 }
 
 /** JoinSession delegate fires this function once attempting to join a session completes */
-void USessionListing::HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult)
+void USessionListing::HandleJoinSessionComplete(const FName SessionName, const EOnJoinSessionCompleteResult::Type JoinResult)
 {
     const IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
     const IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
@@ -81,7 +81,6 @@ void USessionListing::HandleJoinSessionComplete(FName SessionName, EOnJoinSessio
             GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
         }
     }
-    
     // JoinSession Delegate should no longer be associated with this event
     Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
     this->JoinSessionDelegateHandle.Reset();
