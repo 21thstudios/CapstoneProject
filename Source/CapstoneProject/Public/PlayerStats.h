@@ -26,6 +26,8 @@ public:
   void AddDeath();
   UFUNCTION(BlueprintCallable)
   void HandleDeath(UPlayerStats* Actor);
+  UFUNCTION(BlueprintCallable)
+  void ClearStats();
 
   // getter and setter for each 
   UFUNCTION(BlueprintCallable)

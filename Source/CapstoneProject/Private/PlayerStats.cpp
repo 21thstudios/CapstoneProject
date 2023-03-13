@@ -34,6 +34,12 @@ void UPlayerStats::HandleDeath(UPlayerStats* Actor)
   D("Player " + PlayerNamea + " killed " + this->GetPlayerName().ToString() + "!");
 }
 
+void UPlayerStats::ClearStats()
+{
+    this->PlayerKills = 0;
+    this->PlayerStats = 0;
+}
+
 void UPlayerStats::SetPlayerKills(int Kills)
 {
   this->PlayerKills = Kills;
