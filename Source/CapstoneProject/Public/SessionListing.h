@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,9 +5,6 @@
 #include "SessionListing.generated.h"
 
 
-/**
- * 
- */
 UCLASS(Abstract)
 class CAPSTONEPROJECT_API USessionListing : public UUserWidget
 {
@@ -21,8 +16,11 @@ public:
 
 	void SetPlayerCount(int CurrentPlayers, int MaxPlayers);
 
-	void SetPingMs(int PingInMs);
+	void SetPingMs(int32 PingInMs);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* PingInMsTextBlock;
 };
