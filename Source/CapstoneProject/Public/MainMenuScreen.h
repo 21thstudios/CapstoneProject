@@ -16,8 +16,17 @@ class CAPSTONEPROJECT_API UMainMenuScreen : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	
 	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
 
+	/** Fires upon session create request completion */
+	virtual void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+
+	/** Fires upon session start request completion */
+	virtual void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
+	
 	
 	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
