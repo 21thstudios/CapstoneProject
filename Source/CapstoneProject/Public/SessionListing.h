@@ -20,7 +20,7 @@ class CAPSTONEPROJECT_API USessionListing : public UUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
-
+	virtual void NativeDestruct() override;
 public:
 	void SetServerName(FText ServerName) const;
 

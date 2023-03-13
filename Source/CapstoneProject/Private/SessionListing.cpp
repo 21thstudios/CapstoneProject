@@ -7,9 +7,18 @@
 void USessionListing::NativeConstruct()
 {
     Super::NativeConstruct();
-    if (JoinSessionButton)
+    if (JoinSessionButton && !JoinSessionButton->OnClicked.IsBound())
     {
         JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
+    }
+}
+
+void USessionListing::NativeDestruct()
+{
+    Super::NativeDestruct();
+    if (JoinSessionButton && !JoinSessionButton->OnClicked.IsBound())
+    {
+        JoinSessionButton->OnClicked.RemoveDynamic(this, &USessionListing::OnClickJoinSessionButton);
     }
 }
 
