@@ -69,15 +69,19 @@ void USessionListing::OnClickJoinSessionButton(FName GameSessionName, FOnlineSes
 /** JoinSession delegate fires this function once attempting to join a session completes */
 void USessionListing::HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult)
 {
+    const IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
+    const IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
+    
     if (JoinResult == EOnJoinSessionCompleteResult::Success ||
         JoinResult == EOnJoinSessionCompleteResult::AlreadyInSession)
     {
-        // Connect to the game server
+        // Travel to the server
+        if (FString URL; Session->GetResolvedConnectString(SessionName, URL))
+        {
+            GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
+        }
     }
     
-    IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
-    IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
-
     // JoinSession Delegate should no longer be associated with this event
     Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
     this->JoinSessionDelegateHandle.Reset();
