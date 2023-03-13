@@ -1,8 +1,11 @@
 #include "SessionListing.h"
+
+#include "OnlineSubsystemUtils.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 
-void USessionListing::SetServerName(FText ServerName)
+
+void USessionListing::SetServerName(FText ServerName) const
 {
     if (ServerNameTextBlock)
     {
@@ -10,7 +13,7 @@ void USessionListing::SetServerName(FText ServerName)
     }
 }
 
-void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers)
+void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers) const
 {
     if (PlayerCountTextBlock) 
     {
@@ -22,7 +25,7 @@ void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers)
     }
 }
 
-void USessionListing::SetPingMs(int32 PingInMs)
+void USessionListing::SetPingMs(int32 PingInMs) const
 {
     if (PingInMsTextBlock) 
     {
@@ -32,11 +35,45 @@ void USessionListing::SetPingMs(int32 PingInMs)
     }
 }
 
-void USessionListing::OnClickJoinSessionButton()
+void USessionListing::OnClickJoinSessionButton(FName GameSessionName, FOnlineSessionSearchResult& SessionResult)
 {
+    IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
+    IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
+    
     if (JoinSessionButton)
     {
-        APlayerController* PlayerController = this->GetOwningPlayer();
-        
+        const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+        const FUniqueNetId& UniqueNetId = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
+
+        // Register the HandleJoinSessionComplete event handler so it is triggered when we've joined the session
+        this->JoinSessionDelegateHandle =
+            Session->AddOnJoinSessionCompleteDelegate_Handle(FOnJoinSessionComplete::FDelegate::CreateUObject(
+                this,
+                &USessionListing::HandleJoinSessionComplete
+            ));
+   
+        if (bool IsJoinSuccessful = Session->JoinSession(UniqueNetId, GameSessionName, SessionResult))
+        {
+            // Call successfully started 
+        } else
+        {
+            // Call didn't start, error.
+        }
     }
+}
+
+/** JoinSession delegate fires this function once attempting to join a session completes */
+void USessionListing::HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult)
+{
+    if (JoinResult == EOnJoinSessionCompleteResult::Success ||
+        JoinResult == EOnJoinSessionCompleteResult::AlreadyInSession)
+    {
+        // Connect to the game server
+    }
+    
+    IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
+    IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
+
+    Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
+    this->JoinSessionDelegateHandle.Reset();
 }

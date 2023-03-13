@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Online.h"
 #include "SessionListing.generated.h"
 
 
@@ -12,13 +13,15 @@ class CAPSTONEPROJECT_API USessionListing : public UUserWidget
 
 
 public:
-	void SetServerName(FText ServerName);
+	void SetServerName(FText ServerName) const;
 
-	void SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers);
+	void SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers) const;
 
-	void SetPingMs(int32 PingInMs);
+	void SetPingMs(int32 PingInMs) const;
 
-	void OnClickJoinSessionButton();
+	void OnClickJoinSessionButton(FName GameSessionName, FOnlineSessionSearchResult& SessionResult);
+
+	void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;
@@ -31,4 +34,6 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* JoinSessionButton;
+	
+	FDelegateHandle JoinSessionDelegateHandle;
 };
