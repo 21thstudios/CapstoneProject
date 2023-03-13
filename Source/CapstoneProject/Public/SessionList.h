@@ -17,9 +17,11 @@ class CAPSTONEPROJECT_API USessionList : public UUserWidget
 
 public :
 	USessionList();
+	~USessionList();
 	
 	void SetLAN(bool bLAN);
 
+	UFUNCTION()
 	void OnClickRefreshButton();
 
 	void OnFindSessionsComplete(bool bWasSuccessful);
@@ -27,8 +29,8 @@ public :
 	void ClearSessionListings();
 
 	void AddSessionListing(USessionListing* SessionListing);
-
 	
+	void BindOnClicked();
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LANCheckBox;

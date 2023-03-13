@@ -8,6 +8,24 @@ USessionList::USessionList()
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionList::OnFindSessionsComplete);
 }
 
+USessionList::~USessionList()
+{
+	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
+	{
+		RefreshButton->OnClicked.RemoveDynamic(this, &USessionList::OnClickRefreshButton);
+	}
+}
+
+
+void USessionList::BindOnClicked()
+{
+	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
+	{
+		RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
+	}
+}
+
+
 void USessionList::SetLAN(bool bLAN)
 {
 	if (LANCheckBox)
