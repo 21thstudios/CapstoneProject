@@ -13,6 +13,8 @@ public:
 	UPlayerStats();
 	~UPlayerStats();
 
+  // `UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)` resulted in 
+  // linking error. 
   UPROPERTY(EditAnywhere, BlueprintReadWrite)
   int PlayerKills;
   UPROPERTY(EditAnywhere, BlueprintReadWrite)

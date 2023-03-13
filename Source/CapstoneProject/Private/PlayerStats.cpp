@@ -10,6 +10,7 @@ UPlayerStats::UPlayerStats()
 {
   this->PlayerKills = 0;
   this->PlayerDeaths = 0;
+  this->PlayerName = "a";
 }
 
 UPlayerStats::~UPlayerStats()
