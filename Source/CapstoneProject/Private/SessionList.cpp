@@ -27,4 +27,13 @@ void USessionList::ClearSessionListings()
 	}
 }
 
+void USessionList::AddSessionListing(USessionListing* SessionListing)
+{
+	if (SessionListingsScrollBox && SessionListing)
+	{
+		SessionListingsScrollBox->AddChild(SessionListingsScrollBox);
+	}
+}
+
+
 

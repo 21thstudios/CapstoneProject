@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SessionListing.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/CheckBox.h"
@@ -20,6 +21,8 @@ public :
 	void OnClickRefreshButton();
 
 	void ClearSessionListings();
+
+	void AddSessionListing(USessionListing* SessionListing);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LANCheckBox;
