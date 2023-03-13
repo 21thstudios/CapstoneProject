@@ -30,8 +30,13 @@ protected:
 
 	void OnClickCreateGameButton();
 	
+	void SetHostOnLAN(bool bHostOnLAN);
+	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* CreateGameButton;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UCheckBox* LANCheckBox;
 	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
 	

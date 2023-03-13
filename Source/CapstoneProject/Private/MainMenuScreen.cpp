@@ -5,6 +5,7 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "Components/CheckBox.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -25,14 +26,21 @@ void UMainMenuScreen::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-
-
 void UMainMenuScreen::OnClickCreateGameButton()
 {
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 	const FName SessionName = FName("hm");
-	HostSession(UniqueNetId, SessionName, true, true, 4);
+	const bool bIsLan = LANCheckBox ? LANCheckBox->IsChecked() : true;
+	HostSession(UniqueNetId, SessionName, bIsLan, true, 4);
+}
+
+void UMainMenuScreen::SetHostOnLAN(bool bHostOnLAN)
+{
+	if(LANCheckBox)
+	{
+		LANCheckBox->SetIsChecked(bHostOnLAN);
+	}
 }
 
 bool UMainMenuScreen::HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN,
@@ -54,7 +62,7 @@ bool UMainMenuScreen::HostSession(TSharedPtr<const FUniqueNetId> UserId, FName S
 			SessionSettings->bAllowJoinViaPresence = true;
 			SessionSettings->bAllowJoinViaPresenceFriendsOnly = true;
 
-			SessionSettings->Set(SETTING_MAPNAME, FString("NewMap"), EOnlineDataAdvertisementType::ViaOnlineService);
+			SessionSettings->Set(SETTING_MAPNAME, FString("FirstPersonMap"), EOnlineDataAdvertisementType::ViaOnlineService);
 
 			OnCreateSessionCompleteDelegateHandle = Session->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
 
@@ -105,7 +113,7 @@ void UMainMenuScreen::OnStartOnlineGameComplete(FName SessionName, bool bWasSucc
 
 		if (bWasSuccessful)
 		{
-			UGameplayStatics::OpenLevel(GetWorld(), "NewMap", true, "listen");
+			UGameplayStatics::OpenLevel(GetWorld(), "FirstPersonMap", true, "listen");
 		}
 	}
 }
