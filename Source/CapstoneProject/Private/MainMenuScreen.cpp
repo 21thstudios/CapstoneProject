@@ -52,6 +52,7 @@ bool UMainMenuScreen::HostSession(TSharedPtr<const FUniqueNetId> UserId, FName S
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("No OnlineSubsytem found!"));
 	}
+	return false;
 }
 
 void UMainMenuScreen::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
