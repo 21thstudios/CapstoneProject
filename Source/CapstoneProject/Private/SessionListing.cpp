@@ -51,13 +51,17 @@ void USessionListing::OnClickJoinSessionButton(FName GameSessionName, FOnlineSes
                 this,
                 &USessionListing::HandleJoinSessionComplete
             ));
+        
    
         if (bool IsJoinSuccessful = Session->JoinSession(UniqueNetId, GameSessionName, SessionResult))
         {
             // Call successfully started 
         } else
         {
-            // Call didn't start, error.
+            
+            // No longer associate the JoinSession delegate with the HandleJoinSessionComplete event
+            Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
+            this->JoinSessionDelegateHandle.Reset();
         }
     }
 }
@@ -74,6 +78,7 @@ void USessionListing::HandleJoinSessionComplete(FName SessionName, EOnJoinSessio
     IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
     IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
 
+    // JoinSession Delegate should no longer be associated with this event
     Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
     this->JoinSessionDelegateHandle.Reset();
 }
