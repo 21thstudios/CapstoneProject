@@ -45,20 +45,15 @@ void USessionListing::OnClickJoinSessionButton(FName GameSessionName, FOnlineSes
         const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
         const FUniqueNetId& UniqueNetId = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 
-        // Register the HandleJoinSessionComplete event handler so it is triggered when we've joined the session
-        this->JoinSessionDelegateHandle =
-            Session->AddOnJoinSessionCompleteDelegate_Handle(FOnJoinSessionComplete::FDelegate::CreateUObject(
-                this,
-                &USessionListing::HandleJoinSessionComplete
-            ));
+        // Register the HandleJoinSessionComplete event handler
+        this->JoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
+            FOnJoinSessionComplete::FDelegate::CreateUObject(this,&USessionListing::HandleJoinSessionComplete));
         
-   
-        if (bool IsJoinSuccessful = Session->JoinSession(UniqueNetId, GameSessionName, SessionResult))
+        if (Session->JoinSession(UniqueNetId, GameSessionName, SessionResult))
         {
             // Call successfully started 
         } else
         {
-            
             // No longer associate the JoinSession delegate with the HandleJoinSessionComplete event
             Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
             this->JoinSessionDelegateHandle.Reset();
