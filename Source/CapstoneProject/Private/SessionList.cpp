@@ -19,3 +19,12 @@ void USessionList::OnClickRefreshButton()
 	// Search results are made as buttons and added to the SessionListingsScrollBox
 }
 
+void USessionList::ClearSessionListings()
+{
+	if (SessionListingsScrollBox)
+	{
+		SessionListingsScrollBox->ClearChildren();
+	}
+}
+
+

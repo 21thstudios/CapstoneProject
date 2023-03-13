@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/CheckBox.h"
+#include "Components/ScrollBox.h"
 #include "SessionList.generated.h"
 
 
@@ -18,9 +19,14 @@ public :
 
 	void OnClickRefreshButton();
 
+	void ClearSessionListings();
+
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LANCheckBox;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* RefreshButton;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UScrollBox* SessionListingsScrollBox;
 };
