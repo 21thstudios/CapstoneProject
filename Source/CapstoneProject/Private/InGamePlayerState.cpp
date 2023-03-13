@@ -1,5 +1,4 @@
 
-/*
 // Fill out your copyright notice in the Description page of Project Settings.
 
 // Source: https://forums.unrealengine.com/t/print-to-screen-using-c/357351/3 
@@ -47,5 +46,3 @@ void UPlayerStats::HandleDeath(UPlayerStats* Actor)
   auto PlayerNameTemp = Actor->GetPlayerName().ToString();
   D("Player " + PlayerNameTemp + " killed " + this->GetPlayerName().ToString() + "!");
 }
-
-*/

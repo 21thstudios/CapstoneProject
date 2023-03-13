@@ -1,6 +1,6 @@
-D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Module.AdvancedSteamSessions.cpp
+C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Module.AdvancedSteamSessions.cpp
 /I .
-/I D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Source\AdvancedSteamSessions\Private
+/I C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Source\AdvancedSteamSessions\Private
 /I ..\Plugins\Online\OnlineSubsystem\Intermediate\Build\Win64\UnrealEditor\Inc\OnlineSubsystem\UHT
 /I ..\Plugins\Online\OnlineSubsystem
 /I ..\Plugins\Online\OnlineSubsystem\Source
@@ -280,13 +280,13 @@ D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Bu
 /I Runtime\MovieSceneCapture\Public
 /I ..\Intermediate\Build\Win64\UnrealEditor\Inc\AnimationDataController\UHT
 /I Developer\AnimationDataController\Public
-/I D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Inc\AdvancedSteamSessions\UHT
-/I D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Source
+/I C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Inc\AdvancedSteamSessions\UHT
+/I C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Source
 /I ..\Plugins\Online\OnlineSubsystemSteam\Source\Private
-/I D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Source\AdvancedSteamSessions\Classes
-/I D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Intermediate\Build\Win64\UnrealEditor\Inc\AdvancedSessions\UHT
-/I D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source
-/I D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes
+/I C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Source\AdvancedSteamSessions\Classes
+/I C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSessions\Intermediate\Build\Win64\UnrealEditor\Inc\AdvancedSessions\UHT
+/I C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSessions\Source
+/I C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes
 /I ThirdParty\Steamworks\Steamv153\sdk\public
 /I ..\Plugins\Online\OnlineSubsystemSteam\Intermediate\Build\Win64\UnrealEditor\Inc\OnlineSubsystemSteam\UHT
 /I ..\Plugins\Online\OnlineSubsystemSteam
@@ -296,17 +296,17 @@ D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Bu
 /external:I ThirdParty\mimalloc\include
 /external:I ThirdParty\LibTiff\Source\Win64
 /external:I ThirdParty\LibTiff\Source
-/external:I "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.34.31933\INCLUDE"
+/external:I "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\INCLUDE"
 /external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\ucrt"
 /external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\shared"
 /external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\um"
 /external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\winrt"
-/FI"D:\DDrive\Capstone\CapstoneProject\Intermediate\Build\Win64\CapstoneProjectEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h"
-/FI"D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Definitions.AdvancedSteamSessions.h"
-/Yu"D:\DDrive\Capstone\CapstoneProject\Intermediate\Build\Win64\CapstoneProjectEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h"
-/Fp"D:\DDrive\Capstone\CapstoneProject\Intermediate\Build\Win64\CapstoneProjectEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h.pch"
-/Fo"D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Module.AdvancedSteamSessions.cpp.obj"
-/sourceDependencies D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Module.AdvancedSteamSessions.cpp.dep.json
+/FI"C:\Users\Student\Desktop\UE\CapstoneProject\Intermediate\Build\Win64\CapstoneProjectEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h"
+/FI"C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Definitions.AdvancedSteamSessions.h"
+/Yu"C:\Users\Student\Desktop\UE\CapstoneProject\Intermediate\Build\Win64\CapstoneProjectEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h"
+/Fp"C:\Users\Student\Desktop\UE\CapstoneProject\Intermediate\Build\Win64\CapstoneProjectEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h.pch"
+/Fo"C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Module.AdvancedSteamSessions.cpp.obj"
+/sourceDependencies C:\Users\Student\Desktop\UE\CapstoneProject\Plugins\AdvancedSteamSessions\Intermediate\Build\Win64\UnrealEditor\Development\AdvancedSteamSessions\Module.AdvancedSteamSessions.cpp.dep.json
 /Zc:inline
 /nologo
 /Oi
