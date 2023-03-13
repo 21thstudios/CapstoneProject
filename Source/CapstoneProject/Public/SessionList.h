@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
 #include "Components/CheckBox.h"
 #include "SessionList.generated.h"
 
@@ -15,6 +16,11 @@ class CAPSTONEPROJECT_API USessionList : public UUserWidget
 public :
 	void SetLAN(bool LAN);
 
+	void OnClickRefreshButton();
+
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LANCheckBox;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UButton* RefreshButton;
 };
