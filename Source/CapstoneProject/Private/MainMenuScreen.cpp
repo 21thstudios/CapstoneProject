@@ -55,6 +55,23 @@ bool UMainMenuScreen::HostSession(TSharedPtr<const FUniqueNetId> UserId, FName S
 
 void UMainMenuScreen::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OnCreateSessionComplete %s, %d"), *SessionName.ToString(), bWasSuccessful));
+
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
+		if (Session.IsValid())
+		{
+			// Clear the SessionComplete delegate handle because we've finished the call.
+			Session->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
+			if (bWasSuccessful)
+			{
+				OnStartSessionCompleteDelegateHandle = Session->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
+				// OnStartSessionComplete delegate triggered upon completion
+				Session->StartSession(SessionName);
+			}
+		}
+	}
 }
 
 void UMainMenuScreen::OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful)
