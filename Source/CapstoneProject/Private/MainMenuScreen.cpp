@@ -6,6 +6,7 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void UMainMenuScreen::NativeConstruct()
@@ -76,4 +77,20 @@ void UMainMenuScreen::OnCreateSessionComplete(FName SessionName, bool bWasSucces
 
 void UMainMenuScreen::OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OnStartSessionComplete %s, %d"), *SessionName.ToString(), bWasSuccessful));
+
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
+		if (SessionSettings.IsValid())
+		{
+			// Clear the SessionsStart delegate handle because we've finished the call
+			Session->ClearOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegateHandle);
+		}
+
+		if (bWasSuccessful)
+		{
+			UGameplayStatics::OpenLevel(GetWorld(), "NewMap", true, "listen");
+		}
+	}
 }
