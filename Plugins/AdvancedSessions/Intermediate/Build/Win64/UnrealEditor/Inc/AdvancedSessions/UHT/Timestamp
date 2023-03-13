@@ -15,9 +15,9 @@ D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessi
 D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\FindSessionsCallbackProxyAdvanced.h
 D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\GetFriendsCallbackProxy.h
 D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\GetRecentPlayersCallbackProxy.h
+D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\GetUserPrivilegeCallbackProxy.h
 D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\LoginUserCallbackProxy.h
-D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\LogoutUserCallbackProxy.h
 D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\SendFriendInviteCallbackProxy.h
 D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\StartSessionCallbackProxyAdvanced.h
+D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\LogoutUserCallbackProxy.h
 D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\UpdateSessionCallbackProxyAdvanced.h
-D:\DDrive\Capstone\CapstoneProject\Plugins\AdvancedSessions\Source\AdvancedSessions\Classes\GetUserPrivilegeCallbackProxy.h
