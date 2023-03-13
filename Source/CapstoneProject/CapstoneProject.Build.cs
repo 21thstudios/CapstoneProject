@@ -10,7 +10,6 @@ public class CapstoneProject : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "OnlineSubsystem", "OnlineSubsystemUtils" });
 
-		// Uncomment if you are using online features
 		PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 		DynamicallyLoadedModuleNames.AddRange(new string[] { "OnlineSubsystemNull", "OnlineSubsystemSteam" });
