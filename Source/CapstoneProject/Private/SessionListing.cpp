@@ -37,5 +37,6 @@ void USessionListing::OnClickJoinSessionButton()
     if (JoinSessionButton)
     {
         APlayerController* PlayerController = this->GetOwningPlayer();
+        
     }
 }
