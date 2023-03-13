@@ -37,7 +37,7 @@ void UPlayerStats::HandleDeath(UPlayerStats* Actor)
 void UPlayerStats::ClearStats()
 {
     this->PlayerKills = 0;
-    this->PlayerStats = 0;
+    this->PlayerDeaths = 0;
 }
 
 void UPlayerStats::SetPlayerKills(int Kills)
