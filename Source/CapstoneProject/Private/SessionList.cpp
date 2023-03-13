@@ -3,16 +3,6 @@
 #include "OnlineSubsystemUtils.h"
 #include "Components/Button.h"
 
-
-void USessionList::BindOnClicked()
-{
-	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
-	{
-		RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
-	}
-}
-
-
 void USessionList::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -28,6 +18,13 @@ void USessionList::NativeDestruct()
 	}
 }
 
+void USessionList::BindOnClicked()
+{
+	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
+	{
+		RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
+	}
+}
 
 void USessionList::SetLAN(bool bLAN)
 {
