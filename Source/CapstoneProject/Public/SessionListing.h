@@ -14,7 +14,7 @@ class CAPSTONEPROJECT_API USessionListing : public UUserWidget
 public:
 	void SetServerName(FText ServerName);
 
-	void SetPlayerCount(int CurrentPlayers, int MaxPlayers);
+	void SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers);
 
 	void SetPingMs(int32 PingInMs);
 

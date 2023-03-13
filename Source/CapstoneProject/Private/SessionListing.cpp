@@ -1,6 +1,5 @@
 #include "SessionListing.h"
 #include <iostream>
-#include <string>
 #include "Components/TextBlock.h"
 #include "Internationalization/Text.h"
 
@@ -12,7 +11,7 @@ void USessionListing::SetServerName(FText ServerName)
     }
 }
 
-void USessionListing::SetPlayerCount(int CurrentPlayers, int MaxPlayers)
+void USessionListing::SetPlayerCount(int32 CurrentPlayers, int32 MaxPlayers)
 {
     std::cout << "Player count: " << CurrentPlayers << "/" << MaxPlayers << "\n";
 }
