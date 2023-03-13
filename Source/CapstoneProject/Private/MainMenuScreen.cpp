@@ -14,11 +14,25 @@ void UMainMenuScreen::NativeConstruct()
 	Super::NativeConstruct();
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnCreateSessionComplete);
 	OnCreateSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnStartOnlineGameComplete);
+	if (CreateGameButton && !CreateGameButton->OnClicked.IsBound())
+	{
+		CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
+	}
 }
 
 void UMainMenuScreen::NativeDestruct()
 {
 	Super::NativeDestruct();
+}
+
+
+
+void UMainMenuScreen::OnClickCreateGameButton()
+{
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
+	const FName SessionName = FName("hm");
+	HostSession(UniqueNetId, SessionName, true, true, 4);
 }
 
 bool UMainMenuScreen::HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN,

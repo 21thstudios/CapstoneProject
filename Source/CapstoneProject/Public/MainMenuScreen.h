@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
 #include "Interfaces/OnlineSessionDelegates.h"
 #include "MainMenuScreen.generated.h"
 
@@ -26,8 +27,11 @@ protected:
 
 	/** Fires upon session start request completion */
 	virtual void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
+
+	void OnClickCreateGameButton();
 	
-	
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UButton* CreateGameButton;
 	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
 	
