@@ -2,6 +2,12 @@
 
 #include "OnlineSubsystemUtils.h"
 
+USessionList::USessionList()
+{
+	// todo investigate cleanup
+	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionList::OnFindSessionsComplete);
+}
+
 void USessionList::SetLAN(bool bLAN)
 {
 	if (LANCheckBox)

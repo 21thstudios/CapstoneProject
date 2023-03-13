@@ -16,6 +16,8 @@ class CAPSTONEPROJECT_API USessionList : public UUserWidget
 	GENERATED_BODY()
 
 public :
+	USessionList();
+	
 	void SetLAN(bool bLAN);
 
 	void OnClickRefreshButton();
