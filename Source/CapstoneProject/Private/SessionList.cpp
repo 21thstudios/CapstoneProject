@@ -16,10 +16,10 @@ void USessionList::OnClickRefreshButton()
 	{
 		return;
 	}
-	// Empty the SessionListingsScrollBox
+	// Clear previous search results from the Widget
 	ClearSessionListings();
 
-	// Session-related info
+	// Define search terms and search asynchronously. Once finished, calls OnFindSessionsComplete which does the rest.
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
 		const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
@@ -27,22 +27,36 @@ void USessionList::OnClickRefreshButton()
 		const IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
 		if (Session.IsValid() && UniqueNetId.IsValid())
 		{
-			// Retrieve all options from the options column
-			bool bIsPresence = true;
-			bool bShouldOnlySearchLAN = LANCheckBox ? LANCheckBox->IsChecked() : false;
+			SessionSearch = MakeShareable(new FOnlineSessionSearch());
+
+			// todo add more confirable serach terms within options column
+			SessionSearch->bIsLanQuery = LANCheckBox ? LANCheckBox->IsChecked() : false;
+			SessionSearch->MaxSearchResults = 25;
+			SessionSearch->PingBucketSize = 50;
 			
-			// Create a search with those options as filters
+			bool bIsPresence = true;
+			if (bIsPresence)
+			{
+				SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, bIsPresence, EOnlineComparisonOp::Equals);
+			}
+			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
+			
+			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
 	
 	
 
-			// Search results are made as buttons and added to the SessionListingsScrollBox
+			
 		}
+	}
+	else
+	{
+		OnFindSessionsComplete(false);
 	}
 }
 
 void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 {
-	
+	// Search results are made as buttons and added to the SessionListingsScrollBox
 }
  
 
