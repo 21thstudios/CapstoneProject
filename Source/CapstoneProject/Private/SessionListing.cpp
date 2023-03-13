@@ -66,7 +66,7 @@ void USessionListing::OnClickJoinSessionButton()
         this->JoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
             FOnJoinSessionComplete::FDelegate::CreateUObject(this, &USessionListing::HandleJoinSessionComplete));
 
-        if (Session->JoinSession(UniqueNetId, SessionListingInfo.SessionName, SessionListingInfo.SessionResult))
+        if (Session->JoinSession(UniqueNetId, SessionListingInfo.SessionName, *SessionListingInfo.SessionResult))
         {
             // Call successfully started 
         } else
@@ -103,7 +103,7 @@ void USessionListing::SetSessionName(FName SessionName)
     this->SessionListingInfo.SessionName = SessionName;
 }
 
-void USessionListing::SetOnlineSessionSearchResult(FOnlineSessionSearchResult& SearchResult)
+void USessionListing::SetOnlineSessionSearchResult(FOnlineSessionSearchResult* SearchResult)
 {
     this->SessionListingInfo.SessionResult = SearchResult;
 }

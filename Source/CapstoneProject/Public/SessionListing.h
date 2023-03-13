@@ -10,7 +10,7 @@ struct FSessionListingInfo
 {
 	GENERATED_BODY()
 	FName SessionName;
-	FOnlineSessionSearchResult& SessionResult;
+	FOnlineSessionSearchResult* SessionResult;
 };
 
 UCLASS(Abstract)
@@ -34,7 +34,7 @@ public:
 
 	void SetSessionName(FName SessionName);
 
-	void SetOnlineSessionSearchResult(FOnlineSessionSearchResult& SearchResult);
+	void SetOnlineSessionSearchResult(FOnlineSessionSearchResult* SearchResult);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;
