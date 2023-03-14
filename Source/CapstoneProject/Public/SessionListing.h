@@ -41,9 +41,10 @@ public:
 
 	void SetPingMs(int32 PingInMs) const;
 
+	UFUNCTION()
 	void OnClickJoinSessionButton();
 
-	void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
+	virtual void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
 
 	void SetSessionListingInfo(struct FSessionListingInfo& SessionListingInfo);
 

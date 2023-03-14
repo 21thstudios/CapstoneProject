@@ -88,7 +88,11 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 {
 	// Search results are made as buttons and added to the SessionListingsScrollBox
 	UE_LOG(LogTemp, Display, TEXT("OnFindSessionsComplete successfully handled. bWasSuccessful: %hs"), bWasSuccessful ? "true" : "false");
-
+	if (!IsValid(WidgetSessionListingClass))
+	{
+		UE_LOG(LogTemp, Error, TEXT("WidgetSessionListingClass is not initialized. Set it to a Widget blueprint child class from the SessionList blueprint"))
+		return;
+	}
 	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
 	{
 		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
@@ -101,14 +105,14 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 			for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				//TSubclassOf<USessionListing> WidgetSessionListing;
 				FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				//USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), USessionListing::StaticClass(), SessionName);
+				// Could be a spot to check for bad names
+				
 				USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), WidgetSessionListingClass, SessionName);
-				if (IsValid(SessionListing))
+				if (SessionListing)
 				{
+					SessionListing->AddToViewport();
 					/*
-					* PIE: Error: Abstract, Deprecated or Replaced classes are not allowed to be used to construct a user widget. SessionListing is one of these.
 					* The machine not capable of finding sessions should host (not LAN)
 					* The machine capable of finding sessions should search (LAN)
 					* // todo if dynamic button generation keeps giving grief temporarily just make hidden ones
@@ -126,7 +130,6 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 					SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
 					SessionListing->SetPingMs(SearchResult.PingInMs);
 					SessionListing->SetServerName(FText::FromString(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-					AddSessionListing(SessionListing);
 				}
 				else
 				{
@@ -157,7 +160,7 @@ void USessionList::ClearSessionListings()
 
 void USessionList::AddSessionListing(USessionListing* SessionListing)
 {
-	if (SessionListingsScrollBox && SessionListing)
+	if (SessionListingsScrollBox)
 	{
 		SessionListingsScrollBox->AddChild(SessionListingsScrollBox);
 	}

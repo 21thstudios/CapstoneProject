@@ -20,13 +20,13 @@ protected:
 	
 public:
 	void SetLAN(bool bLAN);
-
+	
 	virtual void OnFindSessionsComplete(bool bWasSuccessful);
 
 	void ClearSessionListings();
 
 	void AddSessionListing(USessionListing* SessionListing);
-
+	
 	UFUNCTION()
 	void OnClickRefreshButton();
 

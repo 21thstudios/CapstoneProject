@@ -8,7 +8,7 @@ void USessionListing::NativeConstruct()
 {
     Super::NativeConstruct();
     JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
-    this->SessionListingInfoStruct = {};
+    //this->SessionListingInfoStruct = {};
 }
 
 void USessionListing::NativeDestruct()
