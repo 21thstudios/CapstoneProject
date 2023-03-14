@@ -5,9 +5,13 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "Components/Button.h"
+#include "Components/EditableText.h"
+#include "Components/EditableTextBox.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Kismet/GameplayStatics.h"
 
+const FName DEFAULT_SESSION_NAME = "Unnamed Server";
 
 void UMainMenuScreen::NativeConstruct()
 {
@@ -15,12 +19,10 @@ void UMainMenuScreen::NativeConstruct()
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnCreateSessionComplete);
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnStartOnlineGameComplete);
 	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnDestroySessionComplete);
-	if (CreateGameButton)
-	{
-		CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
-		MultiplayerButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickMultiplayerButton);
-		QuitGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickQuitButton);
-	}
+	CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
+	MultiplayerButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickMultiplayerButton);
+	QuitGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickQuitButton);
+	SessionNameEditableTextBox->OnTextChanged.AddDynamic(this, &UMainMenuScreen::OnSessionNameTextChanged);
 
 	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
 	{
@@ -44,7 +46,7 @@ void UMainMenuScreen::OnClickCreateGameButton()
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Clicked create game button")));
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
-	const FName SessionName = FName("Pizza");
+	const FName SessionName = SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()) : DEFAULT_SESSION_NAME;
 	bool bIsLan = LanCheckBox ? LanCheckBox->IsChecked() : true;
 	const int32 MaxPlayers = 4;
 	HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
@@ -62,14 +64,36 @@ void UMainMenuScreen::OnClickMultiplayerButton()
 
 void UMainMenuScreen::OnClickQuitButton()
 {
-	
+	if(IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
+
+		if (SessionSettings.IsValid())
+		{
+			Session->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
+			Session->DestroySession(SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()): DEFAULT_SESSION_NAME);
+		} 
+	}
+	// If we failed to destroy the session, just exit the game.
+	APlayerController* Player = GetWorld()->GetFirstPlayerController();
+	UKismetSystemLibrary::QuitGame(GetWorld(), Player, EQuitPreference::Quit, true);
 }
+
 
 void UMainMenuScreen::SetHostOnLan(bool bHostOnLan)
 {
 	if(LanCheckBox)
 	{
 		LanCheckBox->SetIsChecked(bHostOnLan);
+	}
+}
+
+void UMainMenuScreen::OnSessionNameTextChanged(const FText& Text)
+{
+	if (Text.ToString().Len() > 32)
+	{
+		FText clippedText = FText::FromString(SessionNameEditableTextBox->GetText().ToString().LeftChop(1));
+		SessionNameEditableTextBox->SetText(clippedText);
 	}
 }
 
@@ -161,9 +185,5 @@ void UMainMenuScreen::OnDestroySessionComplete(FName SessionName, bool bWasSucce
 			// Clear the SessionsDestroy delegate handle because we've finished the call
 			Session->ClearOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegateHandle);
 		}
-
-		// Now exit the game.
-		APlayerController* Player = GetWorld()->GetFirstPlayerController();
-		UKismetSystemLibrary::QuitGame(GetWorld(), Player, EQuitPreference::Quit, true);
 	}
 }

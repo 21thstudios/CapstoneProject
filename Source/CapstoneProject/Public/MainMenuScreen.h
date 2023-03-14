@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "SessionList.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
 #include "Components/CheckBox.h"
 #include "Interfaces/OnlineSessionDelegates.h"
 #include "MainMenuScreen.generated.h"
@@ -29,19 +28,25 @@ protected:
 
 	/** Fires upon session start request completion */
 	virtual void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
-
+	
 	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
 
 	void SetHostOnLan(bool bHostOnLAN);
+
+	UFUNCTION()
+	void OnSessionNameTextChanged(const FText& Text);
 	
 	UFUNCTION()
 	void OnClickCreateGameButton();
 
 	UFUNCTION()
 	void OnClickMultiplayerButton();
-
-	UFUNCTION()
+	
+	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void OnClickQuitButton();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UEditableTextBox* SessionNameEditableTextBox;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	USessionList* SessionList;
