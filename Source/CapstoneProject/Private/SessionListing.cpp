@@ -55,10 +55,7 @@ void USessionListing::OnClickJoinSessionButton()
         {
             // Register the HandleJoinSessionComplete event handler
             Session->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
-            //FName SessionName = SessionListingInfoStruct.SessionName;
-            //FOnlineSessionSearchResult& SessionSearchResult = *SessionListingInfoStruct.SessionResult;
             FName SessionName = ServerNameTextBlock ? FName(ServerNameTextBlock->GetText().ToString()) : FName(TEXT("Unnamed Server"));
-            
             FOnlineSessionSearchResult SessionSearchResult = *SessionResult;
 
             if (Session->JoinSession(0, SessionName, SessionSearchResult))
