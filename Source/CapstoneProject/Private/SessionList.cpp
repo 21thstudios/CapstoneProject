@@ -26,14 +26,18 @@ void USessionList::SetLAN(bool bLAN)
 
 void USessionList::OnClickRefreshButton()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("Pressed Refresh Button!")));
+	UE_LOG(LogTemp, Display, TEXT("Pressed Refresh Button"));
 	if (!SessionListingsScrollBox)
 	{
-		// GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("SessionListingsScrollBox not initialized!!")));
+		UE_LOG(LogTemp, Error, TEXT("SessionListingsScrollBox not initialized!!"));
 		return;
 	}
-	// Clear previous search results from the Widget
+	// Clear previous search results from the Widget and temporarily make it unclickable for the duration of the search
 	ClearSessionListings();
+	RefreshButton->SetIsEnabled(false);
+	// todo check refersh button looks pressed
+	//RefreshButton->SetStyle(RefreshButton->WidgetStyle.Pressed);
+	//RefreshButton->WidgetStyle.SetPressed(new FSlateBrush());
 
 	// Define search terms and search asynchronously. Once finished, calls OnFindSessionsComplete which does the rest.
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
@@ -58,11 +62,17 @@ void USessionList::OnClickRefreshButton()
 			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
 			
 			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
+		} else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Session or UniqueNetId is NULL!"));
+			RefreshButton->SetIsEnabled(true);
 		}
 	}
 	else
 	{
+		UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL from !"));
 		OnFindSessionsComplete(false);
+		RefreshButton->SetIsEnabled(true);
 	}
 }
 
