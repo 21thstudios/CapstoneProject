@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,5 +11,19 @@ UCLASS()
 class CAPSTONEPROJECT_API UPauseMenuScreen : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+	UFUNCTION()
+	void OnClickResumeGameButton();
+
+	UFUNCTION()
+	void OnClickQuitToTitleButton();
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UButton* ResumeGameButton;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UButton* QuitToTitleButton;
 };

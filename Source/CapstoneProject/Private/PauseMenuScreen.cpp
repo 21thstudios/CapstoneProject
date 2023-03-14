@@ -3,3 +3,22 @@
 
 #include "PauseMenuScreen.h"
 
+void UPauseMenuScreen::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
+
+void UPauseMenuScreen::NativeDestruct()
+{
+	
+}
+
+void UPauseMenuScreen::OnClickResumeGameButton()
+{
+	
+}
+
+void UPauseMenuScreen::OnClickQuitToTitleButton()
+{
+	
+}
