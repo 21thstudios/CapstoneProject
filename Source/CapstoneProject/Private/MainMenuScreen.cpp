@@ -18,6 +18,8 @@ void UMainMenuScreen::NativeConstruct()
 	if (CreateGameButton)
 	{
 		CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
+		MultiplayerButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickMultiplayerButton);
+		QuitGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickQuitButton);
 	}
 
 	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
