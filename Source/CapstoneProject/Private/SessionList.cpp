@@ -62,15 +62,16 @@ void USessionList::OnClickRefreshButton()
 			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
 			
 			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
-		} else
+		}
+		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("Session or UniqueNetId is NULL!"));
+			UE_LOG(LogTemp, Error, TEXT("Session or UniqueNetId is not valid!"));
 			RefreshButton->SetIsEnabled(true);
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL from !"));
+		UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
 		OnFindSessionsComplete(false);
 		RefreshButton->SetIsEnabled(true);
 	}
@@ -79,7 +80,7 @@ void USessionList::OnClickRefreshButton()
 void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 {
 	// Search results are made as buttons and added to the SessionListingsScrollBox
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OnFindSessionsComplete bSuccess: %d"), bWasSuccessful));
+	UE_LOG(LogTemp, Display, TEXT("OnFindSessionsComplete successfully handled. bWasSuccessful: %hs"), bWasSuccessful ? "true" : "false");
 
 	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
 	{
@@ -112,6 +113,16 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 				}
 			}
 		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Session or UniqueNetId is not valid!"));
+			RefreshButton->SetIsEnabled(true);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
+		RefreshButton->SetIsEnabled(true);
 	}
 }
  
