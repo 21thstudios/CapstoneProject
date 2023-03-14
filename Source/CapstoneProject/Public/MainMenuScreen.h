@@ -30,6 +30,8 @@ protected:
 	/** Fires upon session start request completion */
 	virtual void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
 
+	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
+
 	void SetHostOnLan(bool bHostOnLAN);
 	
 	UFUNCTION()
@@ -60,6 +62,8 @@ protected:
 	
 	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
 	FOnStartSessionCompleteDelegate OnStartSessionCompleteDelegate;
+	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
 	FDelegateHandle OnCreateSessionCompleteDelegateHandle;
 	FDelegateHandle OnStartSessionCompleteDelegateHandle;
+	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 };

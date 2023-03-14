@@ -14,6 +14,7 @@ void UMainMenuScreen::NativeConstruct()
 	Super::NativeConstruct();
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnCreateSessionComplete);
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnStartOnlineGameComplete);
+	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnDestroySessionComplete);
 	if (CreateGameButton)
 	{
 		CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
@@ -48,6 +49,7 @@ void UMainMenuScreen::OnClickMultiplayerButton()
 
 void UMainMenuScreen::OnClickQuitButton()
 {
+	
 }
 
 void UMainMenuScreen::SetHostOnLan(bool bHostOnLan)
@@ -131,5 +133,24 @@ void UMainMenuScreen::OnStartOnlineGameComplete(FName SessionName, bool bWasSucc
 		{
 			UGameplayStatics::OpenLevel(GetWorld(), "FirstPersonMap", true, "listen");
 		}
+	}
+}
+
+void UMainMenuScreen::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OnDestroySessionComplete %s, %d"), *SessionName.ToString(), bWasSuccessful));
+
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
+		if (SessionSettings.IsValid())
+		{
+			// Clear the SessionsDestroy delegate handle because we've finished the call
+			Session->ClearOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegateHandle);
+		}
+
+		// Now exit the game.
+		APlayerController* Player = GetWorld()->GetFirstPlayerController();
+		UKismetSystemLibrary::QuitGame(GetWorld(), Player, EQuitPreference::Quit, true);
 	}
 }
