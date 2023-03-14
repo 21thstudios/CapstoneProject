@@ -55,8 +55,8 @@ void UMainMenuScreen::OnClickMultiplayerButton()
 	if (MultiplayerButton)
 	{
 		const ESlateVisibility FlipVisibility =
-			MultiplayerButton->GetVisibility() == ESlateVisibility::Hidden ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
-		MultiplayerButton->SetVisibility(FlipVisibility);
+			SessionList->GetVisibility() == ESlateVisibility::Hidden ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
+		SessionList->SetVisibility(FlipVisibility);
 	}
 }
 
