@@ -8,7 +8,7 @@ void USessionListing::NativeConstruct()
 {
     Super::NativeConstruct();
     JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
-    this->SessionListingInfo = {};
+    this->SessionListingInfoStruct = {};
 }
 
 void USessionListing::NativeDestruct()
@@ -61,7 +61,7 @@ void USessionListing::OnClickJoinSessionButton()
         this->JoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
             FOnJoinSessionComplete::FDelegate::CreateUObject(this, &USessionListing::HandleJoinSessionComplete));
 
-        if (Session->JoinSession(UniqueNetId, SessionListingInfo.SessionName, *SessionListingInfo.SessionResult))
+        if (Session->JoinSession(UniqueNetId, SessionListingInfoStruct.SessionName, *SessionListingInfoStruct.SessionResult))
         {
             // Call successfully started 
         } else
@@ -95,5 +95,5 @@ void USessionListing::HandleJoinSessionComplete(const FName SessionName, const E
 
 void USessionListing::SetSessionListingInfo(FSessionListingInfo SessionListingInfo)
 {
-    this->SessionListingInfo = SessionListingInfo;
+    this->SessionListingInfoStruct = SessionListingInfo;
 }

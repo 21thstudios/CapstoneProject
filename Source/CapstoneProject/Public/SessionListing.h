@@ -62,5 +62,5 @@ public:
 	FDelegateHandle JoinSessionDelegateHandle;
 
 	UPROPERTY(BlueprintReadOnly)
-	FSessionListingInfo SessionListingInfo;
+	FSessionListingInfo SessionListingInfoStruct;
 };

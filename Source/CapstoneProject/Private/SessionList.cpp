@@ -107,7 +107,7 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 				FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
 				FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
 				FSessionListingInfo SessionListingInfo = FSessionListingInfo(SessionName, &SearchResult);
-				
+				SessionListing->SetSessionListingInfo(SessionListingInfo);
 				
 				//SessionListing->SetOnlineSessionSearchResult(&SearchResult);
 				//SessionListing->SetSessionName(FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
