@@ -101,11 +101,20 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 			for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), USessionListing::StaticClass());
+				//TSubclassOf<USessionListing> WidgetSessionListing;
+				FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+				//USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), USessionListing::StaticClass(), SessionName);
+				USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), WidgetSessionListingClass, SessionName);
 				if (IsValid(SessionListing))
 				{
+					/*
+					* PIE: Error: Abstract, Deprecated or Replaced classes are not allowed to be used to construct a user widget. SessionListing is one of these.
+					* The machine not capable of finding sessions should host (not LAN)
+					* The machine capable of finding sessions should search (LAN)
+					* // todo if dynamic button generation keeps giving grief temporarily just make hidden ones
+
+					 */
 					// Create session listing, populate, and add to the ScrollBox
-					FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
 					FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
 					FSessionListingInfo SessionListingInfo = FSessionListingInfo(SessionName, &SearchResult);
 					SessionListing->SetSessionListingInfo(SessionListingInfo);

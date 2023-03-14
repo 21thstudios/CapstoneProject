@@ -29,6 +29,9 @@ public:
 
 	UFUNCTION()
 	void OnClickRefreshButton();
+
+	UPROPERTY(EditAnywhere, Category="Class Types")
+	TSubclassOf<UUserWidget> WidgetSessionListingClass;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LANCheckBox;
