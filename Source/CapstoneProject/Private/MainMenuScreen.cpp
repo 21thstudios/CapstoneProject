@@ -36,6 +36,14 @@ void UMainMenuScreen::OnClickCreateGameButton()
 	HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
 }
 
+void UMainMenuScreen::OnClickMultiplayerButton()
+{
+}
+
+void UMainMenuScreen::OnClickQuitButton()
+{
+}
+
 void UMainMenuScreen::SetHostOnLan(bool bHostOnLan)
 {
 	if(LanCheckBox)

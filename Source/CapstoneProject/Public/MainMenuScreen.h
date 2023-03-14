@@ -29,14 +29,26 @@ protected:
 	/** Fires upon session start request completion */
 	virtual void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
 
+	void SetHostOnLan(bool bHostOnLAN);
+	
 	UFUNCTION()
 	void OnClickCreateGameButton();
-	
-	void SetHostOnLan(bool bHostOnLAN);
+
+	UFUNCTION()
+	void OnClickMultiplayerButton();
+
+	UFUNCTION()
+	void OnClickQuitButton();
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* CreateGameButton;
 
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* MultiplayerButton;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* QuitGameButton;
+	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LanCheckBox;
 	
