@@ -82,20 +82,36 @@ void USessionListing::OnClickJoinSessionButton()
 /** JoinSession delegate fires this function once attempting to join a session completes */
 void USessionListing::OnJoinSessionComplete(const FName SessionName, const EOnJoinSessionCompleteResult::Type JoinResult)
 {
-    const IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
-    const IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
-    
-    if (JoinResult == EOnJoinSessionCompleteResult::Success ||
-        JoinResult == EOnJoinSessionCompleteResult::AlreadyInSession)
+    UE_LOG(LogTemp, Display, TEXT("OnJoinSessionComplete delegate handled. JoinResult: %s"), LexToString(JoinResult));
+    if(IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
     {
-        // Travel to the server
-        if (FString URL; Session->GetResolvedConnectString(SessionName, URL))
+        if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
         {
-            GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
+            if (JoinResult == EOnJoinSessionCompleteResult::Success ||
+                JoinResult == EOnJoinSessionCompleteResult::AlreadyInSession)
+            {
+                if (FString URL; Session->GetResolvedConnectString(SessionName, URL))
+                {
+                    UE_LOG(LogTemp, Display, TEXT("Traveling player to server with URL: %s"), *URL);
+                    GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Unable to resolve session connection string: %s"), *URL);
+                }
+            }
+            Session->ClearOnJoinSessionCompleteDelegate_Handle(this->OnJoinSessionDelegateHandle);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Session is not valid!"));
         }
     }
-    // JoinSession Delegate should no longer be associated with this event
-    Session->ClearOnJoinSessionCompleteDelegate_Handle(this->OnJoinSessionDelegateHandle);
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
+    }
+    JoinSessionButton->SetIsEnabled(true);
 }
 
 void USessionListing::SetSessionListingInfo(FSessionListingInfo& SessionListingInfo)
