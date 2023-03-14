@@ -19,11 +19,22 @@ void UMainMenuScreen::NativeConstruct()
 	{
 		CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
 	}
+
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	{
+		PlayerController->bShowMouseCursor = true;
+		PlayerController->SetInputMode(FInputModeUIOnly());
+	}
 }
 
 void UMainMenuScreen::NativeDestruct()
 {
 	Super::NativeDestruct();
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	{
+		PlayerController->bShowMouseCursor = false;
+		PlayerController->SetInputMode(FInputModeGameOnly());
+	}
 }
 
 void UMainMenuScreen::OnClickCreateGameButton()
