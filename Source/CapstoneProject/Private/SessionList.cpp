@@ -7,19 +7,13 @@ void USessionList::NativeConstruct()
 {
 	Super::NativeConstruct();
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionList::OnFindSessionsComplete);
-	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
-	{
-		RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
-	}
+	RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
 }
 
 void USessionList::NativeDestruct()
 {
 	Super::NativeDestruct();
-	if (RefreshButton && !RefreshButton->OnClicked.IsBound())
-	{
-		RefreshButton->OnClicked.RemoveDynamic(this, &USessionList::OnClickRefreshButton);
-	}
+	RefreshButton->OnClicked.RemoveDynamic(this, &USessionList::OnClickRefreshButton);
 }
 
 void USessionList::SetLAN(bool bLAN)
@@ -32,8 +26,10 @@ void USessionList::SetLAN(bool bLAN)
 
 void USessionList::OnClickRefreshButton()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("Pressed Refresh Button!")));
 	if (!SessionListingsScrollBox)
 	{
+		// GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("SessionListingsScrollBox not initialized!!")));
 		return;
 	}
 	// Clear previous search results from the Widget
@@ -73,7 +69,7 @@ void USessionList::OnClickRefreshButton()
 void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 {
 	// Search results are made as buttons and added to the SessionListingsScrollBox
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OFindSessionsComplete bSuccess: %d"), bWasSuccessful));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OnFindSessionsComplete bSuccess: %d"), bWasSuccessful));
 
 	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
 	{

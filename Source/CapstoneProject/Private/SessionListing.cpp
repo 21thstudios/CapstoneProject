@@ -7,19 +7,13 @@
 void USessionListing::NativeConstruct()
 {
     Super::NativeConstruct();
-    if (JoinSessionButton && !JoinSessionButton->OnClicked.IsBound())
-    {
-        JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
-    }
+    JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
 }
 
 void USessionListing::NativeDestruct()
 {
     Super::NativeDestruct();
-    if (JoinSessionButton && !JoinSessionButton->OnClicked.IsBound())
-    {
-        JoinSessionButton->OnClicked.RemoveDynamic(this, &USessionListing::OnClickJoinSessionButton);
-    }
+    JoinSessionButton->OnClicked.RemoveDynamic(this, &USessionListing::OnClickJoinSessionButton);
 }
 
 void USessionListing::SetServerName(FText ServerName) const

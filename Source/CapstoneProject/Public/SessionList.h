@@ -21,15 +21,15 @@ protected:
 public:
 	void SetLAN(bool bLAN);
 
-	UFUNCTION()
-	void OnClickRefreshButton();
-
 	void OnFindSessionsComplete(bool bWasSuccessful);
 
 	void ClearSessionListings();
 
 	void AddSessionListing(USessionListing* SessionListing);
 
+	UFUNCTION()
+	void OnClickRefreshButton();
+	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LANCheckBox;
 
