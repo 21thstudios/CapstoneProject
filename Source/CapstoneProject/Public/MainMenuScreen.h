@@ -17,7 +17,7 @@ class CAPSTONEPROJECT_API UMainMenuScreen : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
@@ -29,6 +29,7 @@ public:
 	/** Fires upon session start request completion */
 	virtual void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
 
+	UFUNCTION()
 	void OnClickCreateGameButton();
 	
 	void SetHostOnLan(bool bHostOnLAN);
