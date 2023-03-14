@@ -2,6 +2,8 @@
 
 #include "OnlineSubsystemUtils.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
+#include "Components/ScrollBoxSlot.h"
 
 void USessionList::NativeConstruct()
 {
@@ -111,12 +113,9 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 				USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), WidgetSessionListingClass, SessionName);
 				if (SessionListing)
 				{
-					SessionListing->AddToViewport();
 					/*
 					* The machine not capable of finding sessions should host (not LAN)
 					* The machine capable of finding sessions should search (LAN)
-					* // todo if dynamic button generation keeps giving grief temporarily just make hidden ones
-
 					 */
 					// Create session listing, populate, and add to the ScrollBox
 					FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
@@ -130,6 +129,7 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 					SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
 					SessionListing->SetPingMs(SearchResult.PingInMs);
 					SessionListing->SetServerName(FText::FromString(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+					this->AddSessionListing(SessionListing);
 				}
 				else
 				{
@@ -162,7 +162,7 @@ void USessionList::AddSessionListing(USessionListing* SessionListing)
 {
 	if (SessionListingsScrollBox)
 	{
-		SessionListingsScrollBox->AddChild(SessionListingsScrollBox);
+		SessionListingsScrollBox->AddChild(SessionListing);
 	}
 }
 

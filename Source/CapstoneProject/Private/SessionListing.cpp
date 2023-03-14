@@ -58,7 +58,7 @@ void USessionListing::OnClickJoinSessionButton()
         const FUniqueNetId& UniqueNetId = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 
         // Register the HandleJoinSessionComplete event handler
-        this->JoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
+        this->OnJoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
             FOnJoinSessionComplete::FDelegate::CreateUObject(this, &USessionListing::HandleJoinSessionComplete));
 
         if (Session->JoinSession(UniqueNetId, SessionListingInfoStruct.SessionName, *SessionListingInfoStruct.SessionResult))
@@ -67,8 +67,8 @@ void USessionListing::OnClickJoinSessionButton()
         } else
         {
             // No longer associate the JoinSession delegate with the HandleJoinSessionComplete event
-            Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
-            this->JoinSessionDelegateHandle.Reset();
+            Session->ClearOnJoinSessionCompleteDelegate_Handle(this->OnJoinSessionDelegateHandle);
+            this->OnJoinSessionDelegateHandle.Reset();
         }
     }
 }
@@ -89,8 +89,8 @@ void USessionListing::HandleJoinSessionComplete(const FName SessionName, const E
         }
     }
     // JoinSession Delegate should no longer be associated with this event
-    Session->ClearOnJoinSessionCompleteDelegate_Handle(this->JoinSessionDelegateHandle);
-    this->JoinSessionDelegateHandle.Reset();
+    Session->ClearOnJoinSessionCompleteDelegate_Handle(this->OnJoinSessionDelegateHandle);
+    this->OnJoinSessionDelegateHandle.Reset();
 }
 
 void USessionListing::SetSessionListingInfo(FSessionListingInfo& SessionListingInfo)

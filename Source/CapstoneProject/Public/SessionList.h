@@ -25,6 +25,7 @@ public:
 
 	void ClearSessionListings();
 
+	UFUNCTION()
 	void AddSessionListing(USessionListing* SessionListing);
 	
 	UFUNCTION()

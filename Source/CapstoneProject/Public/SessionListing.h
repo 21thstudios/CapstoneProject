@@ -59,8 +59,10 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* JoinSessionButton;
+
+	FOnJoinSessionCompleteDelegate OnFindSessionCompleteDelegate;
 	
-	FDelegateHandle JoinSessionDelegateHandle;
+	FDelegateHandle OnJoinSessionDelegateHandle;
 
 	UPROPERTY()
 	FSessionListingInfo SessionListingInfoStruct;
