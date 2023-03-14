@@ -8,7 +8,7 @@ void USessionListing::NativeConstruct()
 {
     Super::NativeConstruct();
     JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
-    //this->SessionListingInfoStruct = {};
+    OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &USessionListing::OnJoinSessionComplete);
 }
 
 void USessionListing::NativeDestruct()
@@ -49,32 +49,38 @@ void USessionListing::SetPingMs(int32 PingInMs) const
 
 void USessionListing::OnClickJoinSessionButton()
 {
-    IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
-    IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
-    
-    if (JoinSessionButton)
+    if(IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
     {
-        const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-        const FUniqueNetId& UniqueNetId = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
-
-        // Register the HandleJoinSessionComplete event handler
-        this->OnJoinSessionDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(
-            FOnJoinSessionComplete::FDelegate::CreateUObject(this, &USessionListing::HandleJoinSessionComplete));
-
-        if (Session->JoinSession(UniqueNetId, SessionListingInfoStruct.SessionName, *SessionListingInfoStruct.SessionResult))
+        if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
         {
-            // Call successfully started 
-        } else
-        {
-            // No longer associate the JoinSession delegate with the HandleJoinSessionComplete event
-            Session->ClearOnJoinSessionCompleteDelegate_Handle(this->OnJoinSessionDelegateHandle);
-            this->OnJoinSessionDelegateHandle.Reset();
+            // Register the HandleJoinSessionComplete event handler
+            Session->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
+            FName SessionName = SessionListingInfoStruct.SessionName;
+            FOnlineSessionSearchResult* SessionSearchResult = SessionListingInfoStruct.SessionResult;
+
+            if (Session->JoinSession(0, SessionName, *SessionSearchResult))
+            {
+                UE_LOG(LogTemp, Display, TEXT("Session successfully dispatched the join session %s call with name"), *SessionName.ToString());
+            } else
+            {
+                UE_LOG(LogTemp, Display, TEXT("Session failed to dispatch the join session %s call"), *SessionName.ToString());
+            }
         }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Session is not valid!"));
+            JoinSessionButton->SetIsEnabled(true);
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
+        JoinSessionButton->SetIsEnabled(true);
     }
 }
 
 /** JoinSession delegate fires this function once attempting to join a session completes */
-void USessionListing::HandleJoinSessionComplete(const FName SessionName, const EOnJoinSessionCompleteResult::Type JoinResult)
+void USessionListing::OnJoinSessionComplete(const FName SessionName, const EOnJoinSessionCompleteResult::Type JoinResult)
 {
     const IOnlineSubsystem *Subsystem = Online::GetSubsystem(GetWorld());
     const IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
@@ -90,7 +96,6 @@ void USessionListing::HandleJoinSessionComplete(const FName SessionName, const E
     }
     // JoinSession Delegate should no longer be associated with this event
     Session->ClearOnJoinSessionCompleteDelegate_Handle(this->OnJoinSessionDelegateHandle);
-    this->OnJoinSessionDelegateHandle.Reset();
 }
 
 void USessionListing::SetSessionListingInfo(FSessionListingInfo& SessionListingInfo)

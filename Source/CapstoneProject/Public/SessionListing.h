@@ -44,7 +44,7 @@ public:
 	UFUNCTION()
 	void OnClickJoinSessionButton();
 
-	virtual void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
+	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
 
 	void SetSessionListingInfo(struct FSessionListingInfo& SessionListingInfo);
 
@@ -60,7 +60,7 @@ public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* JoinSessionButton;
 
-	FOnJoinSessionCompleteDelegate OnFindSessionCompleteDelegate;
+	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
 	
 	FDelegateHandle OnJoinSessionDelegateHandle;
 

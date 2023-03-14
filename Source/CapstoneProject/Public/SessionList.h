@@ -44,7 +44,6 @@ public:
 	UScrollBox* SessionListingsScrollBox;
 	
 	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
-
 	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
 
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
