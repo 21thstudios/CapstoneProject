@@ -5,27 +5,6 @@
 #include "Online.h"
 #include "SessionListing.generated.h"
 
-USTRUCT(BlueprintType)
-struct FSessionListingInfo
-{
-	GENERATED_BODY()
-
-	FSessionListingInfo()
-	{
-		SessionName = FName(TEXT("Missing Session Name"));
-		SessionResult = static_cast<FOnlineSessionSearchResult*>(malloc(sizeof(FOnlineSessionSearchResult)));
-	}
-
-	FSessionListingInfo(FName SessionName, FOnlineSessionSearchResult* SessionResult)
-	{
-		this->SessionName = SessionName;
-		this->SessionResult = SessionResult;
-	}
-	
-	FName SessionName;
-	FOnlineSessionSearchResult* SessionResult;
-};
-
 UCLASS(Abstract)
 class CAPSTONEPROJECT_API USessionListing : public UUserWidget
 {
@@ -45,8 +24,8 @@ public:
 	void OnClickJoinSessionButton();
 
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
-
-	void SetSessionListingInfo(struct FSessionListingInfo& SessionListingInfo);
+	
+	void SetSessionResult(FOnlineSessionSearchResult* SessionSearchResult);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;
@@ -63,7 +42,6 @@ public:
 	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
 	
 	FDelegateHandle OnJoinSessionDelegateHandle;
-
-	UPROPERTY()
-	FSessionListingInfo SessionListingInfoStruct;
+	
+	FOnlineSessionSearchResult* SessionResult;
 };

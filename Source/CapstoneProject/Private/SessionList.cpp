@@ -41,9 +41,6 @@ void USessionList::OnClickRefreshButton()
 	// Define search terms and search asynchronously. Once finished, calls OnFindSessionsComplete which does the rest.
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
-		//const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-		//const FUniqueNetId& UniqueNetId = *LocalPlayer->GetPreferredUniqueNetId();
-		// const FUniqueNetId& UniqueNetId = *GetOwningPlayer()->GetLocalPlayer()->GetPreferredUniqueNetId();
 		if (const IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session && Session.IsValid())
 		{
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
@@ -108,22 +105,17 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
 				FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				// Could be a spot to check for bad names
-				
 				USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), WidgetSessionListingClass, SessionName);
 				if (SessionListing)
 				{
 					/*
-					* The machine not capable of finding sessions should host (not LAN)
-					* The machine capable of finding sessions should search (LAN)
+					* To use Null Subsystem, go to DefaultEngine.ini and:
+					* [OnlineSubsystem] -> DefaultPlatformServer=Steam should be DefaultPlatformService=Null
+					* [[OnlineSubsystemSteam] -> bEnabled=True should be False
 					 */
 					// Create session listing, populate, and add to the ScrollBox
-					FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
-					FSessionListingInfo SessionListingInfo = FSessionListingInfo(SessionName, &SearchResult);
-					SessionListing->SetSessionListingInfo(SessionListingInfo);
-				
-					//SessionListing->SetOnlineSessionSearchResult(&SearchResult);
-					//SessionListing->SetSessionName(FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
+					FOnlineSessionSearchResult& SearchResult = SessionSearch->SearchResults[SearchIdx];
+					SessionListing->SetSessionResult(&SearchResult);
 					int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
 					int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
 					SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);

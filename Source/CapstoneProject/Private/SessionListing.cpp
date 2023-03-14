@@ -55,10 +55,13 @@ void USessionListing::OnClickJoinSessionButton()
         {
             // Register the HandleJoinSessionComplete event handler
             Session->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
-            FName SessionName = SessionListingInfoStruct.SessionName;
-            FOnlineSessionSearchResult* SessionSearchResult = SessionListingInfoStruct.SessionResult;
+            //FName SessionName = SessionListingInfoStruct.SessionName;
+            //FOnlineSessionSearchResult& SessionSearchResult = *SessionListingInfoStruct.SessionResult;
+            FName SessionName = ServerNameTextBlock ? FName(ServerNameTextBlock->GetText().ToString()) : FName(TEXT("Unnamed Server"));
+            
+            FOnlineSessionSearchResult SessionSearchResult = *SessionResult;
 
-            if (Session->JoinSession(0, SessionName, *SessionSearchResult))
+            if (Session->JoinSession(0, SessionName, SessionSearchResult))
             {
                 UE_LOG(LogTemp, Display, TEXT("Session successfully dispatched the join session %s call with name"), *SessionName.ToString());
             } else
@@ -114,7 +117,7 @@ void USessionListing::OnJoinSessionComplete(const FName SessionName, const EOnJo
     JoinSessionButton->SetIsEnabled(true);
 }
 
-void USessionListing::SetSessionListingInfo(FSessionListingInfo& SessionListingInfo)
+void USessionListing::SetSessionResult(FOnlineSessionSearchResult* SessionSearchResult)
 {
-    this->SessionListingInfoStruct = SessionListingInfo;
+    this->SessionResult = SessionSearchResult;
 }
