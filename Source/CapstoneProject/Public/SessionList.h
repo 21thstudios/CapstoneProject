@@ -21,7 +21,7 @@ protected:
 public:
 	void SetLAN(bool bLAN);
 
-	void OnFindSessionsComplete(bool bWasSuccessful);
+	virtual void OnFindSessionsComplete(bool bWasSuccessful);
 
 	void ClearSessionListings();
 

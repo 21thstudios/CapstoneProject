@@ -8,6 +8,7 @@ void USessionListing::NativeConstruct()
 {
     Super::NativeConstruct();
     JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
+    this->SessionListingInfo = {};
 }
 
 void USessionListing::NativeDestruct()
@@ -92,12 +93,7 @@ void USessionListing::HandleJoinSessionComplete(const FName SessionName, const E
     this->JoinSessionDelegateHandle.Reset();
 }
 
-void USessionListing::SetSessionName(FName SessionName)
+void USessionListing::SetSessionListingInfo(FSessionListingInfo SessionListingInfo)
 {
-    this->SessionListingInfo.SessionName = SessionName;
-}
-
-void USessionListing::SetOnlineSessionSearchResult(FOnlineSessionSearchResult* SearchResult)
-{
-    this->SessionListingInfo.SessionResult = SearchResult;
+    this->SessionListingInfo = SessionListingInfo;
 }

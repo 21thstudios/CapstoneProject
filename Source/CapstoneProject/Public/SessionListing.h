@@ -9,6 +9,19 @@ USTRUCT(BlueprintType)
 struct FSessionListingInfo
 {
 	GENERATED_BODY()
+
+	FSessionListingInfo()
+	{
+		SessionName = FName(TEXT("Missing Session Name"));
+		SessionResult = static_cast<FOnlineSessionSearchResult*>(malloc(sizeof(FOnlineSessionSearchResult)));
+	}
+
+	FSessionListingInfo(FName SessionName, FOnlineSessionSearchResult* SessionResult)
+	{
+		this->SessionName = SessionName;
+		this->SessionResult = SessionResult;
+	}
+	
 	FName SessionName;
 	FOnlineSessionSearchResult* SessionResult;
 };
@@ -32,9 +45,7 @@ public:
 
 	void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
 
-	void SetSessionName(FName SessionName);
-
-	void SetOnlineSessionSearchResult(FOnlineSessionSearchResult* SearchResult);
+	void SetSessionListingInfo(FSessionListingInfo SessionListingInfo);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;

@@ -48,7 +48,7 @@ void UMainMenuScreen::OnClickCreateGameButton()
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 	const FName SessionName = SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()) : DEFAULT_SESSION_NAME;
 	bool bIsLan = LanCheckBox ? LanCheckBox->IsChecked() : true;
-	const int32 MaxPlayers = 4;
+	const int32 MaxPlayers = 69;
 	HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
 }
 

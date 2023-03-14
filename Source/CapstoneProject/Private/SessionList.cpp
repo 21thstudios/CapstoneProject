@@ -39,27 +39,36 @@ void USessionList::OnClickRefreshButton()
 	// Define search terms and search asynchronously. Once finished, calls OnFindSessionsComplete which does the rest.
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
-		const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-		const FUniqueNetId& UniqueNetId = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
-		const IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
-		if (Session.IsValid() && UniqueNetId.IsValid())
+		//const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+		//const FUniqueNetId& UniqueNetId = *LocalPlayer->GetPreferredUniqueNetId();
+		// const FUniqueNetId& UniqueNetId = *GetOwningPlayer()->GetLocalPlayer()->GetPreferredUniqueNetId();
+		if (const IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session && Session.IsValid())
 		{
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 
 			// todo add more confirable serach terms within options column
 			SessionSearch->bIsLanQuery = LANCheckBox ? LANCheckBox->IsChecked() : false;
-			SessionSearch->MaxSearchResults = 25;
+			SessionSearch->MaxSearchResults = 10000;
 			SessionSearch->PingBucketSize = 50;
+			//SessionSearch->QuerySettings.Set(SETTING_MAPNAME, FString("FirstPersonMap"), EOnlineComparisonOp::Equals);
+			SessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, false, EOnlineComparisonOp::Equals);
+			SessionSearch->QuerySettings.Set(SEARCH_EMPTY_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
+			SessionSearch->QuerySettings.Set(SEARCH_SECURE_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
 			
-			bool bIsPresence = true;
-			if (bIsPresence)
+			//SessionSearch->TimeoutInSeconds
+			if (bool bIsPresence = true)
 			{
 				SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, bIsPresence, EOnlineComparisonOp::Equals);
 			}
+			if (bool bSearchLobbies = true)
+			{
+				SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, bSearchLobbies, EOnlineComparisonOp::Equals);
+			}
+			
 			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
 			UE_LOG(LogTemp, Display, TEXT("Searching for multiplayer sessions"));
 			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
-			Session->FindSessions(UniqueNetId, SearchSettingsRef);
+			Session->FindSessions(0, SearchSettingsRef);
 		}
 		else
 		{
@@ -87,28 +96,27 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 		{
 			// Clear the delegate handle now that we have finished the OnFindSessions call
 			Session->ClearOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegateHandle);
-
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Num Search Results: %d"), SessionSearch->SearchResults.Num()));
-
-			if (SessionSearch->SearchResults.Num() > 0)
+			UE_LOG(LogTemp, Display, TEXT("Num Search Results: %d"), SessionSearch->SearchResults.Num());
+			
+			for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
 			{
-				for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
-					USessionListing* SessionListing = NewObject<USessionListing>(this, USessionListing::StaticClass());
-					
-					// Create session listing, populate, and add to the ScrollBox
-					//FSessionListingInfo SessionListingInfo = 
-					FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
-					SessionListing->SetOnlineSessionSearchResult(&SearchResult);
-					SessionListing->SetSessionName(FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
-					int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
-					int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
-					SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
-					SessionListing->SetPingMs(SearchResult.PingInMs);
-					SessionListing->SetServerName(FText::FromString(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-					AddSessionListing(SessionListing);
-				}
+				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+				USessionListing* SessionListing = CreateWidget<USessionListing>(this, USessionListing::StaticClass());
+				
+				// Create session listing, populate, and add to the ScrollBox
+				FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+				FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
+				FSessionListingInfo SessionListingInfo = FSessionListingInfo(SessionName, &SearchResult);
+				
+				
+				//SessionListing->SetOnlineSessionSearchResult(&SearchResult);
+				//SessionListing->SetSessionName(FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
+				int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+				int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
+				SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
+				SessionListing->SetPingMs(SearchResult.PingInMs);
+				SessionListing->SetServerName(FText::FromString(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+				AddSessionListing(SessionListing);
 			}
 		}
 		else
