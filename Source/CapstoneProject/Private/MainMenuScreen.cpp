@@ -13,7 +13,7 @@ void UMainMenuScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnCreateSessionComplete);
-	OnCreateSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnStartOnlineGameComplete);
+	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnStartOnlineGameComplete);
 	if (CreateGameButton)
 	{
 		CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
@@ -27,6 +27,7 @@ void UMainMenuScreen::NativeDestruct()
 
 void UMainMenuScreen::OnClickCreateGameButton()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Clicked create game button")));
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 	const FName SessionName = FName("Pizza");
@@ -88,7 +89,6 @@ void UMainMenuScreen::OnCreateSessionComplete(FName SessionName, bool bWasSucces
 		{
 			// Clear the SessionComplete delegate handle because we've finished the call.
 			Session->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
-			OnCreateSessionCompleteDelegateHandle.Reset();
 			if (bWasSuccessful)
 			{
 				OnStartSessionCompleteDelegateHandle = Session->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
@@ -111,7 +111,6 @@ void UMainMenuScreen::OnStartOnlineGameComplete(FName SessionName, bool bWasSucc
 		{
 			// Clear the SessionsStart delegate handle because we've finished the call
 			Session->ClearOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegateHandle);
-			OnStartSessionCompleteDelegateHandle.Reset();
 		}
 
 		if (bWasSuccessful)
