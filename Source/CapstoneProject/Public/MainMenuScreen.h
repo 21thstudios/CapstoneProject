@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SessionList.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/CheckBox.h"
@@ -39,6 +40,9 @@ protected:
 
 	UFUNCTION()
 	void OnClickQuitButton();
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	USessionList* SessionList;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* CreateGameButton;

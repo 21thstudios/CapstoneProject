@@ -38,6 +38,12 @@ void UMainMenuScreen::OnClickCreateGameButton()
 
 void UMainMenuScreen::OnClickMultiplayerButton()
 {
+	if (MultiplayerButton)
+	{
+		const ESlateVisibility FlipVisibility =
+			MultiplayerButton->GetVisibility() == ESlateVisibility::Hidden ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
+		MultiplayerButton->SetVisibility(FlipVisibility);
+	}
 }
 
 void UMainMenuScreen::OnClickQuitButton()
