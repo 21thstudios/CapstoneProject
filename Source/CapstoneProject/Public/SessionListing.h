@@ -45,7 +45,7 @@ public:
 
 	void HandleJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
 
-	void SetSessionListingInfo(FSessionListingInfo SessionListingInfo);
+	void SetSessionListingInfo(struct FSessionListingInfo& SessionListingInfo);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ServerNameTextBlock;
@@ -61,6 +61,6 @@ public:
 	
 	FDelegateHandle JoinSessionDelegateHandle;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	FSessionListingInfo SessionListingInfoStruct;
 };

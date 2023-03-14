@@ -48,7 +48,7 @@ void USessionList::OnClickRefreshButton()
 
 			// todo add more confirable serach terms within options column
 			SessionSearch->bIsLanQuery = LANCheckBox ? LANCheckBox->IsChecked() : false;
-			SessionSearch->MaxSearchResults = 10000;
+			SessionSearch->MaxSearchResults = 30000;
 			SessionSearch->PingBucketSize = 50;
 			//SessionSearch->QuerySettings.Set(SETTING_MAPNAME, FString("FirstPersonMap"), EOnlineComparisonOp::Equals);
 			SessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, false, EOnlineComparisonOp::Equals);
@@ -101,22 +101,28 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 			for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				USessionListing* SessionListing = CreateWidget<USessionListing>(this, USessionListing::StaticClass());
+				USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), USessionListing::StaticClass());
+				if (IsValid(SessionListing))
+				{
+					// Create session listing, populate, and add to the ScrollBox
+					FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+					FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
+					FSessionListingInfo SessionListingInfo = FSessionListingInfo(SessionName, &SearchResult);
+					SessionListing->SetSessionListingInfo(SessionListingInfo);
 				
-				// Create session listing, populate, and add to the ScrollBox
-				FName SessionName = FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				FOnlineSessionSearchResult SearchResult = SessionSearch->SearchResults[SearchIdx];
-				FSessionListingInfo SessionListingInfo = FSessionListingInfo(SessionName, &SearchResult);
-				SessionListing->SetSessionListingInfo(SessionListingInfo);
-				
-				//SessionListing->SetOnlineSessionSearchResult(&SearchResult);
-				//SessionListing->SetSessionName(FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
-				int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
-				int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
-				SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
-				SessionListing->SetPingMs(SearchResult.PingInMs);
-				SessionListing->SetServerName(FText::FromString(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				AddSessionListing(SessionListing);
+					//SessionListing->SetOnlineSessionSearchResult(&SearchResult);
+					//SessionListing->SetSessionName(FName((SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
+					int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+					int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
+					SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
+					SessionListing->SetPingMs(SearchResult.PingInMs);
+					SessionListing->SetServerName(FText::FromString(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+					AddSessionListing(SessionListing);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("Search Result SessionListing pointer is not valid"));
+				}
 			}
 		}
 		else

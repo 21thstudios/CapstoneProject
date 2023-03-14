@@ -93,7 +93,7 @@ void USessionListing::HandleJoinSessionComplete(const FName SessionName, const E
     this->JoinSessionDelegateHandle.Reset();
 }
 
-void USessionListing::SetSessionListingInfo(FSessionListingInfo SessionListingInfo)
+void USessionListing::SetSessionListingInfo(FSessionListingInfo& SessionListingInfo)
 {
     this->SessionListingInfoStruct = SessionListingInfo;
 }

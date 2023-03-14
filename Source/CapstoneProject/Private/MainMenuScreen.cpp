@@ -109,7 +109,7 @@ bool UMainMenuScreen::HostSession(TSharedPtr<const FUniqueNetId> UserId, FName S
 			SessionSettings->bIsLANMatch = bIsLAN;
 			SessionSettings->bUsesPresence = bIsPresence;
 			SessionSettings->NumPublicConnections = MaxNumPlayers;
-			SessionSettings->NumPrivateConnections = 0;
+			SessionSettings->NumPrivateConnections = 5;
 			SessionSettings->bAllowInvites = true;
 			SessionSettings->bAllowJoinInProgress = true;
 			SessionSettings->bShouldAdvertise = true;
