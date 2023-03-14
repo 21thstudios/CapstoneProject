@@ -5,7 +5,6 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
-#include "Components/CheckBox.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -31,15 +30,16 @@ void UMainMenuScreen::OnClickCreateGameButton()
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 	const FName SessionName = FName("hm");
-	const bool bIsLan = LANCheckBox ? LANCheckBox->IsChecked() : true;
-	HostSession(UniqueNetId, SessionName, bIsLan, true, 4);
+	bool bIsLan = LanCheckBox ? LanCheckBox->IsChecked() : true;
+	const int32 MaxPlayers = 4;
+	HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
 }
 
-void UMainMenuScreen::SetHostOnLAN(bool bHostOnLAN)
+void UMainMenuScreen::SetHostOnLan(bool bHostOnLan)
 {
-	if(LANCheckBox)
+	if(LanCheckBox)
 	{
-		LANCheckBox->SetIsChecked(bHostOnLAN);
+		LanCheckBox->SetIsChecked(bHostOnLan);
 	}
 }
 

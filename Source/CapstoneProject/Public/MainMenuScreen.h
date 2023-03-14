@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/CheckBox.h"
 #include "Interfaces/OnlineSessionDelegates.h"
 #include "MainMenuScreen.generated.h"
 
@@ -16,7 +17,7 @@ class CAPSTONEPROJECT_API UMainMenuScreen : public UUserWidget
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
@@ -30,13 +31,13 @@ protected:
 
 	void OnClickCreateGameButton();
 	
-	void SetHostOnLAN(bool bHostOnLAN);
+	void SetHostOnLan(bool bHostOnLAN);
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* CreateGameButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UCheckBox* LANCheckBox;
+	UCheckBox* LanCheckBox;
 	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
 	
