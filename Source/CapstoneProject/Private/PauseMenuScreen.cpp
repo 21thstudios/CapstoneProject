@@ -19,10 +19,16 @@ void UPauseMenuScreen::NativeDestruct()
 
 void UPauseMenuScreen::OnClickResumeGameButton()
 {
-	APlayerController* PlayerController = GetOwningPlayer();
-	PlayerController->SetInputMode(FInputModeGameOnly());
-	PlayerController->SetShowMouseCursor(false);
-	this->RemoveFromParent();
+	if (APlayerController* PlayerController = GetOwningPlayer(); IsValid(PlayerController))
+	{
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->SetShowMouseCursor(false);
+		this->RemoveFromParent();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerController owning PauseMenu screen is not valid, therefore cannot unpause"));
+	}
 }
 
 void UPauseMenuScreen::OnClickQuitToTitleButton()
