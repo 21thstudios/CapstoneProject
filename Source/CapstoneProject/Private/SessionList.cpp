@@ -35,9 +35,6 @@ void USessionList::OnClickRefreshButton()
 	// Clear previous search results from the Widget and temporarily make it unclickable for the duration of the search
 	ClearSessionListings();
 	RefreshButton->SetIsEnabled(false);
-	// todo check refersh button looks pressed
-	//RefreshButton->SetStyle(RefreshButton->WidgetStyle.Pressed);
-	//RefreshButton->WidgetStyle.SetPressed(new FSlateBrush());
 
 	// Define search terms and search asynchronously. Once finished, calls OnFindSessionsComplete which does the rest.
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
@@ -60,8 +57,9 @@ void USessionList::OnClickRefreshButton()
 				SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, bIsPresence, EOnlineComparisonOp::Equals);
 			}
 			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
-			
+			UE_LOG(LogTemp, Display, TEXT("Searching for multiplayer sessions"));
 			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
+			Session->FindSessions(UniqueNetId, SearchSettingsRef);
 		}
 		else
 		{
@@ -116,14 +114,13 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("Session or UniqueNetId is not valid!"));
-			RefreshButton->SetIsEnabled(true);
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
-		RefreshButton->SetIsEnabled(true);
 	}
+	RefreshButton->SetIsEnabled(true);
 }
  
 
