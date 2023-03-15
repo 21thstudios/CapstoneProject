@@ -39,7 +39,7 @@ bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FNa
 
 			OnCreateSessionCompleteDelegateHandle = Session->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
 			
-			UE_LOG(LogTemp, Display, TEXT("Session Interface is valid. Attempting to create session..."))
+			UE_LOG(LogTemp, Display, TEXT("Session Interface is valid. Attempting to create session..."));
 			return Session->CreateSession(*UserId, SessionName, *SessionSettings);
 		}
 		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session creation due to invalid Session Interface or UserId"));
@@ -49,4 +49,32 @@ bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FNa
 		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session creation due to uninitialized Online Subsystem!"));
 	}
 	return false;
+}
+
+void USessionGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
+{
+	UE_LOG(LogTemp, Display, TEXT("Session creation with SessionName: %s has completed. Session creation %hs"), *SessionName.ToString(),  bWasSuccessful ? "succeeded" : "failed");
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
+		if (Session.IsValid()) 
+		{
+			Session->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
+			if (bWasSuccessful)
+			{
+				OnStartSessionCompleteDelegateHandle = Session->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
+				
+				// OnStartSessionComplete delegate triggered upon completion
+				Session->StartSession(SessionName);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Session creation completed, but the SessionInterface is no longer valid and therefore the session cannot be started."));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Session creation completed, but the OnlineSubsystem is no longer initialized and therefore the session cannot be started."));
+	}
 }
