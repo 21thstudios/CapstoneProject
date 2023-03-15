@@ -5,6 +5,7 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "SessionGameInstance.h"
 #include "Components/Button.h"
 #include "Components/EditableText.h"
 #include "Components/EditableTextBox.h"
@@ -43,13 +44,15 @@ void UMainMenuScreen::NativeDestruct()
 
 void UMainMenuScreen::OnClickCreateGameButton()
 {
+	USessionGameInstance SessionGameInstance = dynamic_cast<USessionGameInstance>(GetGameInstance());
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Clicked create game button")));
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 	const FName SessionName = SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()) : DEFAULT_SESSION_NAME;
 	bool bIsLan = LanCheckBox ? LanCheckBox->IsChecked() : true;
 	const int32 MaxPlayers = 69;
-	HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
+	SessionGameInstance.StartOnlineGame();
+	//HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
 }
 
 void UMainMenuScreen::OnClickMultiplayerButton()

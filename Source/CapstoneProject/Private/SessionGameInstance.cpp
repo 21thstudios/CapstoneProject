@@ -37,6 +37,7 @@ bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FNa
 			SessionSettings->bShouldAdvertise = true;
 			SessionSettings->bAllowJoinViaPresence = true;
 			SessionSettings->bAllowJoinViaPresenceFriendsOnly = true;
+			
 			SessionSettings->Set(SETTING_MAPNAME, HOST_MAP_DESTINATION_NAME, EOnlineDataAdvertisementType::ViaOnlineService);
 
 			OnCreateSessionCompleteDelegateHandle = Session->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
@@ -185,7 +186,6 @@ bool USessionGameInstance::JoinOnlineSession(TSharedPtr<const FUniqueNetId> User
 	return bSuccessful;
 }
 
-
 void USessionGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
 	UE_LOG(LogTemp, Display, TEXT("Attempt to join session with SessionName: %s has completed. Result: %s"), *SessionName.ToString(),  LexToString(Result));
@@ -220,7 +220,7 @@ void USessionGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessi
 
 void USessionGameInstance::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
 {
-	UE_LOG(LogTemp, Display, TEXT("Attempting to destroy session with SessionName: %s has completed. Result: %hs"), *SessionName.ToString(),  bWasSuccessful ? "Successful" : "Failed");
+	UE_LOG(LogTemp, Display, TEXT("Attempting to destroy session with SessionName: %s, has completed. Result: %hs"), *SessionName.ToString(),  bWasSuccessful ? "Successful" : "Failed");
 	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
 		if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
@@ -242,13 +242,11 @@ void USessionGameInstance::OnDestroySessionComplete(FName SessionName, bool bWas
 	}
 }
 
-void USessionGameInstance::StartOnlineGame()
+void USessionGameInstance::StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
 {
-	// Creating a local player where we can get the UserID from
 	ULocalPlayer* const Player = GetFirstGamePlayer();
-	//HostSession(Player->GetPreferredUniqueNetId(), GameSessionName, true, true, 4);
-	// Call our custom HostSession function. GameSessionName is a GameInstance variable
-	//HostSession(Player->GetPreferredUniqueNetId(), GameSessionName, true, true, 4);
+	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
+	HostSession(UniqueNetId, NAME_GameSession, bIsLAN, bIsPresence, MaxNumPlayers);
 }
 
 void USessionGameInstance::FindOnlineGames()

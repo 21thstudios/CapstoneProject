@@ -19,7 +19,7 @@ public:
 	USessionGameInstance(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void StartOnlineGame();
+	void StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
 	
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void FindOnlineGames();

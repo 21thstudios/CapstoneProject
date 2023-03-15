@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
-#include "Interfaces/OnlineSessionDelegates.h"
 #include "PauseMenuScreen.generated.h"
 
 /**
@@ -18,10 +17,11 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
-	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
-
 	UFUNCTION()
 	void OnClickResumeGameButton();
+
+	UFUNCTION(BlueprintCallable)
+	void ToggleViewport();
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void OnClickQuitToTitleButton();
@@ -31,7 +31,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* QuitToTitleButton;
-
-	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
-	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 };
