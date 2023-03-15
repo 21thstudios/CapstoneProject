@@ -127,12 +127,40 @@ void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, b
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("Unable to initiate session searching due to invalid Session Interface or UserId"));
+			UE_LOG(LogTemp, Error, TEXT("Unable to initiate session searching due to invalid Session Interface!"));
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session searching due to uninitialized Online Subsystem!"));
 		OnFindSessionsComplete(false);
+	}
+}
+
+void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
+{
+	UE_LOG(LogTemp, Display, TEXT("Finding sesssions %hs"), bWasSuccessful ? "succeeded" : "failed");
+
+	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		if (const IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session && Session.IsValid())
+		{
+			Session->ClearOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegateHandle);
+			
+			UE_LOG(LogTemp, Display, TEXT("Num Search Results: %d"), SessionSearch->SearchResults.Num());
+
+			for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
+			{
+				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Unable to retrieve queried sessions due to invalid Session Interface!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Unable to retrieve queried sessions due to uninitialized Online Subsystem!"));
 	}
 }
