@@ -6,6 +6,7 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Online/OnlineSessionNames.h"
 
 const FString HOST_MAP_DESTINATION_NAME = TEXT("FirstPersonMap");
@@ -76,5 +77,22 @@ void USessionGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasS
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Session creation completed, but the OnlineSubsystem is no longer initialized and therefore the session cannot be started."));
+	}
+}
+
+void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful)
+{
+	UE_LOG(LogTemp, Display, TEXT("Starting Online Game with SessionName: %s has completed. Online game creation %hs"), *SessionName.ToString(),  bWasSuccessful ? "succeeded" : "failed");
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
+		if (Session.IsValid())
+		{
+			Session->ClearOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegateHandle);
+		}
+	}
+	if (bWasSuccessful)
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), FName(HOST_MAP_DESTINATION_NAME), true, "listen");
 	}
 }
