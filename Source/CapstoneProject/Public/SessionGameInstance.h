@@ -17,6 +17,12 @@ class CAPSTONEPROJECT_API USessionGameInstance : public UGameInstance
 
 public:
 	USessionGameInstance(const FObjectInitializer& ObjectInitializer);
+
+	UFUNCTION(BlueprintCallable, Category = "Network|Test")
+	void StartOnlineGame();
+	
+	UFUNCTION(BlueprintCallable, Category = "Network|Test")
+	void FindOnlineGames();
 	
 	/** Creating online sessions */
 	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);

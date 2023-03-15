@@ -20,7 +20,7 @@ USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectIniti
 }
 
 bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FName SessionName,
-	bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
+                                       bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
 {
 	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
 	{
@@ -240,4 +240,19 @@ void USessionGameInstance::OnDestroySessionComplete(FName SessionName, bool bWas
 	{
 		UE_LOG(LogTemp, Error, TEXT("Unable to destroy session due to uninitialized Online Subsystem!"));
 	}
+}
+
+void USessionGameInstance::StartOnlineGame()
+{
+	// Creating a local player where we can get the UserID from
+	ULocalPlayer* const Player = GetFirstGamePlayer();
+	//HostSession(Player->GetPreferredUniqueNetId(), GameSessionName, true, true, 4);
+	// Call our custom HostSession function. GameSessionName is a GameInstance variable
+	//HostSession(Player->GetPreferredUniqueNetId(), GameSessionName, true, true, 4);
+}
+
+void USessionGameInstance::FindOnlineGames()
+{
+	ULocalPlayer* const Player = GetFirstGamePlayer();
+	//FindSessions(Player->GetPreferredUniqueNetId(), true, true);
 }
