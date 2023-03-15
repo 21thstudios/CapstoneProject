@@ -166,8 +166,7 @@ void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	}
 }
 
-bool USessionGameInstance::JoinSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName,
-	const FOnlineSessionSearchResult& SearchResult)
+bool USessionGameInstance::JoinOnlineSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult)
 {
 	bool bSuccessful = false;
 	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
@@ -187,4 +186,37 @@ bool USessionGameInstance::JoinSession(TSharedPtr<const FUniqueNetId> UserId, FN
 		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session joining due to uninitialized Online Subsystem!"));
 	}
 	return bSuccessful;
+}
+
+
+void USessionGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	UE_LOG(LogTemp, Display, TEXT("Attempt to join session with SessionName: %s has completed. Result: %s"), *SessionName.ToString(),  LexToString(Result));
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		if (IOnlineSessionPtr Sessions = OnlineSubsystem->GetSessionInterface(); Sessions.IsValid())
+		{
+			Sessions->ClearOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegateHandle);
+			APlayerController * const PlayerController = GetFirstLocalPlayerController();
+			FString TravelURL;
+			
+			if (PlayerController && Sessions->GetResolvedConnectString(SessionName, TravelURL))
+			{
+				UE_LOG(LogTemp, Display, TEXT("Preparing to client travel to destination URL: %s"), *TravelURL);
+				PlayerController->ClientTravel(TravelURL, ETravelType::TRAVEL_Absolute);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Unable to resolve session connection string: %s"), *TravelURL);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Unable to join session due to invalid Session Interface!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Unable to join session due to uninitialized Online Subsystem!"));
+	}
 }

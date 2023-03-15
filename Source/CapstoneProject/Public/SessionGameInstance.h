@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Online.h"
 #include "Interfaces/OnlineSessionDelegates.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "SessionGameInstance.generated.h"
@@ -18,7 +19,7 @@ class CAPSTONEPROJECT_API USessionGameInstance : public UGameInstance
 
 public:
 	USessionGameInstance(const FObjectInitializer& ObjectInitializer);
-
+	
 	/** Creating online sessions */
 	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
 	virtual void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
@@ -26,12 +27,12 @@ public:
 
 	/** Finding online sessions */
 	void FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence);
-	void OnFindSessionsComplete(bool bWasSuccessful);
+	virtual void OnFindSessionsComplete(bool bWasSuccessful);
 
 	/** Joining online sessions */
-	bool JoinSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult);
-	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
-	
+	virtual bool JoinOnlineSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult);
+	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+
 private:
 	/** Creating online session delegates */
 	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
