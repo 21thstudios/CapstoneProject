@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Online/OnlineSessionNames.h"
 
-const FString MAIN_MENU_MAP_NAME = TEXT("MainMenu");
+const FString MAIN_MENU_MAP_NAME = TEXT("MainMenuMap");
 const FString HOST_MAP_DESTINATION_NAME = TEXT("FirstPersonMap");
 
 USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectInitializer)
