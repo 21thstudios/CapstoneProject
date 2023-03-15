@@ -44,13 +44,14 @@ void UMainMenuScreen::NativeDestruct()
 
 void UMainMenuScreen::OnClickCreateGameButton()
 {
-	USessionGameInstance SessionGameInstance = dynamic_cast<USessionGameInstance>(GetGameInstance());
+	USessionGameInstance* SessionGameInstance = dynamic_cast<USessionGameInstance*>(GetGameInstance());
+
 	//const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	//const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
 	const FName ServerName = SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()) : DEFAULT_SERVER_NAME;
 	bool bIsLan = LanCheckBox ? LanCheckBox->IsChecked() : true;
 	const int32 MaxPlayers = 69;
-	SessionGameInstance.StartOnlineGame(ServerName, bIsLan, true, MaxPlayers);
+	SessionGameInstance->StartOnlineGame(ServerName, bIsLan, true, MaxPlayers);
 	//HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
 }
 
