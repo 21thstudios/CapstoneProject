@@ -8,7 +8,7 @@
 #include "SessionGameInstance.generated.h"
 
 /**
- * 
+ * Extension of the GameInstance responsible for Sessions-related work.
  */
 UCLASS()
 class CAPSTONEPROJECT_API USessionGameInstance : public UGameInstance
@@ -17,17 +17,27 @@ class CAPSTONEPROJECT_API USessionGameInstance : public UGameInstance
 
 public:
 	USessionGameInstance(const FObjectInitializer& ObjectInitializer);
-	
-	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
 
+	/** Creating online sessions */
+	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
 	virtual void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
+
+	/** Finding online sessions */
+	void FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence);
+	void OnFindSessionsComplete(bool bWasSuccessful);
 	
-private:	
+private:
+	/** Creating online session delegates */
 	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
 	FOnStartSessionCompleteDelegate OnStartSessionCompleteDelegate;
 	FDelegateHandle OnCreateSessionCompleteDelegateHandle;
-	FDelegateHandle OnStartSessionCompleteDelegateHandle;
+    FDelegateHandle OnStartSessionCompleteDelegateHandle;
 
+	/** Finding online session delegates */
+	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
+	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
+	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 };
