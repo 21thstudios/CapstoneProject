@@ -31,6 +31,10 @@ void UMainMenuScreen::NativeDestruct()
 		PlayerController->bShowMouseCursor = false;
 		PlayerController->SetInputMode(FInputModeGameOnly());
 	}
+	CreateGameButton->OnClicked.RemoveDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
+	MultiplayerButton->OnClicked.RemoveDynamic(this, &UMainMenuScreen::OnClickMultiplayerButton);
+	QuitGameButton->OnClicked.RemoveDynamic(this, &UMainMenuScreen::OnClickQuitButton);
+	ServerNameEditableTextBox->OnTextChanged.RemoveDynamic(this, &UMainMenuScreen::OnSessionNameTextChanged);
 }
 
 void UMainMenuScreen::OnClickCreateGameButton()
