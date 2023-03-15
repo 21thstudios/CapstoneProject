@@ -65,8 +65,6 @@ void USessionGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasS
 			if (bWasSuccessful)
 			{
 				OnStartSessionCompleteDelegateHandle = Session->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
-				
-				// OnStartSessionComplete delegate triggered upon completion
 				Session->StartSession(SessionName);
 			}
 		}
