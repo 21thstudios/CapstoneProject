@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Online/OnlineSessionNames.h"
 
+const FString MAIN_MENU_MAP_NAME = TEXT("MainMenu");
 const FString HOST_MAP_DESTINATION_NAME = TEXT("FirstPersonMap");
 
 USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectInitializer)
@@ -18,6 +19,7 @@ USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectIniti
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnStartOnlineGameComplete);
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnFindSessionsComplete);
 	OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnJoinSessionComplete);
+	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnDestroySessionComplete);
 }
 
 bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FName SessionName,
@@ -218,5 +220,29 @@ void USessionGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessi
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Unable to join session due to uninitialized Online Subsystem!"));
+	}
+}
+
+void USessionGameInstance::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
+{
+	UE_LOG(LogTemp, Display, TEXT("Attempting to destroy session with SessionName: %s has completed. Result: %hs"), *SessionName.ToString(),  bWasSuccessful ? "Successful" : "Failed");
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
+		{
+			Session->ClearOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegateHandle);
+			if (bWasSuccessful)
+			{
+				UGameplayStatics::OpenLevel(GetWorld(), FName(MAIN_MENU_MAP_NAME), true);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Unable to destroy session due to invalid Session Interface!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Unable to destroy session due to uninitialized Online Subsystem!"));
 	}
 }

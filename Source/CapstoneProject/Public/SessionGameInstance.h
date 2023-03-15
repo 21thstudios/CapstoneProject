@@ -33,6 +33,8 @@ public:
 	virtual bool JoinOnlineSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult);
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
+	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
+
 private:
 	/** Creating online session delegates */
 	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
@@ -47,6 +49,10 @@ private:
 	/** Joining online session delegates */
 	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
 	FDelegateHandle OnJoinSessionCompleteDelegateHandle;
+
+	/** Destroying online session delegates */
+	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
+	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
