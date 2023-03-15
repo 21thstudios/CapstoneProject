@@ -6,11 +6,10 @@
 #include "SessionList.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CheckBox.h"
-#include "Interfaces/OnlineSessionDelegates.h"
 #include "MainMenuScreen.generated.h"
 
 /**
- * 
+ * Main menu widget screen players see when joining the game.
  */
 UCLASS()
 class CAPSTONEPROJECT_API UMainMenuScreen : public UUserWidget
@@ -21,20 +20,18 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
-	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
-
 	void SetHostOnLan(bool bHostOnLAN);
 
 	UFUNCTION()
 	void OnSessionNameTextChanged(const FText& Text);
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void OnClickCreateGameButton();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void OnClickMultiplayerButton();
 	
-	UFUNCTION(BlueprintCallable, Category = "Network|Test")
+	UFUNCTION(BlueprintCallable)
 	void OnClickQuitButton();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -47,16 +44,11 @@ protected:
 	UButton* CreateGameButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* MultiplayerButton;
+	UButton* MultiplayerButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* QuitGameButton;
+	UButton* QuitGameButton;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LanCheckBox;
-	
-	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
-	
-	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
-	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 };

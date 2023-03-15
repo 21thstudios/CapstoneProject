@@ -1,11 +1,9 @@
 #include "MainMenuScreen.h"
 
-#include "OnlineSubsystem.h"
 #include "SessionGameInstance.h"
 #include "Components/Button.h"
 #include "Components/EditableText.h"
 #include "Components/EditableTextBox.h"
-#include "Interfaces/OnlineSessionInterface.h"
 #include "Kismet/GameplayStatics.h"
 
 const FName DEFAULT_SERVER_NAME = "Unnamed Server";
@@ -13,7 +11,6 @@ const FName DEFAULT_SERVER_NAME = "Unnamed Server";
 void UMainMenuScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
-	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &UMainMenuScreen::OnDestroySessionComplete);
 	CreateGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickCreateGameButton);
 	MultiplayerButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickMultiplayerButton);
 	QuitGameButton->OnClicked.AddDynamic(this, &UMainMenuScreen::OnClickQuitButton);
@@ -57,17 +54,8 @@ void UMainMenuScreen::OnClickMultiplayerButton()
 
 void UMainMenuScreen::OnClickQuitButton()
 {
-	if(IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
-	{
-		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
-
-		if (SessionSettings.IsValid())
-		{
-			Session->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
-			Session->DestroySession(ServerNameEditableTextBox ? FName(ServerNameEditableTextBox->GetText().ToString()): DEFAULT_SERVER_NAME);
-		} 
-	}
-	// If we failed to destroy the session, just exit the game.
+	USessionGameInstance* SessionGameInstance = dynamic_cast<USessionGameInstance*>(GetGameInstance());
+	SessionGameInstance->DestroySessionAndLeaveGame();
 	APlayerController* Player = GetWorld()->GetFirstPlayerController();
 	UKismetSystemLibrary::QuitGame(GetWorld(), Player, EQuitPreference::Quit, true);
 }
@@ -87,20 +75,5 @@ void UMainMenuScreen::OnSessionNameTextChanged(const FText& Text)
 	{
 		FText clippedText = FText::FromString(ServerNameEditableTextBox->GetText().ToString().LeftChop(1));
 		ServerNameEditableTextBox->SetText(clippedText);
-	}
-}
-
-void UMainMenuScreen::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("OnDestroySessionComplete %s, %d"), *SessionName.ToString(), bWasSuccessful));
-
-	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
-	{
-		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
-		if (SessionSettings.IsValid())
-		{
-			// Clear the SessionsDestroy delegate handle because we've finished the call
-			Session->ClearOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegateHandle);
-		}
 	}
 }
