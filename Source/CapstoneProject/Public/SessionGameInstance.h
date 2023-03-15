@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Interfaces/OnlineSessionDelegates.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "SessionGameInstance.generated.h"
 
 /**
@@ -26,6 +27,10 @@ public:
 	/** Finding online sessions */
 	void FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence);
 	void OnFindSessionsComplete(bool bWasSuccessful);
+
+	/** Joining online sessions */
+	bool JoinSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, const FOnlineSessionSearchResult& SearchResult);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 	
 private:
 	/** Creating online session delegates */
@@ -37,6 +42,10 @@ private:
 	/** Finding online session delegates */
 	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
 	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
+
+	/** Joining online session delegates */
+	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
+	FDelegateHandle OnJoinSessionCompleteDelegateHandle;
 	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;

@@ -17,6 +17,7 @@ USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectIniti
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnCreateSessionComplete);
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnStartOnlineGameComplete);
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnFindSessionsComplete);
+	OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnJoinSessionComplete);
 }
 
 bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FName SessionName,
@@ -44,7 +45,7 @@ bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FNa
 			UE_LOG(LogTemp, Display, TEXT("Session Interface is valid. Attempting to create session..."));
 			return Session->CreateSession(*UserId, SessionName, *SessionSettings);
 		}
-		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session creation due to invalid Session Interface or UserId"));
+		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session creation due to invalid Session Interface or UserId!"));
 	}
 	else
 	{
@@ -163,4 +164,27 @@ void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Unable to retrieve queried sessions due to uninitialized Online Subsystem!"));
 	}
+}
+
+bool USessionGameInstance::JoinSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName,
+	const FOnlineSessionSearchResult& SearchResult)
+{
+	bool bSuccessful = false;
+	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid() && UserId.IsValid())
+		{
+			OnJoinSessionCompleteDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
+			bSuccessful = Session->JoinSession(*UserId, SessionName, SearchResult);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Unable to initiate session joining due to invalid Session Interface or UserId!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session joining due to uninitialized Online Subsystem!"));
+	}
+	return bSuccessful;
 }
