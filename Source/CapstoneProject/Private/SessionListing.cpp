@@ -1,6 +1,7 @@
 #include "SessionListing.h"
 
 #include "OnlineSubsystemUtils.h"
+#include "SessionGameInstance.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 
@@ -58,7 +59,7 @@ void USessionListing::OnClickJoinSessionButton()
             FName SessionName = ServerNameTextBlock ? FName(ServerNameTextBlock->GetText().ToString()) : FName(TEXT("Unnamed Server"));
             FOnlineSessionSearchResult SessionSearchResult = *SessionResult;
 
-            if (Session->JoinSession(0, SessionName, SessionSearchResult))
+            if (Session->JoinSession(0, FName(TEXT("TestSessionName")), SessionSearchResult))
             {
                 UE_LOG(LogTemp, Display, TEXT("Session successfully dispatched the join session %s call with name"), *SessionName.ToString());
             } else

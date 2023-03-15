@@ -33,7 +33,6 @@ void UPauseMenuScreen::ToggleViewport()
 			PlayerController->SetInputMode(FInputModeGameOnly());
 			PlayerController->SetShowMouseCursor(false);
 			this->RemoveFromParent();
-			
 		}
 		else
 		{
@@ -52,6 +51,13 @@ void UPauseMenuScreen::ToggleViewport()
 
 void UPauseMenuScreen::OnClickQuitToTitleButton()
 {
-	USessionGameInstance* SessionGameInstance = dynamic_cast<USessionGameInstance*>(GetGameInstance());
-	SessionGameInstance->DestroySessionAndLeaveGame();
+	if (APlayerController* PlayerController = GetOwningPlayer(); IsValid(PlayerController))
+	{
+		USessionGameInstance* SessionGameInstance = dynamic_cast<USessionGameInstance*>(PlayerController->GetLocalPlayer()->GetGameInstance());
+		SessionGameInstance->DestroySessionAndLeaveGame();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerController owning PauseMenu screen is not valid, therefore cannot quit"));
+	}
 }

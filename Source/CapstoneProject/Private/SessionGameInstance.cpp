@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Online/OnlineSessionNames.h"
 
+const FName SESSION_NAME = FName(TEXT("TestSessionName"));
 const FString MAIN_MENU_MAP_NAME = TEXT("MainMenuMap");
 const FString HOST_MAP_DESTINATION_NAME = TEXT("FirstPersonMap");
 
@@ -172,7 +173,8 @@ bool USessionGameInstance::JoinOnlineSession(TSharedPtr<const FUniqueNetId> User
 		if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid() && UserId.IsValid())
 		{
 			OnJoinSessionCompleteDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
-			bSuccessful = Session->JoinSession(*UserId, SessionName, SearchResult);
+			//bSuccessful = Session->JoinSession(*UserId, SessionName, SearchResult);
+			bSuccessful = Session->JoinSession(*UserId, SESSION_NAME, SearchResult);
 		}
 		else
 		{
@@ -246,7 +248,7 @@ void USessionGameInstance::StartOnlineGame(FName ServerName, bool bIsLAN, bool b
 {
 	const ULocalPlayer* const Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
-	HostSession(UniqueNetId, NAME_GameSession, bIsLAN, bIsPresence, MaxNumPlayers);
+	HostSession(UniqueNetId, SESSION_NAME, bIsLAN, bIsPresence, MaxNumPlayers);
 }
 
 void USessionGameInstance::FindOnlineGames(bool bIsLAN, bool bIsPresence)
@@ -267,7 +269,7 @@ void USessionGameInstance::DestroySessionAndLeaveGame()
 		{
 			Sessions->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
 
-			Sessions->DestroySession(NAME_GameSession);
+			Sessions->DestroySession(SESSION_NAME);
 		}
 	}
 }
