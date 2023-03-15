@@ -23,6 +23,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void FindOnlineGames();
+
+	UFUNCTION(BlueprintCallable, Category = "Network|Test")
+	void DestroySessionAndLeaveGame();
 	
 	/** Creating online sessions */
 	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);

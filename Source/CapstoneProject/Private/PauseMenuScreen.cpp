@@ -4,6 +4,7 @@
 #include "PauseMenuScreen.h"
 
 #include "OnlineSubsystem.h"
+#include "SessionGameInstance.h"
 #include "GameFramework/OnlineSession.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -20,7 +21,6 @@ void UPauseMenuScreen::NativeDestruct()
 {
 	Super::NativeDestruct();
 }
-
 
 void UPauseMenuScreen::OnClickResumeGameButton()
 {
@@ -48,9 +48,8 @@ void UPauseMenuScreen::OnClickQuitToTitleButton()
 			IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
 			if (Session.IsValid())
 			{
-				// todo: Store reference to game and extract this logic there.
-				//Session->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
-				//Session->DestroySession();
+				USessionGameInstance* SessionGameInstance = dynamic_cast<USessionGameInstance*>(GetGameInstance());
+				SessionGameInstance->DestroySessionAndLeaveGame();
 			}
 			else
 			{
@@ -100,6 +99,5 @@ void UPauseMenuScreen::OnDestroySessionComplete(FName SessionName, bool bWasSucc
 	{
 		UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
 	}
-	
 }
 

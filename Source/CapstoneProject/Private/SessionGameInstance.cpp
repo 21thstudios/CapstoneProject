@@ -256,3 +256,19 @@ void USessionGameInstance::FindOnlineGames()
 	ULocalPlayer* const Player = GetFirstGamePlayer();
 	//FindSessions(Player->GetPreferredUniqueNetId(), true, true);
 }
+
+void USessionGameInstance::DestroySessionAndLeaveGame()
+{
+	IOnlineSubsystem* OnlineSub = IOnlineSubsystem::Get();
+	if (OnlineSub)
+	{
+		IOnlineSessionPtr Sessions = OnlineSub->GetSessionInterface();
+
+		if (Sessions.IsValid())
+		{
+			Sessions->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
+
+			Sessions->DestroySession(NAME_GameSession);
+		}
+	}
+}
