@@ -116,7 +116,6 @@ void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, b
 			SessionSearch->QuerySettings.Set(SEARCH_EMPTY_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
 			SessionSearch->QuerySettings.Set(SEARCH_SECURE_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
 			SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
-			SessionSearch->GetDefaultSessionSettings()->
 			
 			if (bIsPresence)
 			{
