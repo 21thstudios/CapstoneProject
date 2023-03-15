@@ -8,7 +8,6 @@
 #include "SessionList.generated.h"
 
 
-
 UCLASS()
 class CAPSTONEPROJECT_API USessionList : public UUserWidget
 {
@@ -21,8 +20,6 @@ protected:
 public:
 	void SetLAN(bool bLAN);
 	
-	//virtual void OnFindSessionsComplete(bool bWasSuccessful);
-
 	void ClearSessionListings();
 
 	USessionListing* USessionList::CreateAndInsertSessionListingWidget(FOnlineSessionSearchResult& SearchResult, FName SessionName);
@@ -44,11 +41,4 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScrollBox* SessionListingsScrollBox;
-	
-	/*
-	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
-	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
-
-	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
-	*/
 };

@@ -11,7 +11,7 @@ const FName SESSION_NAME = FName(TEXT("TestSessionName"));
 const FString MAIN_MENU_MAP_NAME = TEXT("MainMenuMap");
 const FString HOST_MAP_DESTINATION_NAME = TEXT("FirstPersonMap");
 
-USessionList* hm;
+USessionList* MenuWidgetHandle;
 
 USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -116,6 +116,7 @@ void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, b
 			SessionSearch->QuerySettings.Set(SEARCH_EMPTY_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
 			SessionSearch->QuerySettings.Set(SEARCH_SECURE_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
 			SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
+			SessionSearch->GetDefaultSessionSettings()->
 			
 			if (bIsPresence)
 			{
@@ -155,7 +156,7 @@ void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 			for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
-				hm->CreateAndInsertSessionListingWidget(SessionSearch->SearchResults[SearchIdx], SESSION_NAME);
+				MenuWidgetHandle->CreateAndInsertSessionListingWidget(SessionSearch->SearchResults[SearchIdx], SESSION_NAME);
 			}
 		}
 		else
@@ -167,9 +168,9 @@ void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Unable to retrieve queried sessions due to uninitialized Online Subsystem!"));
 	}
-	if (hm)
+	if (MenuWidgetHandle)
 	{
-		hm->RefreshButton->SetIsEnabled(true);
+		MenuWidgetHandle->RefreshButton->SetIsEnabled(true);
 	}
 }
 
@@ -209,7 +210,7 @@ void USessionGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessi
 				if (FString URL; Session->GetResolvedConnectString(SessionName, URL))
 				{
 					UE_LOG(LogTemp, Display, TEXT("Preparing to client travel to destination URL: %s"), *URL);
-					hm->GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
+					MenuWidgetHandle->GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
 				}
 				else
 				{
@@ -285,24 +286,8 @@ void USessionGameInstance::DestroySessionAndLeaveGame()
 
 void USessionGameInstance::PopulateWidgetWithOnlineGames(USessionList* SessionListWidget)
 {
-	hm = SessionListWidget; // update once finished
+	MenuWidgetHandle = SessionListWidget; // update once finished
 	FindOnlineGames(SessionListWidget->LANCheckBox->IsChecked(), true);
-	/*
-	ULocalPlayer* const Player = GetFirstGamePlayer();
-	FOnlineSessionSearchResult SearchResult;
-	if (SessionSearch->SearchResults.Num() > 0)
-	{
-		for (int32 i = 0; i < SessionSearch->SearchResults.Num(); i++)
-		{
-			if (SessionSearch->SearchResults[i].Session.OwningUserId != Player->GetPreferredUniqueNetId())
-			{
-				SearchResult = SessionSearch->SearchResults[i];
-				SessionListWidget->CreateAndInsertSessionListingWidget(SearchResult, SESSION_NAME);
-			}
-		}
-	}
-	SessionListWidget->RefreshButton->SetIsEnabled(true);
-	*/
 }
 
 void USessionGameInstance::JoinOnlineGameProvidedSearchResult(FOnlineSessionSearchResult* SearchResult)
