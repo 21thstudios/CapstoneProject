@@ -21,14 +21,6 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
-	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
-
-	/** Fires upon session create request completion */
-	virtual void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
-
-	/** Fires upon session start request completion */
-	virtual void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
-	
 	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
 
 	void SetHostOnLan(bool bHostOnLAN);
@@ -46,7 +38,7 @@ protected:
 	void OnClickQuitButton();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UEditableTextBox* SessionNameEditableTextBox;
+	class UEditableTextBox* ServerNameEditableTextBox;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	USessionList* SessionList;
@@ -65,10 +57,6 @@ protected:
 	
 	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
 	
-	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
-	FOnStartSessionCompleteDelegate OnStartSessionCompleteDelegate;
 	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
-	FDelegateHandle OnCreateSessionCompleteDelegateHandle;
-	FDelegateHandle OnStartSessionCompleteDelegateHandle;
 	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 };
