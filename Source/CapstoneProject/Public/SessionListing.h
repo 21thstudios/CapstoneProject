@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Online.h"
 #include "SessionListing.generated.h"
 
 UCLASS(Abstract)
@@ -22,8 +21,6 @@ public:
 
 	UFUNCTION()
 	void OnClickJoinSessionButton();
-
-	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult);
 	
 	void SetSessionResult(FOnlineSessionSearchResult* SessionSearchResult);
 
@@ -38,10 +35,6 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* JoinSessionButton;
-
-	FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
-	
-	FDelegateHandle OnJoinSessionDelegateHandle;
 	
 	FOnlineSessionSearchResult* SessionResult;
 };

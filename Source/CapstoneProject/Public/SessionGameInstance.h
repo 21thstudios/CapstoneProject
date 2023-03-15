@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Online.h"
+#include "SessionList.h"
 #include "Interfaces/OnlineSessionDelegates.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "SessionGameInstance.generated.h"
@@ -23,6 +24,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void FindOnlineGames(bool bIsLAN, bool bIsPresence);
+
+	UFUNCTION(BlueprintCallable, Category = "Network|Test")
+	void PopulateWidgetWithOnlineGames(USessionList* SessionListWidget);
+
+	void JoinOnlineGameProvidedSearchResult(FOnlineSessionSearchResult* SearchResult);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void DestroySessionAndLeaveGame();

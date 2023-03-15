@@ -2,6 +2,7 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "Components/Button.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Online/OnlineSessionNames.h"
@@ -9,6 +10,8 @@
 const FName SESSION_NAME = FName(TEXT("TestSessionName"));
 const FString MAIN_MENU_MAP_NAME = TEXT("MainMenuMap");
 const FString HOST_MAP_DESTINATION_NAME = TEXT("FirstPersonMap");
+
+USessionList* hm;
 
 USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -152,6 +155,7 @@ void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 			for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Session Number: %d | Sessionname: %s "), SearchIdx+1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName));
+				hm->CreateAndInsertSessionListingWidget(SessionSearch->SearchResults[SearchIdx], SESSION_NAME);
 			}
 		}
 		else
@@ -162,6 +166,10 @@ void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Unable to retrieve queried sessions due to uninitialized Online Subsystem!"));
+	}
+	if (hm)
+	{
+		hm->RefreshButton->SetIsEnabled(true);
 	}
 }
 
@@ -191,32 +199,33 @@ bool USessionGameInstance::JoinOnlineSession(TSharedPtr<const FUniqueNetId> User
 void USessionGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
 	UE_LOG(LogTemp, Display, TEXT("Attempt to join session with SessionName: %s has completed. Result: %s"), *SessionName.ToString(),  LexToString(Result));
-	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	if (Result == EOnJoinSessionCompleteResult::Success ||
+		Result == EOnJoinSessionCompleteResult::AlreadyInSession)
 	{
-		if (IOnlineSessionPtr Sessions = OnlineSubsystem->GetSessionInterface(); Sessions.IsValid())
+		if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 		{
-			Sessions->ClearOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegateHandle);
-			APlayerController * const PlayerController = GetFirstLocalPlayerController();
-			FString TravelURL;
-			
-			if (PlayerController && Sessions->GetResolvedConnectString(SessionName, TravelURL))
+			if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
 			{
-				UE_LOG(LogTemp, Display, TEXT("Preparing to client travel to destination URL: %s"), *TravelURL);
-				PlayerController->ClientTravel(TravelURL, ETravelType::TRAVEL_Absolute);
+				if (FString URL; Session->GetResolvedConnectString(SessionName, URL))
+				{
+					UE_LOG(LogTemp, Display, TEXT("Preparing to client travel to destination URL: %s"), *URL);
+					hm->GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Unable to resolve session connection string: %s"), *URL);
+				}
+				Session->ClearOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegateHandle);
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Unable to resolve session connection string: %s"), *TravelURL);
+				UE_LOG(LogTemp, Error, TEXT("Unable to join session due to invalid Session Interface!"));
 			}
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("Unable to join session due to invalid Session Interface!"));
+			UE_LOG(LogTemp, Error, TEXT("Unable to join session due to uninitialized Online Subsystem!"));
 		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Unable to join session due to uninitialized Online Subsystem!"));
 	}
 }
 
@@ -273,3 +282,33 @@ void USessionGameInstance::DestroySessionAndLeaveGame()
 		}
 	}
 }
+
+void USessionGameInstance::PopulateWidgetWithOnlineGames(USessionList* SessionListWidget)
+{
+	hm = SessionListWidget; // update once finished
+	FindOnlineGames(SessionListWidget->LANCheckBox->IsChecked(), true);
+	/*
+	ULocalPlayer* const Player = GetFirstGamePlayer();
+	FOnlineSessionSearchResult SearchResult;
+	if (SessionSearch->SearchResults.Num() > 0)
+	{
+		for (int32 i = 0; i < SessionSearch->SearchResults.Num(); i++)
+		{
+			if (SessionSearch->SearchResults[i].Session.OwningUserId != Player->GetPreferredUniqueNetId())
+			{
+				SearchResult = SessionSearch->SearchResults[i];
+				SessionListWidget->CreateAndInsertSessionListingWidget(SearchResult, SESSION_NAME);
+			}
+		}
+	}
+	SessionListWidget->RefreshButton->SetIsEnabled(true);
+	*/
+}
+
+void USessionGameInstance::JoinOnlineGameProvidedSearchResult(FOnlineSessionSearchResult* SearchResult)
+{
+	ULocalPlayer* const Player = GetFirstGamePlayer();
+	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
+	JoinOnlineSession(UniqueNetId, SESSION_NAME, *SearchResult);
+}
+

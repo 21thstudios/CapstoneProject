@@ -21,9 +21,11 @@ protected:
 public:
 	void SetLAN(bool bLAN);
 	
-	virtual void OnFindSessionsComplete(bool bWasSuccessful);
+	//virtual void OnFindSessionsComplete(bool bWasSuccessful);
 
 	void ClearSessionListings();
+
+	USessionListing* USessionList::CreateAndInsertSessionListingWidget(FOnlineSessionSearchResult& SearchResult, FName SessionName);
 
 	UFUNCTION()
 	void AddSessionListing(USessionListing* SessionListing);
@@ -43,8 +45,10 @@ public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScrollBox* SessionListingsScrollBox;
 	
+	/*
 	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
 	FDelegateHandle OnFindSessionsCompleteDelegateHandle;
 
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+	*/
 };

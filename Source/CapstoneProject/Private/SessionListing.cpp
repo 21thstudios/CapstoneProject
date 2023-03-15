@@ -1,6 +1,5 @@
 #include "SessionListing.h"
 
-#include "OnlineSubsystemUtils.h"
 #include "SessionGameInstance.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
@@ -9,7 +8,6 @@ void USessionListing::NativeConstruct()
 {
     Super::NativeConstruct();
     JoinSessionButton->OnClicked.AddDynamic(this, &USessionListing::OnClickJoinSessionButton);
-    OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &USessionListing::OnJoinSessionComplete);
 }
 
 void USessionListing::NativeDestruct()
@@ -50,69 +48,8 @@ void USessionListing::SetPingMs(int32 PingInMs) const
 
 void USessionListing::OnClickJoinSessionButton()
 {
-    if(IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
-    {
-        if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
-        {
-            // Register the HandleJoinSessionComplete event handler
-            Session->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
-            FName SessionName = ServerNameTextBlock ? FName(ServerNameTextBlock->GetText().ToString()) : FName(TEXT("Unnamed Server"));
-            FOnlineSessionSearchResult SessionSearchResult = *SessionResult;
-
-            if (Session->JoinSession(0, FName(TEXT("TestSessionName")), SessionSearchResult))
-            {
-                UE_LOG(LogTemp, Display, TEXT("Session successfully dispatched the join session %s call with name"), *SessionName.ToString());
-            } else
-            {
-                UE_LOG(LogTemp, Display, TEXT("Session failed to dispatch the join session %s call"), *SessionName.ToString());
-            }
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("Session is not valid!"));
-            JoinSessionButton->SetIsEnabled(true);
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
-        JoinSessionButton->SetIsEnabled(true);
-    }
-}
-
-/** JoinSession delegate fires this function once attempting to join a session completes */
-void USessionListing::OnJoinSessionComplete(const FName SessionName, const EOnJoinSessionCompleteResult::Type JoinResult)
-{
-    UE_LOG(LogTemp, Display, TEXT("OnJoinSessionComplete delegate handled. JoinResult: %s"), LexToString(JoinResult));
-    if(IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
-    {
-        if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
-        {
-            if (JoinResult == EOnJoinSessionCompleteResult::Success ||
-                JoinResult == EOnJoinSessionCompleteResult::AlreadyInSession)
-            {
-                if (FString URL; Session->GetResolvedConnectString(SessionName, URL))
-                {
-                    UE_LOG(LogTemp, Display, TEXT("Traveling player to server with URL: %s"), *URL);
-                    GetOwningPlayer()->ClientTravel(URL, TRAVEL_Absolute);
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Warning, TEXT("Unable to resolve session connection string: %s"), *URL);
-                }
-            }
-            Session->ClearOnJoinSessionCompleteDelegate_Handle(this->OnJoinSessionDelegateHandle);
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("Session is not valid!"));
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("IOnlineSubsystem is NULL!"));
-    }
-    JoinSessionButton->SetIsEnabled(true);
+    USessionGameInstance* SessionGameInstance = dynamic_cast<USessionGameInstance*>(GetGameInstance());
+    SessionGameInstance->JoinOnlineGameProvidedSearchResult(SessionResult);
 }
 
 void USessionListing::SetSessionResult(FOnlineSessionSearchResult* SessionSearchResult)

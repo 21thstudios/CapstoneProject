@@ -1,6 +1,7 @@
 #include "SessionList.h"
 
 #include "OnlineSubsystemUtils.h"
+#include "SessionGameInstance.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/ScrollBoxSlot.h"
@@ -8,7 +9,7 @@
 void USessionList::NativeConstruct()
 {
 	Super::NativeConstruct();
-	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionList::OnFindSessionsComplete);
+	//OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionList::OnFindSessionsComplete);
 	RefreshButton->OnClicked.AddDynamic(this, &USessionList::OnClickRefreshButton);
 }
 
@@ -37,7 +38,11 @@ void USessionList::OnClickRefreshButton()
 	// Clear previous search results from the Widget and temporarily make it unclickable for the duration of the search
 	ClearSessionListings();
 	RefreshButton->SetIsEnabled(false);
-
+	
+	USessionGameInstance* SessionGameInstance = dynamic_cast<USessionGameInstance*>(GetGameInstance());
+	//SessionGameInstance->FindOnlineGames(LANCheckBox ? LANCheckBox->IsChecked() : false, true);
+	SessionGameInstance->PopulateWidgetWithOnlineGames(this);
+	/*
 	// Define search terms and search asynchronously. Once finished, calls OnFindSessionsComplete which does the rest.
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
@@ -81,8 +86,9 @@ void USessionList::OnClickRefreshButton()
 		OnFindSessionsComplete(false);
 		RefreshButton->SetIsEnabled(true);
 	}
+	*/
 }
-
+/*
 void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 {
 	// Search results are made as buttons and added to the SessionListingsScrollBox
@@ -108,11 +114,7 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 				USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), WidgetSessionListingClass, SessionName);
 				if (SessionListing)
 				{
-					/*
-					* To use Null Subsystem, go to DefaultEngine.ini and:
-					* [OnlineSubsystem] -> DefaultPlatformServer=Steam should be DefaultPlatformService=Null
-					* [[OnlineSubsystemSteam] -> bEnabled=True should be False
-					 */
+
 					// Create session listing, populate, and add to the ScrollBox
 					FOnlineSessionSearchResult& SearchResult = SessionSearch->SearchResults[SearchIdx];
 					SessionListing->SetSessionResult(&SearchResult);
@@ -140,7 +142,19 @@ void USessionList::OnFindSessionsComplete(bool bWasSuccessful)
 	}
 	RefreshButton->SetIsEnabled(true);
 }
- 
+*/
+USessionListing* USessionList::CreateAndInsertSessionListingWidget(FOnlineSessionSearchResult& SearchResult, FName SessionName)
+{
+	USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), WidgetSessionListingClass, SessionName);
+	SessionListing->SetSessionResult(&SearchResult);
+	int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+	int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
+	SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
+	SessionListing->SetPingMs(SearchResult.PingInMs);
+	SessionListing->SetServerName(FText::FromString(SearchResult.Session.OwningUserName));
+	this->AddSessionListing(SessionListing);
+	return SessionListing;
+}
 
 void USessionList::ClearSessionListings()
 {
