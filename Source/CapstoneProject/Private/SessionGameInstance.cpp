@@ -15,7 +15,8 @@ USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectIniti
 	:Super(ObjectInitializer)
 {
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnCreateSessionComplete);
-	OnStartSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnStartOnlineGameComplete);
+	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnStartOnlineGameComplete);
+	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnFindSessionsComplete);
 }
 
 bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FName SessionName,
@@ -94,5 +95,44 @@ void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWa
 	if (bWasSuccessful)
 	{
 		UGameplayStatics::OpenLevel(GetWorld(), FName(HOST_MAP_DESTINATION_NAME), true, "listen");
+	}
+}
+
+void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence)
+{
+	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
+	{
+		if (const IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session && Session.IsValid())
+		{
+			SessionSearch = MakeShareable(new FOnlineSessionSearch());
+			
+			SessionSearch->bIsLanQuery = bIsLAN;
+			SessionSearch->MaxSearchResults = 30000;
+			SessionSearch->PingBucketSize = 50;
+			SessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, false, EOnlineComparisonOp::Equals);
+			SessionSearch->QuerySettings.Set(SEARCH_EMPTY_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
+			SessionSearch->QuerySettings.Set(SEARCH_SECURE_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
+			SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
+			
+			if (bIsPresence)
+			{
+				SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, bIsPresence, EOnlineComparisonOp::Equals);
+			}
+			
+			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
+			
+			UE_LOG(LogTemp, Display, TEXT("SessionInterface is valid. Finding sessions using provided settings..."));
+			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
+			Session->FindSessions(*UserId, SearchSettingsRef);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Unable to initiate session searching due to invalid Session Interface or UserId"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session searching due to uninitialized Online Subsystem!"));
+		OnFindSessionsComplete(false);
 	}
 }
