@@ -244,15 +244,16 @@ void USessionGameInstance::OnDestroySessionComplete(FName SessionName, bool bWas
 
 void USessionGameInstance::StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
 {
-	ULocalPlayer* const Player = GetFirstGamePlayer();
+	const ULocalPlayer* const Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
 	HostSession(UniqueNetId, NAME_GameSession, bIsLAN, bIsPresence, MaxNumPlayers);
 }
 
-void USessionGameInstance::FindOnlineGames()
+void USessionGameInstance::FindOnlineGames(bool bIsLAN, bool bIsPresence)
 {
-	ULocalPlayer* const Player = GetFirstGamePlayer();
-	//FindSessions(Player->GetPreferredUniqueNetId(), true, true);
+	const ULocalPlayer* const Player = GetFirstGamePlayer();
+	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
+	FindSessions(UniqueNetId, bIsLAN, bIsPresence);
 }
 
 void USessionGameInstance::DestroySessionAndLeaveGame()

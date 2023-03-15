@@ -12,7 +12,7 @@
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Kismet/GameplayStatics.h"
 
-const FName DEFAULT_SESSION_NAME = "Unnamed Server";
+const FName DEFAULT_SERVER_NAME = "Unnamed Server";
 
 void UMainMenuScreen::NativeConstruct()
 {
@@ -45,13 +45,12 @@ void UMainMenuScreen::NativeDestruct()
 void UMainMenuScreen::OnClickCreateGameButton()
 {
 	USessionGameInstance SessionGameInstance = dynamic_cast<USessionGameInstance>(GetGameInstance());
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Clicked create game button")));
-	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-	const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
-	const FName SessionName = SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()) : DEFAULT_SESSION_NAME;
+	//const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	//const TSharedPtr<const FUniqueNetId> UniqueNetId = LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId();
+	const FName ServerName = SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()) : DEFAULT_SERVER_NAME;
 	bool bIsLan = LanCheckBox ? LanCheckBox->IsChecked() : true;
 	const int32 MaxPlayers = 69;
-	SessionGameInstance.StartOnlineGame();
+	SessionGameInstance.StartOnlineGame(ServerName, bIsLan, true, MaxPlayers);
 	//HostSession(UniqueNetId, SessionName, bIsLan, true, MaxPlayers);
 }
 
@@ -74,7 +73,7 @@ void UMainMenuScreen::OnClickQuitButton()
 		if (SessionSettings.IsValid())
 		{
 			Session->AddOnDestroySessionCompleteDelegate_Handle(OnDestroySessionCompleteDelegate);
-			Session->DestroySession(SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()): DEFAULT_SESSION_NAME);
+			Session->DestroySession(SessionNameEditableTextBox ? FName(SessionNameEditableTextBox->GetText().ToString()): DEFAULT_SERVER_NAME);
 		} 
 	}
 	// If we failed to destroy the session, just exit the game.

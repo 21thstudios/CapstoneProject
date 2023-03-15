@@ -22,7 +22,7 @@ public:
 	void StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
 	
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void FindOnlineGames();
+	void FindOnlineGames(bool bIsLAN, bool bIsPresence);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void DestroySessionAndLeaveGame();
