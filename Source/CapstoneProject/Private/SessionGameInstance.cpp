@@ -26,7 +26,7 @@ USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectIniti
 bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FName SessionName,
                                        bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
 {
-	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
+	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
 		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
 		if (Session.IsValid() && UserId.IsValid())
@@ -144,7 +144,7 @@ void USessionGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Display, TEXT("Finding sesssions %hs"), bWasSuccessful ? "succeeded" : "failed");
 
-	if (IOnlineSubsystem* const OnlineSubsystem = IOnlineSubsystem::Get())
+	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
 		if (const IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session && Session.IsValid())
 		{
@@ -255,14 +255,14 @@ void USessionGameInstance::OnDestroySessionComplete(FName SessionName, bool bWas
 
 void USessionGameInstance::StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
 {
-	const ULocalPlayer* const Player = GetFirstGamePlayer();
+	const ULocalPlayer* Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
 	HostSession(UniqueNetId, SESSION_NAME, bIsLAN, bIsPresence, MaxNumPlayers);
 }
 
 void USessionGameInstance::FindOnlineGames(bool bIsLAN, bool bIsPresence)
 {
-	const ULocalPlayer* const Player = GetFirstGamePlayer();
+	const ULocalPlayer* Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
 	FindSessions(UniqueNetId, bIsLAN, bIsPresence);
 }
@@ -291,7 +291,7 @@ void USessionGameInstance::PopulateWidgetWithOnlineGames(USessionList* SessionLi
 
 void USessionGameInstance::JoinOnlineGameProvidedSearchResult(FOnlineSessionSearchResult* SearchResult)
 {
-	ULocalPlayer* const Player = GetFirstGamePlayer();
+	const ULocalPlayer* Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
 	JoinOnlineSession(UniqueNetId, SESSION_NAME, *SearchResult);
 }

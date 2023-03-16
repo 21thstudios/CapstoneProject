@@ -43,8 +43,8 @@ USessionListing* USessionList::CreateAndInsertSessionListingWidget(FOnlineSessio
 {
 	USessionListing* SessionListing = CreateWidget<USessionListing>(this->GetOwningPlayer(), WidgetSessionListingClass, SessionName);
 	SessionListing->SetSessionResult(&SearchResult);
-	int32 const MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
-	int32 const CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
+	const int32 MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+	const int32 CurrentPlayers = MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
 	SessionListing->SetPlayerCount(CurrentPlayers, MaxPlayers);
 	SessionListing->SetPingMs(SearchResult.PingInMs);
 	SessionListing->SetServerName(FText::FromString(SearchResult.Session.OwningUserName));

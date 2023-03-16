@@ -68,6 +68,6 @@ private:
 	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
 	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 	
-	TSharedPtr<class FOnlineSessionSettings> SessionSettings;
-	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+	TSharedPtr<FOnlineSessionSettings> SessionSettings;
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 };
