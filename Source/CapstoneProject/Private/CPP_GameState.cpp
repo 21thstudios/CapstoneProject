@@ -9,7 +9,10 @@
 // Source for chrono use: https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
 // Source for string use (make sure to include the header): https://stackoverflow.com/questions/31860405/how-to-concatenate-a-string-with-chronomilliseconds
 
+// Debug print, with quotations. E.g., `D("Hello World");` 
 #define D(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
+// Debug print with automatically converting an integer into a printable form. 
+#define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(x).c_str());}
 
 ACPP_GameState::ACPP_GameState()
 {
@@ -32,15 +35,15 @@ void ACPP_GameState::ResetStateForNewGame()
 	this->SetGameStartTimeToNow();
 }
 
+
 void ACPP_GameState::ResetAllPlayersStates()
 {
 	// Source: https://forums.unrealengine.com/t/how-to-get-the-player-controller-with-c/287177
-	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator )
+	for (auto Player : this->PlayerArray)
 	{
-		ACPP_PlayerState PlayerState = Iterator->GetPlayerState();
+		// Player.ResetKillsAndDeaths();
+		ACPP_PlayerState* Stats = static_cast<ACPP_PlayerState*>(Player);
+		D("Kills for current player:");
+		Dnum(Stats->Kills);
 	}
-	
-	// Source: https://forums.unrealengine.com/t/get-all-actors-of-class-in-c/329740/3
-	TArray<BP_FirstPersonCharacter*> Actors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), BP_FirstPersonCharacter::StaticClass(), Actors); 
 }

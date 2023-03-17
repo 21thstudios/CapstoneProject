@@ -16,6 +16,7 @@ class CAPSTONEPROJECT_API ACPP_PlayerState : public APlayerState
 
 public:
 	ACPP_PlayerState();
+	virtual ~ACPP_PlayerState();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Kills;
@@ -26,6 +27,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName Name;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void ResetKillsAndDeaths();
+
+	UFUNCTION(BlueprintCallable)
+	void KillOtherPlayer(ACPP_PlayerState* OtherPlayer);
+
+	void BeginPlay() override;
+
+	void PrintKillsOnScreen();
+
+	void PrintDeathsOnScreen();
+
+	void PrintStatsOnScreen();
 };
