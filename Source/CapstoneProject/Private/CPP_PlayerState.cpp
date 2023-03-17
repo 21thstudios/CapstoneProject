@@ -18,4 +18,3 @@ void ACPP_PlayerState::ResetKillsAndDeaths()
 	this->Kills = 0;
 	this->Deaths = 0;
 }
-
