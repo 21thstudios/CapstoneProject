@@ -20,4 +20,12 @@ public:
 
 private:
 	std::chrono::milliseconds time_at_start;
+
+public:
+	UFUNCTION()
+	void ResetStateForNewGame();
+
+	void ResetAllPlayersStates();
+
+	void SetGameStartTimeToNow();
 };

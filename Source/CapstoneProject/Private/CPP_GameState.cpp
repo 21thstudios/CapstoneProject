@@ -11,20 +11,26 @@
 
 ACPP_GameState::ACPP_GameState()
 {
-	std::chrono::milliseconds game_start_time = std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::system_clock::now().time_since_epoch()
-		);
+	this->SetGameStartTimeToNow();
 
 	// std::to_string(ms.count())
-	if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(ms.count()).c_str());}
+	if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(this->time_at_start.count()).c_str());}
 }
 
-void ACPP_PlayerState::ResetStateForNewGame()
+void ACPP_GameState::SetGameStartTimeToNow()
 {
-	this->ResetKillsAndDeaths();
+	this->time_at_start = std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()
+		);	
 }
 
-void ACPP_PlayerState::SetGameStartTimeToNow()
+void ACPP_GameState::ResetStateForNewGame()
 {
-	this->
+	this->ResetAllPlayersStates();
+	this->SetGameStartTimeToNow();
+}
+
+void ACPP_GameState::ResetAllPlayersStates()
+{
+	
 }
