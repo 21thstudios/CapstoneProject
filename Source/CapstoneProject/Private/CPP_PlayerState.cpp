@@ -13,3 +13,9 @@ ACPP_PlayerState::ACPP_PlayerState()
 	D("scree");
 }
 
+void ACPP_PlayerState::ResetKillsAndDeaths()
+{
+	this->Kills = 0;
+	this->Deaths = 0;
+}
+
