@@ -13,6 +13,7 @@
 #define D(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
 // Debug print with automatically converting an integer into a printable form. 
 #define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(x).c_str());}
+#define Dstr(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, x.ToString());}
 
 ACPP_GameState::ACPP_GameState()
 {
@@ -31,10 +32,24 @@ void ACPP_GameState::SetGameStartTimeToNow()
 
 void ACPP_GameState::ResetStateForNewGame()
 {
-	this->ResetAllPlayersStates();
-	this->SetGameStartTimeToNow();
+	if (HasAuthority()) {
+		int HighestKills = -1;
+		ACPP_PlayerState* StateWithHighestKills = NULL;
+		for (auto Player : this->PlayerArray)
+		{
+            ACPP_PlayerState* Stats = static_cast<ACPP_PlayerState*>(Player);
+			if (Stats->Kills > HighestKills)  {
+				HighestKills = Stats->Kills;
+				StateWithHighestKills = Stats;
+			}
+		}
+		D("Player with the highest kills:");
+		Dstr(StateWithHighestKills->Name);
+	    D("Clearing state for new game.");
+	    this->ResetAllPlayersStates();
+	    this->SetGameStartTimeToNow();
+	}
 }
-
 
 void ACPP_GameState::ResetAllPlayersStates()
 {
@@ -45,5 +60,15 @@ void ACPP_GameState::ResetAllPlayersStates()
 		ACPP_PlayerState* Stats = static_cast<ACPP_PlayerState*>(Player);
 		D("Kills for current player:");
 		Dnum(Stats->Kills);
+		Stats->ResetKillsAndDeaths();
 	}
+}
+
+void ACPP_GameState::BeginPlay() 
+{
+	Super::BeginPlay();
+	// Source: https://www.tomlooman.com/unreal-engine-cpp-timers/ 
+	FTimerHandle GameEndTimer;
+	FTimerDelegate Delegate;
+	GetWorld()->GetTimerManager().SetTimer(GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, 6, true);
 }

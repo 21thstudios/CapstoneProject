@@ -28,4 +28,7 @@ public:
 	void ResetAllPlayersStates();
 
 	void SetGameStartTimeToNow();
+
+	UFUNCTION()
+	void BeginPlay();
 };

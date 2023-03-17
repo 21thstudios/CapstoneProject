@@ -13,7 +13,7 @@ ACPP_PlayerState::ACPP_PlayerState()
 {
 	this->Kills = 0;
 	this->Deaths = 0;
-	this->Name = "a";
+	this->Name = std::to_string(this->GetPlayerId()).c_str();
 	D("scree");
 }
 
@@ -32,15 +32,21 @@ void ACPP_PlayerState::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetGameState<ACPP_GameState>()->ResetAllPlayersStates();
+	
 }
 
 void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)
 {
 	this->Kills++;
 	OtherPlayer->Deaths++;
+	if (OtherPlayer == this)
+	{
+		D("OtherPlayer is self");
+	}
 	this->PrintStatsOnScreen();
 	OtherPlayer->PrintStatsOnScreen();
-	
+	ACPP_GameState* GameState = GetWorld()->GetGameState<ACPP_GameState>();
+	GameState->ResetAllPlayersStates();
 }
 
 void ACPP_PlayerState::PrintKillsOnScreen()
@@ -60,6 +66,3 @@ void ACPP_PlayerState::PrintStatsOnScreen()
 	this->PrintKillsOnScreen();
 	this->PrintDeathsOnScreen();
 }
-
-
-
