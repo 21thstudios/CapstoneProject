@@ -1,8 +1,10 @@
 // Copyright (c) 21thStudios contributors. All rights reserved. Licensed under the MIT license.
 
 #include "CPP_GameState.h"
+#include "CPP_PlayerState.h"
 #include <chrono>
 #include <string>
+#include "Kismet/GameplayStatics.h"
 
 // Source for chrono use: https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
 // Source for string use (make sure to include the header): https://stackoverflow.com/questions/31860405/how-to-concatenate-a-string-with-chronomilliseconds
@@ -32,5 +34,13 @@ void ACPP_GameState::ResetStateForNewGame()
 
 void ACPP_GameState::ResetAllPlayersStates()
 {
+	// Source: https://forums.unrealengine.com/t/how-to-get-the-player-controller-with-c/287177
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator )
+	{
+		ACPP_PlayerState PlayerState = Iterator->GetPlayerState();
+	}
 	
+	// Source: https://forums.unrealengine.com/t/get-all-actors-of-class-in-c/329740/3
+	TArray<BP_FirstPersonCharacter*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), BP_FirstPersonCharacter::StaticClass(), Actors); 
 }
