@@ -20,6 +20,10 @@ protected:
 	
 	void SetHostOnLan(bool bHostOnLAN);
 
+	void SetUsePresence(bool bUsePresence);
+
+	void SetUseLobbies(bool bUseLobbies);
+
 	UFUNCTION()
 	void OnSessionNameTextChanged(const FText& Text);
 	
@@ -49,4 +53,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* LanCheckBox;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UCheckBox* PresenceCheckBox;
+	
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UCheckBox* UseLobbiesCheckBox;
 };

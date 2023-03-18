@@ -60,6 +60,22 @@ void USessionList::ClearSessionListings()
 	}
 }
 
+void USessionList::SetUsePresence(bool bUsePresence)
+{
+	if (PresenceCheckBox)
+	{
+		PresenceCheckBox->SetIsChecked(bUsePresence);
+	}
+}
+
+void USessionList::SetSearchLobbies(bool bSearchLobbies)
+{
+	if (SearchLobbiesCheckBox)
+	{
+		SearchLobbiesCheckBox->SetIsChecked(bSearchLobbies);
+	}
+}
+
 void USessionList::AddSessionListing(USessionListing* SessionListing)
 {
 	if (SessionListingsScrollBox)
