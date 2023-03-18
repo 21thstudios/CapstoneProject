@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include <string>
 #define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(x).c_str());}
+#define DFstr(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, x);}
 
 ACPP_PlayerState::ACPP_PlayerState()
 {
@@ -19,7 +20,7 @@ ACPP_PlayerState::ACPP_PlayerState()
 	this->Deaths = 0;
 	// Temporary solution here-- we would need to extend our API to get a proper player name,
 	// so we're using the player ID in string form. 
-	this->Name = std::to_string(this->GetPlayerId()).c_str();
+	this->Name = std::to_string(this->GetUniqueID()).c_str();
 	this->bReplicates = true;
 }
 
@@ -51,6 +52,13 @@ void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)
 	{
 		D("OtherPlayer is self");
 	}
+
+	FString KillerName = this->Name.ToString();
+	FString DierName = OtherPlayer->Name.ToString();
+	FString DisplayMessage = KillerName + " killed " + DierName + "!";
+
+	DFstr(DisplayMessage);
+
 	// More debug. 
 	// this->PrintStatsOnScreen();
 	// OtherPlayer->PrintStatsOnScreen();
@@ -94,4 +102,5 @@ void ACPP_PlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACPP_PlayerState, Kills);
 	DOREPLIFETIME(ACPP_PlayerState, Deaths);
+	DOREPLIFETIME(ACPP_PlayerState, Name);
 }
