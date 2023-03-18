@@ -14,15 +14,18 @@
 // Debug print with automatically converting an integer into a printable form. 
 #define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(x).c_str());}
 #define Dstr(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, x.ToString());}
+#define DFstr(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, x);}
 
 ACPP_GameState::ACPP_GameState()
 {
 	this->SetGameStartTimeToNow();
-	// this->mode = "time";
-	this->time_or_kills_to_end = 5;
+	this->mode = TEXT("time");
+	this->kills_to_end = 3;
+	this->time_to_end = 20;
+	this->bReplicates = true;
 
 	// std::to_string(ms.count())
-	if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(this->time_at_start.count()).c_str());}
+	// if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(this->time_at_start.count()).c_str());}
 }
 
 void ACPP_GameState::SetGameStartTimeToNow()
@@ -45,9 +48,12 @@ void ACPP_GameState::ResetStateForNewGame()
 				StateWithHighestKills = Stats;
 			}
 		}
-		D("Player with the highest kills:");
-		Dstr(StateWithHighestKills->Name);
-	    D("Clearing state for new game.");
+		FString WinnerName = StateWithHighestKills->Name.ToString();
+		FString NumberOfKills = FString::FromInt(StateWithHighestKills->Kills);
+		FString DisplayMessage = WinnerName + " won the game with " + NumberOfKills + " kills!";
+
+		DFstr(DisplayMessage);
+		D("Resetting all player stats.");
 	    this->ResetAllPlayersStates();
 	    this->SetGameStartTimeToNow();
 	}
@@ -60,8 +66,8 @@ void ACPP_GameState::ResetAllPlayersStates()
 	{
 		// Player.ResetKillsAndDeaths();
 		ACPP_PlayerState* Stats = static_cast<ACPP_PlayerState*>(Player);
-		D("Kills for current player:");
-		Dnum(Stats->Kills);
+		// D("Kills for current player:");
+		// Dnum(Stats->Kills);
 		Stats->ResetKillsAndDeaths();
 	}
 }
@@ -72,5 +78,5 @@ void ACPP_GameState::BeginPlay()
 	// Source: https://www.tomlooman.com/unreal-engine-cpp-timers/ 
 	FTimerHandle GameEndTimer;
 	FTimerDelegate Delegate;
-	GetWorld()->GetTimerManager().SetTimer(GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, 6, true);
+	GetWorld()->GetTimerManager().SetTimer(GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, this->time_to_end, true);
 }

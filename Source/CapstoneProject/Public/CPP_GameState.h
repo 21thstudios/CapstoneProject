@@ -3,6 +3,7 @@
 #pragma once
 
 #include <chrono>
+#include <string>
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "CPP_GameState.generated.h"
@@ -11,7 +12,7 @@
  * 
  */
 UCLASS()
-class CAPSTONEPROJECT_API ACPP_GameState : public AGameStateBase
+class CAPSTONEPROJECT_API ACPP_GameState : public AGameStateBase 
 {
 	GENERATED_BODY()
 
@@ -23,7 +24,7 @@ private:
 
 public:
 	// Was unable to complete this part: 
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	// Haven't looked into C++ enums here, but would be a better solution.
 	// If `mode` is equal to `kills`, ends once the correct number of kills is reached.
 	// If `mode` is equal to `time`, ends once the correct amount of time has passed.
@@ -34,10 +35,13 @@ public:
 	// we'll need to check in multiple different spots for each condition. Further,
 	// we might want to add another condition in the future for the game to end or use a
 	// combination of conditions. 
-	// string mode;
+	FString mode;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int time_or_kills_to_end;
+	int kills_to_end;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int time_to_end;
 	
 	UFUNCTION()
 	void ResetStateForNewGame();
@@ -48,4 +52,8 @@ public:
 
 	UFUNCTION()
 	void BeginPlay();
+
+	// UFUNCTION()
+	// Source: https://forums.unrealengine.com/t/replicating-variables-in-c/79772/2 
+	// void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const override;
 };

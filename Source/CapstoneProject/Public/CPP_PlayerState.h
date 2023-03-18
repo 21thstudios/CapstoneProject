@@ -18,10 +18,10 @@ public:
 	ACPP_PlayerState();
 	virtual ~ACPP_PlayerState();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	int Kills;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	int Deaths;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

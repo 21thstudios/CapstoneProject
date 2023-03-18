@@ -5,6 +5,7 @@
 
 #include "CPP_PlayerState.h"
 #include "CPP_GameState.h"
+#include "Net/UnrealNetwork.h"
 #include "Engine/World.h"
 #include <string>
 #define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(x).c_str());}
@@ -19,7 +20,7 @@ ACPP_PlayerState::ACPP_PlayerState()
 	// Temporary solution here-- we would need to extend our API to get a proper player name,
 	// so we're using the player ID in string form. 
 	this->Name = std::to_string(this->GetPlayerId()).c_str();
-	D("scree");
+	this->bReplicates = true;
 }
 
 void ACPP_PlayerState::ResetKillsAndDeaths()
@@ -51,8 +52,8 @@ void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)
 		D("OtherPlayer is self");
 	}
 	// More debug. 
-	this->PrintStatsOnScreen();
-	OtherPlayer->PrintStatsOnScreen();
+	// this->PrintStatsOnScreen();
+	// OtherPlayer->PrintStatsOnScreen();
 
 	ACPP_GameState* GameState = GetWorld()->GetGameState<ACPP_GameState>();
 	// const char* mode = GameState->mode; 
@@ -62,8 +63,11 @@ void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)
 	// immediately wrong with it, but I'm curious for any advice/suggestions. 
 	// if (strcmp(mode, "kills") == 0)
 	// {
-		GameState->ResetAllPlayersStates();
 	// }
+	if (this->Kills > GameState->kills_to_end)
+	{
+		GameState->ResetAllPlayersStates();
+	}
 }
 
 void ACPP_PlayerState::PrintKillsOnScreen()
@@ -82,4 +86,12 @@ void ACPP_PlayerState::PrintStatsOnScreen()
 {
 	this->PrintKillsOnScreen();
 	this->PrintDeathsOnScreen();
+}
+
+// Source: https://forums.unrealengine.com/t/replicating-variables-in-c/79772/2 
+void ACPP_PlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACPP_PlayerState, Kills);
+	DOREPLIFETIME(ACPP_PlayerState, Deaths);
 }
