@@ -18,6 +18,8 @@
 ACPP_GameState::ACPP_GameState()
 {
 	this->SetGameStartTimeToNow();
+	// this->mode = "time";
+	this->time_or_kills_to_end = 5;
 
 	// std::to_string(ms.count())
 	if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(this->time_at_start.count()).c_str());}

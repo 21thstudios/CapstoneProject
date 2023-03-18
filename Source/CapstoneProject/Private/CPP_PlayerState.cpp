@@ -11,8 +11,13 @@
 
 ACPP_PlayerState::ACPP_PlayerState()
 {
+	// Inheriting here and adding instance variables feels not modular. Any recommendations
+	// for whether to continue doing it this way, or maybe extract these variables into another
+	// class/some other approach? UE encourages doing it this way. 
 	this->Kills = 0;
 	this->Deaths = 0;
+	// Temporary solution here-- we would need to extend our API to get a proper player name,
+	// so we're using the player ID in string form. 
 	this->Name = std::to_string(this->GetPlayerId()).c_str();
 	D("scree");
 }
@@ -39,14 +44,26 @@ void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)
 {
 	this->Kills++;
 	OtherPlayer->Deaths++;
+	// Debug message to ensure that the player killing and the player being killed
+	// are not the same. 
 	if (OtherPlayer == this)
 	{
 		D("OtherPlayer is self");
 	}
+	// More debug. 
 	this->PrintStatsOnScreen();
 	OtherPlayer->PrintStatsOnScreen();
+
 	ACPP_GameState* GameState = GetWorld()->GetGameState<ACPP_GameState>();
-	GameState->ResetAllPlayersStates();
+	// const char* mode = GameState->mode; 
+	// If we're playing in the mode where the game ends once a certain number of kills
+	// are reached, execute this code (definitely not an ideal solution). It also feels
+	// weird to grab a `GameState` reference from a `PlayerState`. I don't see anything
+	// immediately wrong with it, but I'm curious for any advice/suggestions. 
+	// if (strcmp(mode, "kills") == 0)
+	// {
+		GameState->ResetAllPlayersStates();
+	// }
 }
 
 void ACPP_PlayerState::PrintKillsOnScreen()
