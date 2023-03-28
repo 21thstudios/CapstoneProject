@@ -9,8 +9,15 @@ void UScoreboardWidget::SetMapName(FText MapName) const
 {
 	if (MapNameTextBlock)
 	{
-		MapNameTextBlock->SetText(MapName);
+		FFormatNamedArguments Args;
+		Args.Add("Prefix", *TEXT("Map"));
+		Args.Add("MapName", MapName);
+		FText FormattedText = FText::Format(
+			NSLOCTEXT("Scoreboard", "MapNameWithPrefixFormat", "{Prefix}: {MapName}"),
+			Args);
+		MapNameTextBlock->SetText(FormattedText);
 	}
+	UE_LOG(LogTemp, Error, TEXT("Failed to set map name of scoreboard due to invalid MapNameTextBlock!"));
 }
 
 void UScoreboardWidget::SetServerName(FText ServerName) const
