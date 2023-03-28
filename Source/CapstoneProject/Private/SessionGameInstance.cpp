@@ -16,6 +16,7 @@ USessionList* MenuWidgetHandle;
 USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
+	HostedSessionInfo.ServerName = SESSION_NAME;
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnCreateSessionComplete);
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnStartOnlineGameComplete);
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnFindSessionsComplete);
@@ -102,7 +103,7 @@ void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWa
 	}
 	if (bWasSuccessful)
 	{
-		//UGameplayStatics::OpenLevel(GetWorld(), "FirstPersonMap", true, "listen");
+		HostedSessionInfo.ServerName = SessionName;
 		GetWorld()->ServerTravel("/Game/FirstPerson/Maps/FirstPersonMap?listen", true);
 	}
 }
