@@ -31,7 +31,10 @@ void UScoreboardWidget::SetMapName(FText MapName) const
 			Args);
 		MapNameTextBlock->SetText(FormattedText);
 	}
-	UE_LOG(LogTemp, Error, TEXT("Failed to set map name of scoreboard due to invalid MapNameTextBlock!"));
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to set map name of scoreboard due to invalid MapNameTextBlock!"));
+	}
 }
 
 void UScoreboardWidget::SetServerName(FText ServerName) const
@@ -47,5 +50,8 @@ void UScoreboardWidget::SetServerName(FText ServerName) const
 		
 		ServerNameTextBlock->SetText(FormattedText);
 	}
-	UE_LOG(LogTemp, Error, TEXT("Failed to set server name of scoreboard due to invalid ServerNameTextBlock!"));
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to set server name of scoreboard due to invalid ServerNameTextBlock!"));
+	}
 }
