@@ -5,6 +5,16 @@
 
 #include "Components/TextBlock.h"
 
+void UScoreboardWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
+
+void UScoreboardWidget::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UScoreboardWidget::SetMapName(FText MapName) const
 {
 	if (MapNameTextBlock)

@@ -18,6 +18,9 @@ class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	
 	void SetMapName(FText MapName) const;
 	void SetServerName(FText ServerName) const;
 	
