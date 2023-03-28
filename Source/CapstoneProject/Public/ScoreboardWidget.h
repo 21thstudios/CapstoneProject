@@ -16,11 +16,11 @@ UCLASS()
 class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 {
 	GENERATED_BODY()
-protected:
-	virtual void NativeConstruct() override;
 	
-	virtual void NativeDestruct() override;
-
+protected:
+	void SetMapName(FText MapName) const;
+	void SetServerName(FText ServerName) const;
+	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;
 
