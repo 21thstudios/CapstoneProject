@@ -3,3 +3,12 @@
 
 #include "ScoreboardWidget.h"
 
+#include "Components/TextBlock.h"
+
+void UScoreboardWidget::SetMapName(FText MapName) const
+{
+	if (MapNameTextBlock)
+	{
+		MapNameTextBlock->SetText(MapName);
+	}
+}
