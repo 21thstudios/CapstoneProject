@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ScoreboardEntryWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/ScrollBox.h"
 #include "ScoreboardWidget.generated.h"
 
 /**
@@ -14,5 +16,23 @@ UCLASS()
 class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 {
 	GENERATED_BODY()
+protected:
+	virtual void NativeConstruct() override;
 	
+	virtual void NativeDestruct() override;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UScrollBox* ScoreboardEntryScrollBox;
+
+	UPROPERTY(EditAnywhere, Category="Class Types")
+	TSubclassOf<UUserWidget> ScoreboardEntryBlueprintClass;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* ServerNameTextBlock;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* MapNameTextBlock;
 };
