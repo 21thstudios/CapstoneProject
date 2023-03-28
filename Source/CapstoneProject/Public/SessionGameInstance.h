@@ -8,6 +8,18 @@
 #include "Interfaces/OnlineSessionInterface.h"
 #include "SessionGameInstance.generated.h"
 
+USTRUCT(BlueprintType)
+struct FHostedSessionInfo
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Properties")
+	FName ServerName;
+	
+	//UPROPERTY()
+	//UObject* SafeObjectPointer;
+};
+
 /**
  * Extension of the GameInstance responsible for Sessions-related work.
  */
@@ -18,6 +30,9 @@ class CAPSTONEPROJECT_API USessionGameInstance : public UGameInstance
 
 public:
 	USessionGameInstance(const FObjectInitializer& ObjectInitializer);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FHostedSessionInfo HostedSessionInfo;
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers, bool bUseLobbies);

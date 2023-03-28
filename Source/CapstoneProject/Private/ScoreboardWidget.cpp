@@ -8,6 +8,7 @@
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	SetMapName(FText::FromString(GetWorld()->GetMapName()));
 }
 
 void UScoreboardWidget::NativeDestruct()
