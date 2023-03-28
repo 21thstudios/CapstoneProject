@@ -3,8 +3,6 @@
 
 #include "ScoreboardEntryWidget.h"
 
-#include "Components/TextBlock.h"
-
 void UScoreboardEntryWidget::SetPlayerDisplayName(FText DisplayName) const
 {
 	if (PlayerDisplayNameTextBlock)
