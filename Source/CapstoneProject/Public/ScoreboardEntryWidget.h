@@ -15,9 +15,9 @@ class CAPSTONEPROJECT_API UScoreboardEntryWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	void SetPlayerDisplayName(FText DisplayName);
-	void SetPingInMs(int32 Ping);
-	void SetNumKills(int32 NumKills);
+	void SetPlayerDisplayName(FText DisplayName) const;
+	void SetPingInMs(int32 Ping) const;
+	void SetNumKills(int32 NumKills) const;
 	void SetNumDeaths(int32 NumDeaths);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))

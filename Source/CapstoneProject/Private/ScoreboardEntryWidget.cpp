@@ -5,7 +5,7 @@
 
 #include "Components/TextBlock.h"
 
-void UScoreboardEntryWidget::SetPlayerDisplayName(FText DisplayName)
+void UScoreboardEntryWidget::SetPlayerDisplayName(FText DisplayName) const
 {
 	if (PlayerDisplayNameTextBlock)
 	{
@@ -17,7 +17,7 @@ void UScoreboardEntryWidget::SetPlayerDisplayName(FText DisplayName)
 	}
 }
 
-void UScoreboardEntryWidget::SetPingInMs(int32 Ping)
+void UScoreboardEntryWidget::SetPingInMs(int32 Ping) const
 {
 	if (PingMsTextBlock)
 	{
@@ -32,5 +32,18 @@ void UScoreboardEntryWidget::SetPingInMs(int32 Ping)
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to set ping of scoreboard entry due to invalid PingMsTextBlock!"));
+	}
+}
+
+void UScoreboardEntryWidget::SetNumKills(int32 NumKills) const
+{
+	if (NumKillsTextBlock)
+	{
+		FText NumKillsParsed = FText::FromString(FString::FromInt(NumKills));
+		NumKillsTextBlock->SetText(NumKillsParsed);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to set kills of scoreboard entry due to invalid NumKillsTextBlock!"));
 	}
 }
