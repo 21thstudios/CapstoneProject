@@ -13,5 +13,22 @@ UCLASS()
 class CAPSTONEPROJECT_API UScoreboardEntryWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+protected:
+	void SetPlayerDisplayName(FText DisplayName);
+	void SetPingInMs(int32 Ping);
+	void SetNumKills(int32 NumKills);
+	void SetNumDeaths(int32 NumDeaths);
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* PlayerDisplayNameTextBlock;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* PingMsTextBlock;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* NumKillsTextBlock;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* NumDeathsTextBlock;
 };
