@@ -3,12 +3,15 @@
 
 #include "ScoreboardWidget.h"
 
+#include "SessionGameInstance.h"
 #include "Components/TextBlock.h"
 
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	SetMapName(FText::FromString(GetWorld()->GetMapName()));
+	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
+	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
 }
 
 void UScoreboardWidget::NativeDestruct()
