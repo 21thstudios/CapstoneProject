@@ -18,7 +18,7 @@ protected:
 	void SetPlayerDisplayName(FText DisplayName) const;
 	void SetPingInMs(int32 Ping) const;
 	void SetNumKills(int32 NumKills) const;
-	void SetNumDeaths(int32 NumDeaths);
+	void SetNumDeaths(int32 NumDeaths) const;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* PlayerDisplayNameTextBlock;

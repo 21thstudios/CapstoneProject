@@ -47,3 +47,16 @@ void UScoreboardEntryWidget::SetNumKills(int32 NumKills) const
 		UE_LOG(LogTemp, Error, TEXT("Failed to set kills of scoreboard entry due to invalid NumKillsTextBlock!"));
 	}
 }
+
+void UScoreboardEntryWidget::SetNumDeaths(int32 NumDeaths) const
+{
+	if (NumDeathsTextBlock)
+	{
+		FText NumDeathsParsed = FText::FromString(FString::FromInt(NumDeaths));
+		NumDeathsTextBlock->SetText(NumDeathsParsed);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to set deaths of scoreboard entry due to invalid NumDeathsTextBlock!"));
+	}
+}
