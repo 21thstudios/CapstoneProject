@@ -16,13 +16,15 @@ void UScoreboardWidget::NativeConstruct()
 	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
 	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
 	FScoreboardEntryData ScoreboardEntryData;
-	
 	FUniqueNetIdPtr UniqueNetId = GetOwningPlayerState()->GetUniqueId().GetV1();
+	
+	// Retrieve the Steam username. We should cache this on the server
 	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
 	IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
 	FString name = Identity->GetPlayerNickname(*UniqueNetId);
 	FText DisplayName = FText::FromString(name);
-			
+
+	// Populate local player scoreboard entry. This should be managed by server
 	ScoreboardEntryData.NumDeaths = 0;
 	ScoreboardEntryData.NumKills = 0;
 	ScoreboardEntryData.PingInMillis = GetOwningPlayerState()->GetCompressedPing() * 4;
@@ -35,6 +37,7 @@ void UScoreboardWidget::NativeConstruct()
 	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
 	ScoreboardData.EndTimeSeconds = 130;
 	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
+	
 	OnUpdateEntries(&ScoreboardData);
 }
 
@@ -104,37 +107,6 @@ void UScoreboardWidget::InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidge
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to insert entry due to invalid ScoreboardEntryWidget!"));
-	}
-}
-
-void UScoreboardWidget::UpdateEntries(TArray<APlayerState*> PlayerArray)
-{
-	if (ScoreboardEntryScrollBox)
-	{
-		ClearEntries();
-		for (APlayerState* PlayerState : PlayerArray)
-		{
-			FUniqueNetIdPtr UniqueNetId = PlayerState->GetUniqueId().GetV1();
-
-			// temp
-			IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
-			IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
-			FString name = Identity->GetPlayerNickname(*UniqueNetId);
-			FText DisplayName = FText::FromString(name);
-			FScoreboardEntryData ScoreboardEntryData;
-			
-			ScoreboardEntryData.NumDeaths = 0;
-			ScoreboardEntryData.NumKills = 0;
-			ScoreboardEntryData.PingInMillis = PlayerState->GetCompressedPing() * 4;
-			ScoreboardEntryData.SteamDisplayName = DisplayName;
-			ScoreboardEntryData.UniqueNetId = UniqueNetId.Get();
-			
-			AddEntry(&ScoreboardEntryData);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to update entries due to invalid ScoreboardEntryWidget!"));
 	}
 }
 

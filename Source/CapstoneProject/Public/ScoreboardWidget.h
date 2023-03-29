@@ -48,9 +48,6 @@ protected:
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
 
-	void UpdateEntries(TArray<APlayerState *> PlayerArray);
-	// todo delegate handle here when Joey's player state
-
 	void OnUpdateEntries(FScoreboardData* ScoreboardData);
 	
 	UFUNCTION(BlueprintCallable)
