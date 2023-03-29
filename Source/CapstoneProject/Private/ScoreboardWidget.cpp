@@ -120,6 +120,25 @@ void UScoreboardWidget::UpdateEntries(TArray<APlayerState*> PlayerArray)
 	}
 }
 
+void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
+{
+	if (ScoreboardEntryScrollBox)
+	{
+		SetMapName(ScoreboardData->MapName);
+		SetServerName(ScoreboardData->ServerName);
+		// todo add time remaining text box
+		ClearEntries();
+		for (FScoreboardEntryData* ScoreboardEntryData : ScoreboardData->ScoreboardEntryData)
+		{
+			AddEntry(ScoreboardEntryData);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to update entries due to invalid ScoreboardEntryWidget!"));
+	}
+}
+
 void UScoreboardWidget::ClearEntries()
 {
 	if (ScoreboardEntryScrollBox)
