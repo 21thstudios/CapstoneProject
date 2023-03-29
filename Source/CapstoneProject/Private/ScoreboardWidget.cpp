@@ -11,13 +11,31 @@
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	SetMapName(FText::FromString(GetWorld()->GetMapName()));
+	
+	// todo game state should call OnUpdateEntries 
 	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
-	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
-	// temp
-	TArray<APlayerState*> LocalPlayerStates;
-	LocalPlayerStates.Add(GetOwningPlayerState());
-	UpdateEntries(LocalPlayerStates);
+	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
+	FScoreboardEntryData ScoreboardEntryData;
+	
+	FUniqueNetIdPtr UniqueNetId = GetOwningPlayerState()->GetUniqueId().GetV1();
+	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+	IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+	FString name = Identity->GetPlayerNickname(*UniqueNetId);
+	FText DisplayName = FText::FromString(name);
+			
+	ScoreboardEntryData.NumDeaths = 0;
+	ScoreboardEntryData.NumKills = 0;
+	ScoreboardEntryData.PingInMillis = GetOwningPlayerState()->GetCompressedPing() * 4;
+	ScoreboardEntryData.SteamDisplayName = DisplayName;
+	ScoreboardEntryData.UniqueNetId = UniqueNetId.Get();
+	ScoreboardEntryDataArray.Add(&ScoreboardEntryData);
+	
+	FScoreboardData ScoreboardData;
+	ScoreboardData.MapName = FText::FromString(GetWorld()->GetMapName());
+	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
+	ScoreboardData.EndTimeSeconds = 130;
+	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
+	OnUpdateEntries(&ScoreboardData);
 }
 
 void UScoreboardWidget::NativeDestruct()
