@@ -5,6 +5,7 @@
 
 #include "SessionGameInstance.h"
 #include "Components/TextBlock.h"
+#include "GameFramework/PlayerState.h"
 
 void UScoreboardWidget::NativeConstruct()
 {
@@ -12,6 +13,10 @@ void UScoreboardWidget::NativeConstruct()
 	SetMapName(FText::FromString(GetWorld()->GetMapName()));
 	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
 	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
+	// temp
+	TArray<APlayerState*> LocalPlayerStates;
+	LocalPlayerStates.Add(GetOwningPlayerState());
+	UpdateEntries(LocalPlayerStates);
 }
 
 void UScoreboardWidget::NativeDestruct()
@@ -56,7 +61,7 @@ void UScoreboardWidget::SetServerName(FText ServerName) const
 	}
 }
 
-void UScoreboardWidget::AddEntry(FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills,
+void UScoreboardWidget::AddEntry(const FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills,
 	int32 NumDeaths)
 {
 	if (ScoreboardEntryScrollBox)
@@ -87,9 +92,45 @@ void UScoreboardWidget::InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidge
 	}
 }
 
-void UScoreboardWidget::UpdateEntries()
+void UScoreboardWidget::UpdateEntries(TArray<APlayerState*> PlayerArray)
 {
-	// todo RPC call to GameMode for list of player controllers
+	if (ScoreboardEntryScrollBox)
+	{
+		ClearEntries();
+		for (APlayerState* PlayerState : PlayerArray)
+		{
+			// todo update with Joey data
+			int32 Ping = PlayerState->GetCompressedPing() * 4;
+			int32 NumDeaths = 0;
+			int32 NumKills = 0;
+			FUniqueNetIdPtr UniqueNetId = PlayerState->GetUniqueId().GetV1();
+
+			// temp
+			IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+			IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+			FString name = Identity->GetPlayerNickname(*UniqueNetId);
+			FText DisplayName = FText::FromString(name);
+			
+			AddEntry(UniqueNetId.Get(), DisplayName, Ping, NumKills, NumDeaths);
+		}
+		// temp
+		int32 Ping = 0;
+		int32 NumDeaths = 0;
+		int32 NumKills = 0;
+		FUniqueNetIdPtr UniqueNetId = GetOwningLocalPlayer()->GetPreferredUniqueNetId().GetV1();
+
+		// temp
+		IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+		IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+		FString name = Identity->GetPlayerNickname(*UniqueNetId);
+		FText DisplayName = FText::FromString(name);
+		AddEntry(UniqueNetId.Get(), DisplayName, Ping, NumKills, NumDeaths);
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to update entries due to invalid ScoreboardEntryWidget!"));
+	}
 }
 
 void UScoreboardWidget::ClearEntries()

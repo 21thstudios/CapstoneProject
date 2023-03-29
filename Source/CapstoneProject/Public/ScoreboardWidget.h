@@ -27,12 +27,12 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SetServerName(FText ServerName) const;
 	
-	void AddEntry(FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills, int32 NumDeaths);
+	void AddEntry(const FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills, int32 NumDeaths);
 
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
 
-	UFUNCTION(BlueprintCallable)
-	void UpdateEntries();
+	void UpdateEntries(TArray<APlayerState *> PlayerArray);
+	// todo delegate handle here when Joey's player state
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearEntries();

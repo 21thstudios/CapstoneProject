@@ -21,7 +21,7 @@ void UScoreboardEntryWidget::SetPingInMs(int32 Ping) const
 	{
 		FFormatNamedArguments Args;
 		Args.Add("PingInMs", Ping);
-		Args.Add("ms", *TEXT("ms"));
+		Args.Add("ms", FText::FromString("ms"));
 		FText FormattedText = FText::Format(
 			NSLOCTEXT("ScoreboardEntry", "PingInMsFormat", "{PingInMs}{ms}"),
 			Args);
