@@ -7,6 +7,24 @@
 #include "Components/TextBlock.h"
 #include "ScoreboardEntryWidget.generated.h"
 
+USTRUCT(BlueprintType)
+struct FScoreboardEntryData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName SteamDisplayName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 PingInMillis;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 NumKills;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 NumDeaths;
+};
+
 /**
  * Base user widget for scoreboard entries. This is the part of the scoreboard which contains individual player data. 
  */
