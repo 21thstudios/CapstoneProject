@@ -13,7 +13,7 @@ struct FScoreboardEntryData
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName SteamDisplayName;
+	FText SteamDisplayName;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PingInMillis;
@@ -38,6 +38,7 @@ public:
 	void SetPingInMs(int32 Ping) const;
 	void SetNumKills(int32 NumKills) const;
 	void SetNumDeaths(int32 NumDeaths) const;
+	void SetAll(FScoreboardEntryData* ScoreboardEntryData) const;
 
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))

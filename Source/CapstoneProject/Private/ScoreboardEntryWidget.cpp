@@ -58,3 +58,11 @@ void UScoreboardEntryWidget::SetNumDeaths(int32 NumDeaths) const
 		UE_LOG(LogTemp, Error, TEXT("Failed to set deaths of scoreboard entry due to invalid NumDeathsTextBlock!"));
 	}
 }
+
+void UScoreboardEntryWidget::SetAll(FScoreboardEntryData* ScoreboardEntryData) const
+{
+	SetPlayerDisplayName(ScoreboardEntryData->SteamDisplayName);
+	SetPingInMs(ScoreboardEntryData->PingInMillis);
+	SetNumKills(ScoreboardEntryData->NumKills);
+	SetNumDeaths(ScoreboardEntryData->NumDeaths);
+}
