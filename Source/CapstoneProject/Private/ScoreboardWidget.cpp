@@ -113,19 +113,6 @@ void UScoreboardWidget::UpdateEntries(TArray<APlayerState*> PlayerArray)
 			
 			AddEntry(UniqueNetId.Get(), DisplayName, Ping, NumKills, NumDeaths);
 		}
-		// temp
-		int32 Ping = 0;
-		int32 NumDeaths = 0;
-		int32 NumKills = 0;
-		FUniqueNetIdPtr UniqueNetId = GetOwningLocalPlayer()->GetPreferredUniqueNetId().GetV1();
-
-		// temp
-		IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
-		IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
-		FString name = Identity->GetPlayerNickname(*UniqueNetId);
-		FText DisplayName = FText::FromString(name);
-		AddEntry(UniqueNetId.Get(), DisplayName, Ping, NumKills, NumDeaths);
-		
 	}
 	else
 	{
