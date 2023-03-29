@@ -11,6 +11,8 @@ USTRUCT(BlueprintType)
 struct FScoreboardEntryData
 {
 	GENERATED_BODY()
+
+	const FUniqueNetId* UniqueNetId;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText SteamDisplayName;

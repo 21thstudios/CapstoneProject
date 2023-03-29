@@ -4,6 +4,7 @@
 #include "ScoreboardWidget.h"
 
 #include "SessionGameInstance.h"
+#include "Chaos/ChaosPerfTest.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/PlayerState.h"
 
@@ -61,17 +62,13 @@ void UScoreboardWidget::SetServerName(FText ServerName) const
 	}
 }
 
-void UScoreboardWidget::AddEntry(const FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills,
-	int32 NumDeaths)
+void UScoreboardWidget::AddEntry(FScoreboardEntryData* ScoreboardEntryData)
 {
 	if (ScoreboardEntryScrollBox)
 	{
-		FName WidgetName = FName(UniqueNetId->ToString());
+		const FName WidgetName = FName(ScoreboardEntryData->UniqueNetId->ToString());
 		UScoreboardEntryWidget* ScoreboardEntry = CreateWidget<UScoreboardEntryWidget>(this->GetOwningPlayer(), ScoreboardEntryBlueprintClass, WidgetName);
-		ScoreboardEntry->SetNumDeaths(NumDeaths);
-		ScoreboardEntry->SetNumKills(NumKills);
-		ScoreboardEntry->SetPlayerDisplayName(DisplayName);
-		ScoreboardEntry->SetPingInMs(Ping);
+		ScoreboardEntry->SetAll(ScoreboardEntryData);
 		InsertEntry(ScoreboardEntry);
 	}
 	else
@@ -99,10 +96,6 @@ void UScoreboardWidget::UpdateEntries(TArray<APlayerState*> PlayerArray)
 		ClearEntries();
 		for (APlayerState* PlayerState : PlayerArray)
 		{
-			// todo update with Joey data
-			int32 Ping = PlayerState->GetCompressedPing() * 4;
-			int32 NumDeaths = 0;
-			int32 NumKills = 0;
 			FUniqueNetIdPtr UniqueNetId = PlayerState->GetUniqueId().GetV1();
 
 			// temp
@@ -110,8 +103,15 @@ void UScoreboardWidget::UpdateEntries(TArray<APlayerState*> PlayerArray)
 			IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
 			FString name = Identity->GetPlayerNickname(*UniqueNetId);
 			FText DisplayName = FText::FromString(name);
+			FScoreboardEntryData ScoreboardEntryData;
 			
-			AddEntry(UniqueNetId.Get(), DisplayName, Ping, NumKills, NumDeaths);
+			ScoreboardEntryData.NumDeaths = 0;
+			ScoreboardEntryData.NumKills = 0;
+			ScoreboardEntryData.PingInMillis = PlayerState->GetCompressedPing() * 4;
+			ScoreboardEntryData.SteamDisplayName = DisplayName;
+			ScoreboardEntryData.UniqueNetId = UniqueNetId.Get();
+			
+			AddEntry(&ScoreboardEntryData);
 		}
 	}
 	else

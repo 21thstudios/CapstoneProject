@@ -27,8 +27,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SetServerName(FText ServerName) const;
 	
-	void AddEntry(const FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills, int32 NumDeaths);
-
+	void AddEntry(FScoreboardEntryData* ScoreboardEntryData);
+	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
 
 	void UpdateEntries(TArray<APlayerState *> PlayerArray);
