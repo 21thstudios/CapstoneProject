@@ -24,7 +24,7 @@ void UScoreboardWidget::SetMapName(FText MapName) const
 	if (MapNameTextBlock)
 	{
 		FFormatNamedArguments Args;
-		Args.Add("Prefix", *TEXT("Map"));
+		Args.Add("Prefix", FText::FromString("Map"));
 		Args.Add("MapName", MapName);
 		FText FormattedText = FText::Format(
 			NSLOCTEXT("Scoreboard", "MapNameWithPrefixFormat", "{Prefix}: {MapName}"),
@@ -42,7 +42,7 @@ void UScoreboardWidget::SetServerName(FText ServerName) const
 	if (ServerNameTextBlock)
 	{
 		FFormatNamedArguments Args;
-		Args.Add("Prefix", *TEXT("Server"));
+		Args.Add("Prefix", FText::FromString("Server"));
 		Args.Add("ServerName", ServerName);
 		FText FormattedText = FText::Format(
 			NSLOCTEXT("Scoreboard", "ServerNameWithPrefixFormat", "{Prefix}: {ServerName}"),
@@ -53,5 +53,24 @@ void UScoreboardWidget::SetServerName(FText ServerName) const
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to set server name of scoreboard due to invalid ServerNameTextBlock!"));
+	}
+}
+
+void UScoreboardWidget::ToggleViewport()
+{
+	if (APlayerController* PlayerController = GetOwningPlayer(); IsValid(PlayerController))
+	{
+		if (this->IsInViewport())
+		{
+			this->RemoveFromParent();
+		}
+		else
+		{
+			this->AddToViewport();
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerController owning Scoreboard screen is not valid, therefore cannot pause/unpause"));
 	}
 }

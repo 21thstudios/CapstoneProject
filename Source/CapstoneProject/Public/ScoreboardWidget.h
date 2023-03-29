@@ -23,6 +23,9 @@ protected:
 	
 	void SetMapName(FText MapName) const;
 	void SetServerName(FText ServerName) const;
+
+	UFUNCTION(BlueprintCallable)
+	void ToggleViewport();
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;
