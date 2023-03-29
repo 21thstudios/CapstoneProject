@@ -145,11 +145,11 @@ void UScoreboardWidget::ClearEntries()
 	}
 }
 
-void UScoreboardWidget::ToggleViewport()
+void UScoreboardWidget::ToggleViewport(bool ShouldAddToViewport)
 {
 	if (APlayerController* PlayerController = GetOwningPlayer(); IsValid(PlayerController))
 	{
-		if (this->IsInViewport())
+		if (this->IsInViewport() && !ShouldAddToViewport)
 		{
 			this->RemoveFromParent();
 		}

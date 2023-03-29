@@ -38,7 +38,7 @@ protected:
 	void ClearEntries();
 
 	UFUNCTION(BlueprintCallable)
-	void ToggleViewport();
+	void ToggleViewport(bool ShouldAddToViewport);
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;
