@@ -100,12 +100,23 @@ void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWa
 		{
 			Session->ClearOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegateHandle);
 		}
+		if (bWasSuccessful)
+		{
+			const ULocalPlayer* Player = GetFirstGamePlayer();
+			const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
+			HostedSessionInfo.ServerName = SessionName;
+			IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+			IOnlineIdentity* OnlineIdentity = Identity.Get();
+			FString name = Identity->GetPlayerNickname(*UniqueNetId);
+
+			GetWorld()->ServerTravel("/Game/FirstPerson/Maps/FirstPersonMap?listen", true);
+		}
 	}
-	if (bWasSuccessful)
+	else
 	{
-		HostedSessionInfo.ServerName = SessionName;
-		GetWorld()->ServerTravel("/Game/FirstPerson/Maps/FirstPersonMap?listen", true);
+		UE_LOG(LogTemp, Error, TEXT("hm"));
 	}
+
 }
 
 void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence, bool bSearchLobbies)

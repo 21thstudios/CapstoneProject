@@ -20,9 +20,22 @@ class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	
+
+	UFUNCTION(BlueprintCallable)
 	void SetMapName(FText MapName) const;
+	
+	UFUNCTION(BlueprintCallable)
 	void SetServerName(FText ServerName) const;
+	
+	void AddEntry(FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills, int32 NumDeaths);
+
+	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateEntries();
+	
+	UFUNCTION(BlueprintCallable)
+	void ClearEntries();
 
 	UFUNCTION(BlueprintCallable)
 	void ToggleViewport();

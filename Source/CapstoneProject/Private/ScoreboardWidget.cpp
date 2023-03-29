@@ -56,6 +56,54 @@ void UScoreboardWidget::SetServerName(FText ServerName) const
 	}
 }
 
+void UScoreboardWidget::AddEntry(FUniqueNetId* UniqueNetId, FText DisplayName, int32 Ping, int32 NumKills,
+	int32 NumDeaths)
+{
+	if (ScoreboardEntryScrollBox)
+	{
+		FName WidgetName = FName(UniqueNetId->ToString());
+		UScoreboardEntryWidget* ScoreboardEntry = CreateWidget<UScoreboardEntryWidget>(this->GetOwningPlayer(), ScoreboardEntryBlueprintClass, WidgetName);
+		ScoreboardEntry->SetNumDeaths(NumDeaths);
+		ScoreboardEntry->SetNumKills(NumKills);
+		ScoreboardEntry->SetPlayerDisplayName(DisplayName);
+		ScoreboardEntry->SetPingInMs(Ping);
+		InsertEntry(ScoreboardEntry);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to add entry due to invalid ScoreboardEntryWidget!"));
+	}
+}
+
+void UScoreboardWidget::InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget)
+{
+	if (ScoreboardEntryScrollBox)
+	{
+		ScoreboardEntryScrollBox->AddChild(ScoreboardEntryWidget);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to insert entry due to invalid ScoreboardEntryWidget!"));
+	}
+}
+
+void UScoreboardWidget::UpdateEntries()
+{
+	// todo RPC call to GameMode for list of player controllers
+}
+
+void UScoreboardWidget::ClearEntries()
+{
+	if (ScoreboardEntryScrollBox)
+	{
+		ScoreboardEntryScrollBox->ClearChildren();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to clear entries due to invalid ScoreboardEntryWidget!"));
+	}
+}
+
 void UScoreboardWidget::ToggleViewport()
 {
 	if (APlayerController* PlayerController = GetOwningPlayer(); IsValid(PlayerController))

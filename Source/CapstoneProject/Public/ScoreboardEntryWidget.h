@@ -15,12 +15,13 @@ class CAPSTONEPROJECT_API UScoreboardEntryWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	void SetPlayerDisplayName(FText DisplayName) const;
 	void SetPingInMs(int32 Ping) const;
 	void SetNumKills(int32 NumKills) const;
 	void SetNumDeaths(int32 NumDeaths) const;
 
+protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* PlayerDisplayNameTextBlock;
 

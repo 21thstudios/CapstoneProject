@@ -15,7 +15,6 @@ struct FHostedSessionInfo
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Properties")
 	FName ServerName;
-	
 	//UPROPERTY()
 	//UObject* SafeObjectPointer;
 };
