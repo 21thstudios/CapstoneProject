@@ -142,7 +142,7 @@ void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
 		SetMapName(ScoreboardData->MapName);
 		SetServerName(ScoreboardData->ServerName);
 		SetRemainingTimeInSeconds(ScoreboardData->SecondsRemainingOfGame);
-		ClearEntries();
+		ClearEntries(); // todo pre-build all widgets, then clear, then insert all the entries
 		for (FScoreboardEntryData* ScoreboardEntryData : ScoreboardData->ScoreboardEntryData)
 		{
 			AddEntry(ScoreboardEntryData);
