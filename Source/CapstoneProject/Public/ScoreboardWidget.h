@@ -20,7 +20,7 @@ struct FScoreboardData
 	FText MapName;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 EndTimeSeconds;
+	int32 SecondsRemainingOfGame;
 	
 	TArray<FScoreboardEntryData*> ScoreboardEntryData;
 };
@@ -43,6 +43,9 @@ protected:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetServerName(FText ServerName) const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetRemainingTimeInSeconds(int32 RemainingTimeSeconds);
 	
 	void AddEntry(FScoreboardEntryData* ScoreboardEntryData);
 	
@@ -70,4 +73,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* MapNameTextBlock;
+	
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* RemainingTimeSecondsTextBlock;
 };

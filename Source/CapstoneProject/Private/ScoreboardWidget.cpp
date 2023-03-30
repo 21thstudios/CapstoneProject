@@ -3,6 +3,8 @@
 
 #include "ScoreboardWidget.h"
 
+#include <chrono>
+
 #include "SessionGameInstance.h"
 #include "Chaos/ChaosPerfTest.h"
 #include "Components/TextBlock.h"
@@ -35,7 +37,7 @@ void UScoreboardWidget::NativeConstruct()
 	FScoreboardData ScoreboardData;
 	ScoreboardData.MapName = FText::FromString(GetWorld()->GetMapName());
 	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
-	ScoreboardData.EndTimeSeconds = 130;
+	ScoreboardData.SecondsRemainingOfGame = 125;
 	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
 	
 	OnUpdateEntries(&ScoreboardData);
@@ -83,6 +85,29 @@ void UScoreboardWidget::SetServerName(FText ServerName) const
 	}
 }
 
+void UScoreboardWidget::SetRemainingTimeInSeconds(int32 RemainingTimeSeconds)
+{
+	if (RemainingTimeSecondsTextBlock)
+	{
+		int32 RemainingTimeMinutes = RemainingTimeSeconds / 60;
+		int32 LeftoverSeconds = RemainingTimeSeconds % 60;
+		FString RemainingTimeMinutesString = RemainingTimeMinutes > 0 ? FString::FromInt(RemainingTimeMinutes) : "";
+		FString RemainingTimeSecondsString = RemainingTimeMinutes > 0 && LeftoverSeconds < 10 ? FString("0").Append(FString::FromInt(LeftoverSeconds)) : FString::FromInt(LeftoverSeconds);
+		
+		FFormatNamedArguments Args;
+		Args.Add("MinutesRemaining", FText::FromString(RemainingTimeMinutesString));
+		Args.Add("MinutesRemainingDelimiter", RemainingTimeMinutes > 0 ? FText::FromString(":") : FText::FromString(""));
+		Args.Add("SecondsRemaining", FText::FromString(RemainingTimeSecondsString));
+		FText FormattedText = FText::Format(
+	NSLOCTEXT("Scoreboard", "RemainingTimeFormat", "{MinutesRemaining}{MinutesRemainingDelimiter}{SecondsRemaining}"), Args);
+		RemainingTimeSecondsTextBlock->SetText(FormattedText);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to add entry due to invalid RemainingTimeSecondsTextBlock!"));
+	}
+}
+
 void UScoreboardWidget::AddEntry(FScoreboardEntryData* ScoreboardEntryData)
 {
 	if (ScoreboardEntryScrollBox)
@@ -116,7 +141,7 @@ void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
 	{
 		SetMapName(ScoreboardData->MapName);
 		SetServerName(ScoreboardData->ServerName);
-		// todo add time remaining text box
+		SetRemainingTimeInSeconds(ScoreboardData->SecondsRemainingOfGame);
 		ClearEntries();
 		for (FScoreboardEntryData* ScoreboardEntryData : ScoreboardData->ScoreboardEntryData)
 		{
