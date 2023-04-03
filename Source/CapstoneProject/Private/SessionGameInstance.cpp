@@ -8,8 +8,8 @@
 #include "Online/OnlineSessionNames.h"
 
 const FName SESSION_NAME = FName(TEXT("TestSessionName"));
-const FString MAIN_MENU_MAP_NAME = TEXT("MainMenuMap");
-const FString HOST_MAP_DESTINATION_NAME = TEXT("/Game/FirstPerson/Maps/FirstPersonMap");
+const FString MAIN_MENU_MAP_NAME = TEXT("BloodGulch");
+const FString HOST_MAP_DESTINATION_NAME = TEXT("/Game/Maps/BloodGulch/BloodGulch");
 
 USessionList* MenuWidgetHandle;
 
@@ -109,8 +109,7 @@ void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWa
 			IOnlineIdentity* OnlineIdentity = Identity.Get();
 			FString name = Identity->GetPlayerNickname(*UniqueNetId);
 
-			GetWorld()->ServerTravel("/Game/FirstPerson/Maps/FirstPersonMap?listen", true);
-		}
+			GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);		}
 	}
 	else
 	{
