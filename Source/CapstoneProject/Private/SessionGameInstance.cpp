@@ -8,7 +8,7 @@
 #include "Online/OnlineSessionNames.h"
 
 const FName SESSION_NAME = FName(TEXT("TestSessionName"));
-const FString MAIN_MENU_MAP_NAME = TEXT("BloodGulch");
+const FString MAIN_MENU_MAP_NAME = TEXT("MainMenu");
 const FString HOST_MAP_DESTINATION_NAME = TEXT("/Game/Maps/BloodGulch/BloodGulch");
 
 USessionList* MenuWidgetHandle;
