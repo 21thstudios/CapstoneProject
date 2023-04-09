@@ -50,8 +50,23 @@ public:
 
 	void SetGameStartTimeToNow();
 
+  bool ShouldEndGameByTime();
+
+  bool ShouldEndGameByKills();
+
+  void HandleGameEndByKills();
+
+  void HandleGameEndByTime();
+
+  int GetTimeSinceGameStart();
+
+  int StartTime();
+
 	UFUNCTION()
 	void BeginPlay();
+
+  // Tick function 
+  void Tick();
 
 	// UFUNCTION()
 	// Source: https://forums.unrealengine.com/t/replicating-variables-in-c/79772/2 
