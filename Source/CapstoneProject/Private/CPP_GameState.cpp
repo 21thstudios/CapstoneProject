@@ -15,7 +15,7 @@
 ACPP_GameState::ACPP_GameState()
 {
 	this->SetGameStartTimeToNow();
-	this->mode = TEXT("time");
+	this->mode = TEXT("kills");
 	this->kills_to_end = 3;
 	this->time_to_end = 20;
 	this->bReplicates = true;
@@ -73,7 +73,6 @@ bool ACPP_GameState::ShouldEndGameByKills()
     if (Stats->Kills >= this->kills_to_end) {
       return true;
     }
-    D("Kills for current player:");
   }
   return false;
 }
