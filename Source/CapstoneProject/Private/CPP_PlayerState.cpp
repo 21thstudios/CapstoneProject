@@ -7,9 +7,9 @@
 #include "CPP_GameState.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/World.h"
-#include <string>
+// #include <string>
 
-#define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, std::to_string(x).c_str());}
+#define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::FromInt(x));}
 #define DFstr(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, x);}
 
 ACPP_PlayerState::ACPP_PlayerState()
@@ -17,7 +17,7 @@ ACPP_PlayerState::ACPP_PlayerState()
 	this->Kills = 0;
 	this->Deaths = 0;
 	// Replace with proper way to get player name once available 
-	this->Name = std::to_string(this->GetUniqueID()).c_str();
+	this->Name = FName(*FString::FromInt(this->GetUniqueID()));
 	this->bReplicates = true;
 }
 

@@ -60,9 +60,8 @@ void ACPP_GameState::ResetAllPlayersStates()
 
 void ACPP_GameState::SetGameStartTimeToNow()
 {
-	this->time_at_start = std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::system_clock::now().time_since_epoch()
-		);	
+  FDateTime Now = FDateTime::Now();
+  this->time_at_start = Now.ToUnixTimestamp();
 }
 
 bool ACPP_GameState::ShouldEndGameByTime()
@@ -78,6 +77,7 @@ bool ACPP_GameState::ShouldEndGameByKills()
     if (Stats->Kills >= this->kills_to_end) {
       return true;
     }
+    D("Kills for current player:");
   }
   return false;
 }
@@ -98,13 +98,12 @@ void ACPP_GameState::HandleGameEndByTime()
 
 int ACPP_GameState::GetTimeSinceGameStart()
 {
-  int now = std::chrono::duration_cast<std::chrono::milliseconds>(
-    std::chrono::system_clock::now().time_since_epoch()
-    ).count();
-  return now - this->StartTime();
+  FDateTime NowDateTime = FDateTime::Now();
+  int Now = NowDateTime.ToUnixTimestamp();
+  return Now - this->StartTime();
 }
 
-void ACPP_GameState::Tick() 
+void ACPP_GameState::HandleGameEnd() 
 {
   if (this->mode == TEXT("time")) {
     this->HandleGameEndByTime();
@@ -116,14 +115,13 @@ void ACPP_GameState::Tick()
 }
 
 int ACPP_GameState::StartTime() {
-  return this->time_at_start.count();
+  return this->time_at_start;
 }
 
 void ACPP_GameState::BeginPlay() 
 {
 	Super::BeginPlay();
 	// Source: https://www.tomlooman.com/unreal-engine-cpp-timers/ 
-	/*
   FTimerHandle GameEndTimer;
 	FTimerDelegate Delegate;
   
@@ -134,5 +132,9 @@ void ACPP_GameState::BeginPlay()
   } else {
     D("Invalid game mode.");
   }
-  */
+}
+
+void ACPP_GameState::BeginDestroy()
+{
+  Super::BeginDestroy();
 }
