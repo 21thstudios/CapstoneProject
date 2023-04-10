@@ -40,20 +40,16 @@ void ACPP_GameState::ResetStateForNewGame()
 
 		DFstr(DisplayMessage);
 		D("Resetting all player stats.");
-	    this->ResetAllPlayersStates();
-	    this->SetGameStartTimeToNow();
+    this->ResetAllPlayersStates();
+    this->SetGameStartTimeToNow();
 	}
 }
 
 void ACPP_GameState::ResetAllPlayersStates()
 {
-	// Source: https://forums.unrealengine.com/t/how-to-get-the-player-controller-with-c/287177
 	for (auto Player : this->PlayerArray)
 	{
-		// Player.ResetKillsAndDeaths();
 		ACPP_PlayerState* Stats = static_cast<ACPP_PlayerState*>(Player);
-		// D("Kills for current player:");
-		// Dnum(Stats->Kills);
 		Stats->ResetKillsAndDeaths();
 	}
 }
@@ -121,11 +117,5 @@ int ACPP_GameState::StartTime() {
 void ACPP_GameState::BeginPlay() 
 {
 	Super::BeginPlay();
-  if (this->mode == TEXT("time")) {
-	  GetWorld()->GetTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, this->time_to_end, true);
-  } else if (this->mode == TEXT("kills")) {
-    GetWorld()->GetTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, 1.0f, true);
-  } else {
-    D("Invalid game mode.");
-  }
+  GetWorldTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::HandleGameEnd, 1.0f, true);
 }
