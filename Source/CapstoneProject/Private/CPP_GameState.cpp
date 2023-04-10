@@ -67,6 +67,9 @@ bool ACPP_GameState::ShouldEndGameByTime()
 
 bool ACPP_GameState::ShouldEndGameByKills()
 {
+  if (this->PlayerArray.Num() == 0) {
+    return false;
+  }
   for (auto Player : this->PlayerArray)
   {
     ACPP_PlayerState* Stats = static_cast<ACPP_PlayerState*>(Player);
