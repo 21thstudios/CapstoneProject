@@ -22,6 +22,8 @@ public:
 
 private:
 	int time_at_start;
+  FTimerHandle GameEndTimer;
+  FTimerDelegate Delegate;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

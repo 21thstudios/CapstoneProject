@@ -121,20 +121,11 @@ int ACPP_GameState::StartTime() {
 void ACPP_GameState::BeginPlay() 
 {
 	Super::BeginPlay();
-	// Source: https://www.tomlooman.com/unreal-engine-cpp-timers/ 
-  FTimerHandle GameEndTimer;
-	FTimerDelegate Delegate;
-  
   if (this->mode == TEXT("time")) {
-	  GetWorld()->GetTimerManager().SetTimer(GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, this->time_to_end, true);
+	  GetWorld()->GetTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, this->time_to_end, true);
   } else if (this->mode == TEXT("kills")) {
-    GetWorld()->GetTimerManager().SetTimer(GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, 1.0f, true);
+    GetWorld()->GetTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::ResetStateForNewGame, 1.0f, true);
   } else {
     D("Invalid game mode.");
   }
-}
-
-void ACPP_GameState::BeginDestroy()
-{
-  Super::BeginDestroy();
 }
