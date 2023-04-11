@@ -8,8 +8,8 @@
 #include "Online/OnlineSessionNames.h"
 
 const FName SESSION_NAME = FName(TEXT("TestSessionName"));
-const FString MAIN_MENU_MAP_NAME = TEXT("MainMenuMap");
-const FString HOST_MAP_DESTINATION_NAME = TEXT("FirstPersonMap");
+const FString MAIN_MENU_MAP_NAME = TEXT("BloodGulch");
+const FString HOST_MAP_DESTINATION_NAME = TEXT("/Game/Maps/BloodGulch/BloodGulch");
 
 USessionList* MenuWidgetHandle;
 
@@ -24,30 +24,35 @@ USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectIniti
 }
 
 bool USessionGameInstance::HostSession(TSharedPtr<const FUniqueNetId> UserId,FName SessionName,
-                                       bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
+                                       bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers, bool bUseLobbies)
 {
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
 		IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface();
-		if (Session.IsValid() && UserId.IsValid())
+		if (Session.IsValid())
 		{
 			SessionSettings = MakeShareable(new FOnlineSessionSettings());
 			SessionSettings->bIsLANMatch = bIsLAN;
 			SessionSettings->bUsesPresence = bIsPresence;
 			SessionSettings->NumPublicConnections = MaxNumPlayers;
-			SessionSettings->NumPrivateConnections = 5;
+			SessionSettings->NumPrivateConnections = 20;
 			SessionSettings->bAllowInvites = true;
 			SessionSettings->bAllowJoinInProgress = true;
 			SessionSettings->bShouldAdvertise = true;
-			SessionSettings->bAllowJoinViaPresence = true;
-			SessionSettings->bAllowJoinViaPresenceFriendsOnly = true;
-			
-			SessionSettings->Set(SETTING_MAPNAME, HOST_MAP_DESTINATION_NAME, EOnlineDataAdvertisementType::ViaOnlineService);
+			if (bUseLobbies)
+			{
+				SessionSettings->bUseLobbiesIfAvailable = bUseLobbies;
+			}
+			//SessionSettings->bAllowJoinViaPresence = bIsPresence;
+			//SessionSettings->bAllowJoinViaPresenceFriendsOnly = bIsPresence;
+			SessionSettings->bIsDedicated= false;
+
+			//SessionSettings->Set(SETTING_MAPNAME, HOST_MAP_DESTINATION_NAME, EOnlineDataAdvertisementType::ViaOnlineService);
 
 			OnCreateSessionCompleteDelegateHandle = Session->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
 			
 			UE_LOG(LogTemp, Display, TEXT("Session Interface is valid. Attempting to create session..."));
-			return Session->CreateSession(*UserId, SessionName, *SessionSettings);
+			return Session->CreateSession(0, SESSION_NAME, *SessionSettings);
 		}
 		UE_LOG(LogTemp, Error, TEXT("Unable to initiate session creation due to invalid Session Interface or UserId!"));
 	}
@@ -70,7 +75,7 @@ void USessionGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasS
 			if (bWasSuccessful)
 			{
 				OnStartSessionCompleteDelegateHandle = Session->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
-				Session->StartSession(SessionName);
+				Session->StartSession(SESSION_NAME);
 			}
 		}
 		else
@@ -81,7 +86,7 @@ void USessionGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasS
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Session creation completed, but the OnlineSubsystem is no longer initialized and therefore the session cannot be started."));
-	}
+	} 
 }
 
 void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful)
@@ -97,11 +102,12 @@ void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWa
 	}
 	if (bWasSuccessful)
 	{
-		UGameplayStatics::OpenLevel(GetWorld(), FName(HOST_MAP_DESTINATION_NAME), true, "listen");
+		//UGameplayStatics::OpenLevel(GetWorld(), "BloodGulch", true, "listen");
+		GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);
 	}
 }
 
-void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence)
+void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence, bool bSearchLobbies)
 {
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
@@ -110,23 +116,26 @@ void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, b
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 			
 			SessionSearch->bIsLanQuery = bIsLAN;
-			SessionSearch->MaxSearchResults = 30000;
+			SessionSearch->MaxSearchResults = 1000;
 			SessionSearch->PingBucketSize = 50;
-			SessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, false, EOnlineComparisonOp::Equals);
-			SessionSearch->QuerySettings.Set(SEARCH_EMPTY_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
-			SessionSearch->QuerySettings.Set(SEARCH_SECURE_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
-			SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
-			
+			//SessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, false, EOnlineComparisonOp::Equals);
+			//SessionSearch->QuerySettings.Set(SEARCH_EMPTY_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
+			//SessionSearch->QuerySettings.Set(SEARCH_SECURE_SERVERS_ONLY, false, EOnlineComparisonOp::Equals);
+
+			if (bSearchLobbies)
+			{
+				SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
+			}
 			if (bIsPresence)
 			{
-				SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, bIsPresence, EOnlineComparisonOp::Equals);
+				SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 			}
 			
 			TSharedRef<FOnlineSessionSearch> SearchSettingsRef = SessionSearch.ToSharedRef();
 			
 			UE_LOG(LogTemp, Display, TEXT("SessionInterface is valid. Finding sessions using provided settings..."));
 			OnFindSessionsCompleteDelegateHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
-			Session->FindSessions(*UserId, SearchSettingsRef);
+			Session->FindSessions(0, SearchSettingsRef);
 		}
 		else
 		{
@@ -178,11 +187,12 @@ bool USessionGameInstance::JoinOnlineSession(TSharedPtr<const FUniqueNetId> User
 	bool bSuccessful = false;
 	if (IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
-		if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid() && UserId.IsValid())
+		if (IOnlineSessionPtr Session = OnlineSubsystem->GetSessionInterface(); Session.IsValid())
 		{
 			OnJoinSessionCompleteDelegateHandle = Session->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
 			//bSuccessful = Session->JoinSession(*UserId, SessionName, SearchResult);
-			bSuccessful = Session->JoinSession(*UserId, SESSION_NAME, SearchResult);
+			UE_LOG(LogTemp, Error, TEXT("Attemping to join session with SESSION_NAME: %s"), *SESSION_NAME.ToString());
+			bSuccessful = Session->JoinSession(0, SESSION_NAME, SearchResult);
 		}
 		else
 		{
@@ -253,18 +263,18 @@ void USessionGameInstance::OnDestroySessionComplete(FName SessionName, bool bWas
 	}
 }
 
-void USessionGameInstance::StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)
+void USessionGameInstance::StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers, bool bUseLobbies)
 {
 	const ULocalPlayer* Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
-	HostSession(UniqueNetId, SESSION_NAME, bIsLAN, bIsPresence, MaxNumPlayers);
+	HostSession(UniqueNetId, SESSION_NAME, bIsLAN, bIsPresence, MaxNumPlayers, bUseLobbies);
 }
 
-void USessionGameInstance::FindOnlineGames(bool bIsLAN, bool bIsPresence)
+void USessionGameInstance::FindOnlineGames(bool bIsLAN, bool bIsPresence, bool bSearchLobbies)
 {
 	const ULocalPlayer* Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
-	FindSessions(UniqueNetId, bIsLAN, bIsPresence);
+	FindSessions(UniqueNetId, bIsLAN, bIsPresence, bSearchLobbies);
 }
 
 void USessionGameInstance::DestroySessionAndLeaveGame()
@@ -286,13 +296,13 @@ void USessionGameInstance::DestroySessionAndLeaveGame()
 void USessionGameInstance::PopulateWidgetWithOnlineGames(USessionList* SessionListWidget)
 {
 	MenuWidgetHandle = SessionListWidget; // update once finished
-	FindOnlineGames(SessionListWidget->LANCheckBox->IsChecked(), true);
+	FindOnlineGames(SessionListWidget->LANCheckBox->IsChecked(), SessionListWidget->PresenceCheckBox->IsChecked(), SessionListWidget->SearchLobbiesCheckBox->IsChecked());
 }
 
 void USessionGameInstance::JoinOnlineGameProvidedSearchResult(FOnlineSessionSearchResult* SearchResult)
 {
 	const ULocalPlayer* Player = GetFirstGamePlayer();
 	const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
-	JoinOnlineSession(UniqueNetId, SESSION_NAME, *SearchResult);
+	JoinOnlineSession(0, SESSION_NAME, *SearchResult);
 }
 

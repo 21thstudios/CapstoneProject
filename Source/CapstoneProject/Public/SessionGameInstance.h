@@ -20,10 +20,10 @@ public:
 	USessionGameInstance(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
+	void StartOnlineGame(FName ServerName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers, bool bUseLobbies);
 	
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void FindOnlineGames(bool bIsLAN, bool bIsPresence);
+	void FindOnlineGames(bool bIsLAN, bool bIsPresence, bool bSearchLobbies);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void PopulateWidgetWithOnlineGames(USessionList* SessionListWidget);
@@ -34,12 +34,12 @@ public:
 	void DestroySessionAndLeaveGame();
 	
 	/** Creating online sessions */
-	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers);
+	bool HostSession(TSharedPtr<const FUniqueNetId> UserId, FName SessionName, bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers, bool bUseLobbies);
 	virtual void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
 
 	/** Finding online sessions */
-	void FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence);
+	void FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence, bool bSearchLobbies);
 	virtual void OnFindSessionsComplete(bool bWasSuccessful);
 
 	/** Joining online sessions */
