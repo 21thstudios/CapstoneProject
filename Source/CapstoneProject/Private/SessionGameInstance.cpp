@@ -8,7 +8,7 @@
 #include "Online/OnlineSessionNames.h"
 
 const FName SESSION_NAME = FName(TEXT("TestSessionName"));
-const FString MAIN_MENU_MAP_NAME = TEXT("BloodGulch");
+const FString MAIN_MENU_MAP_NAME = TEXT("MainMenu");
 const FString HOST_MAP_DESTINATION_NAME = TEXT("/Game/Maps/BloodGulch/BloodGulch");
 
 USessionList* MenuWidgetHandle;
@@ -16,6 +16,7 @@ USessionList* MenuWidgetHandle;
 USessionGameInstance::USessionGameInstance(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
+	HostedSessionInfo.ServerName = SESSION_NAME;
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnCreateSessionComplete);
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnStartOnlineGameComplete);
 	OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &USessionGameInstance::OnFindSessionsComplete);
@@ -99,12 +100,22 @@ void USessionGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWa
 		{
 			Session->ClearOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegateHandle);
 		}
+		if (bWasSuccessful)
+		{
+			const ULocalPlayer* Player = GetFirstGamePlayer();
+			const TSharedPtr<const FUniqueNetId> UniqueNetId = Player->GetPreferredUniqueNetId().GetUniqueNetId();
+			HostedSessionInfo.ServerName = SessionName;
+			IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+			IOnlineIdentity* OnlineIdentity = Identity.Get();
+			FString name = Identity->GetPlayerNickname(*UniqueNetId);
+
+			GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);		}
 	}
-	if (bWasSuccessful)
+	else
 	{
-		//UGameplayStatics::OpenLevel(GetWorld(), "BloodGulch", true, "listen");
-		GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);
+		UE_LOG(LogTemp, Error, TEXT("hm"));
 	}
+
 }
 
 void USessionGameInstance::FindSessions(TSharedPtr<const FUniqueNetId> UserId, bool bIsLAN, bool bIsPresence, bool bSearchLobbies)
