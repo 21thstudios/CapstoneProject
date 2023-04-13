@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/Image.h"
 #include "Blueprint/UserWidget.h"
 #include "CrosshairWidget.generated.h"
 

@@ -3,8 +3,6 @@
 
 #include "CrosshairWidget.h"
 
-#include "Components/Image.h"
-
 void UCrosshairWidget::SetCrosshair(UTexture2D* Crosshair)
 {
 	if (CrosshairImage)
