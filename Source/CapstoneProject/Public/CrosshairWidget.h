@@ -21,6 +21,6 @@ public:
 	UImage* CrosshairImage;
 
 	UFUNCTION(BlueprintCallable)
-	void SetCrosshair(UImage* Crosshair);
+	void SetCrosshair(UTexture2D* Crosshair);
 	
 };
