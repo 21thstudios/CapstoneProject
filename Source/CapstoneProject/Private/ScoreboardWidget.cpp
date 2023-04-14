@@ -5,6 +5,7 @@
 
 #include <chrono>
 
+#include "CPP_PlayerState.h"
 #include "SessionGameInstance.h"
 #include "Chaos/ChaosPerfTest.h"
 #include "Components/TextBlock.h"
@@ -13,7 +14,7 @@
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+	/*
 	// todo game state should call OnUpdateEntries 
 	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
 	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
@@ -40,11 +41,17 @@ void UScoreboardWidget::NativeConstruct()
 	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
 	
 	OnUpdateEntries(&ScoreboardData);
+	*/
+	//OnUpdateEntriesScoreboardDelegate.AddDynamic(this, &ACPP_PlayerState::OnUpdateEntries);
+	ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(GetOwningPlayerState());
+	PlayerState->OnUpdateEntriesScoreboardDelegate.AddDynamic(this, &UScoreboardWidget::OnUpdateEntries);
 }
 
 void UScoreboardWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
+	ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(GetOwningPlayerState());
+	PlayerState->OnUpdateEntriesScoreboardDelegate.RemoveDynamic(this, &UScoreboardWidget::OnUpdateEntries);
 }
 
 void UScoreboardWidget::SetMapName(FText MapName) const
@@ -134,17 +141,17 @@ void UScoreboardWidget::InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidge
 	}
 }
 
-void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
+void UScoreboardWidget::OnUpdateEntries(FScoreboardData ScoreboardData)
 {
 	if (ScoreboardEntryScrollBox)
 	{
 		SetMapName(FText::FromString(GetWorld()->GetMapName()));
-		SetServerName(ScoreboardData->ServerName);
-		SetRemainingTimeInSeconds(ScoreboardData->SecondsRemainingOfGame);
+		SetServerName(ScoreboardData.ServerName);
+		SetRemainingTimeInSeconds(ScoreboardData.SecondsRemainingOfGame);
 		ClearEntries(); // todo pre-build all widgets, then clear, then insert all the entries
-		for (FScoreboardEntryData* ScoreboardEntryData : ScoreboardData->ScoreboardEntryData)
+		for (FScoreboardEntryData ScoreboardEntryData : ScoreboardData.ScoreboardEntryData)
 		{
-			AddEntry(ScoreboardEntryData);
+			AddEntry(&ScoreboardEntryData);
 		}
 	}
 	else

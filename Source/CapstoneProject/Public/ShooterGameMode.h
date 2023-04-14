@@ -13,7 +13,5 @@ UCLASS()
 class CAPSTONEPROJECT_API AShooterGameMode : public AGameMode
 {
 	GENERATED_BODY()
-
-protected:
-	virtual void PostLogin(APlayerController* NewPlayer) override;
+	
 };

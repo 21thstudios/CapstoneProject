@@ -3,8 +3,3 @@
 
 #include "ShooterGameMode.h"
 
-void AShooterGameMode::PostLogin(APlayerController* NewPlayer)
-{
-	Super::PostLogin(NewPlayer);
-	
-}

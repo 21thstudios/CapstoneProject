@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ScoreboardWidget.h"
 #include "GameFramework/PlayerState.h"
 #include "CPP_PlayerState.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateScoreboardDelegate, FScoreboardData, ScoreboardData);
 /**
  * 
  */
@@ -40,4 +42,10 @@ public:
 	void PrintDeathsOnScreen();
 
 	void PrintStatsOnScreen();
+
+	UFUNCTION()
+	void OnUpdateEntries(FScoreboardData ScoreboardData);
+	
+	UPROPERTY(BlueprintAssignable)
+	FUpdateScoreboardDelegate OnUpdateEntriesScoreboardDelegate;
 };

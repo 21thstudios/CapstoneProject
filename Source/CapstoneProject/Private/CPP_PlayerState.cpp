@@ -70,6 +70,12 @@ void ACPP_PlayerState::PrintStatsOnScreen()
 	this->PrintDeathsOnScreen();
 }
 
+void ACPP_PlayerState::OnUpdateEntries(FScoreboardData ScoreboardData)
+{
+	DFstr("EVENT TRIGGEREd");
+	UE_LOG(LogTemp, Error, TEXT("UpdateEntries event triggered"));
+}
+
 void ACPP_PlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

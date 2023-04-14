@@ -19,9 +19,11 @@ struct FScoreboardData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 SecondsRemainingOfGame;
 	
-	TArray<FScoreboardEntryData*> ScoreboardEntryData;
+	TArray<FScoreboardEntryData> ScoreboardEntryData;
 };
 
+//DECLARE_DYNAMIC_DELEGATE_OneParam(FUpdateScoreboardDelegate, FScoreboardData, ScoreboardData);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateScoreboardDelegate, FScoreboardData, ScoreboardData);
 /**
  * Base user widget for scoreboards. Provided a list of PlayerState and visualizes the information within it to the
  * end user.
@@ -48,7 +50,8 @@ protected:
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
 
-	void OnUpdateEntries(FScoreboardData* ScoreboardData);
+	UFUNCTION()
+	void OnUpdateEntries(FScoreboardData ScoreboardData);
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearEntries();
@@ -73,4 +76,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* RemainingTimeSecondsTextBlock;
+
+	//UPROPERTY(BlueprintAssignable)
+	//FUpdateScoreboardDelegate OnUpdateEntriesScoreboardDelegate;
 };
