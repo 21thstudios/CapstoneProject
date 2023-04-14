@@ -17,6 +17,7 @@ class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
+	UScoreboardWidget();
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
@@ -42,7 +43,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void OnRefreshScoreboard();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTimerHandle RefreshScoreboardTimerHandle;
+
+	float ScoreboardDelayInSecondsPerRefresh;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;

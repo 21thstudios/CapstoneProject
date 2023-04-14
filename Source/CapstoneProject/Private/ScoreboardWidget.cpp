@@ -13,6 +13,11 @@
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
+UScoreboardWidget::UScoreboardWidget()
+{
+	this->ScoreboardDelayInSecondsPerRefresh = 1.f;
+}
+
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -23,8 +28,9 @@ void UScoreboardWidget::NativeConstruct()
 	
 	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
 	SetMapName(FText::FromString(GetWorld()->GetMapName()));
-
 	OnRefreshScoreboard();
+
+	GetWorld()->GetTimerManager().SetTimer(RefreshScoreboardTimerHandle, this, &UScoreboardWidget::OnRefreshScoreboard, ScoreboardDelayInSecondsPerRefresh, true);
 }
 
 void UScoreboardWidget::NativeDestruct()
