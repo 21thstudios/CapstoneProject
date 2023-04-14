@@ -51,7 +51,7 @@ protected:
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
 	
-	void RefreshScoreboardEntries();
+	void RefreshScoreboard();
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearEntries();
