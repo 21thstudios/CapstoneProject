@@ -8,23 +8,6 @@
 #include "Components/ScrollBox.h"
 #include "ScoreboardWidget.generated.h"
 
-USTRUCT(BlueprintType)
-struct FScoreboardData
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText ServerName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText MapName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 SecondsRemainingOfGame;
-	
-	TArray<FScoreboardEntryData*> ScoreboardEntryData;
-};
-
 /**
  * Base user widget for scoreboards. Provided a list of PlayerState and visualizes the information within it to the
  * end user.
