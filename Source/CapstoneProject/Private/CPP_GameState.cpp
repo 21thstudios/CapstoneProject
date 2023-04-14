@@ -65,15 +65,26 @@ void ACPP_GameState::SetGameStartTimeToNow()
 
 void ACPP_GameState::BroadcastScoreboardUpdate()
 {
-	FScoreboardData ScoreboardData = {};
-	
 	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
+	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+	IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+	
+	FScoreboardData ScoreboardData = {};
 	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
 	ScoreboardData.SecondsRemainingOfGame = this->time_to_end - FDateTime::Now().ToUnixTimestamp();
 	ScoreboardData.ScoreboardEntryData = TArray<FScoreboardEntryData*>();
-	for (APlayerState* PlayerState : this->PlayerArray)
+	for (APlayerState* PS : this->PlayerArray)
 	{
+		ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(PS);
 		
+		FScoreboardEntryData ScoreboardEntryData = FScoreboardEntryData();
+		ScoreboardEntryData.NumDeaths = PlayerState->Deaths;
+		ScoreboardEntryData.NumKills = PlayerState->Kills;
+		ScoreboardEntryData.PingInMillis = PlayerState->GetCompressedPing() * 4;
+		ScoreboardEntryData.UniqueNetId = PlayerState->GetUniqueId().GetV1().Get();
+		ScoreboardEntryData.SteamDisplayName = FText::FromString(Identity->GetPlayerNickname(*PlayerState->GetUniqueId().GetV1()));
+
+		ScoreboardData.ScoreboardEntryData.Add(&ScoreboardEntryData);
 	}
 }
 
