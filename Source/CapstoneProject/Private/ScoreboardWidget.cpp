@@ -40,7 +40,7 @@ void UScoreboardWidget::NativeConstruct()
 	ScoreboardData.SecondsRemainingOfGame = 125;
 	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
 	
-	OnUpdateEntries(&ScoreboardData);
+	RefreshScoreboard();
 }
 
 void UScoreboardWidget::NativeDestruct()
@@ -152,6 +152,11 @@ void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to update entries due to invalid ScoreboardEntryWidget!"));
 	}
+}
+
+void UScoreboardWidget::RefreshScoreboard()
+{
+	
 }
 
 void UScoreboardWidget::ClearEntries()
