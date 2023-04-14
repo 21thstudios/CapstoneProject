@@ -141,25 +141,6 @@ void UScoreboardWidget::InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidge
 	}
 }
 
-void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
-{
-	if (ScoreboardEntryScrollBox)
-	{
-		SetMapName(ScoreboardData->MapName);
-		SetServerName(ScoreboardData->ServerName);
-		SetRemainingTimeInSeconds(ScoreboardData->SecondsRemainingOfGame);
-		ClearEntries(); // todo pre-build all widgets, then clear, then insert all the entries
-		for (FScoreboardEntryData* ScoreboardEntryData : ScoreboardData->ScoreboardEntryData)
-		{
-			AddEntry(ScoreboardEntryData);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to update entries due to invalid ScoreboardEntryWidget!"));
-	}
-}
-
 void UScoreboardWidget::RefreshScoreboardEntries()
 {
 	if (ScoreboardEntryScrollBox)

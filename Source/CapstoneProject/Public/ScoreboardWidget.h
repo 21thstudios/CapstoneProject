@@ -50,8 +50,6 @@ protected:
 	void AddEntry(FScoreboardEntryData* ScoreboardEntryData);
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
-
-	void OnUpdateEntries(FScoreboardData* ScoreboardData);
 	
 	void RefreshScoreboardEntries();
 	
