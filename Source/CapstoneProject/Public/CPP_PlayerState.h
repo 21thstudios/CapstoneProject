@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CPP_GameState.h"
 #include "ScoreboardWidget.h"
 #include "GameFramework/PlayerState.h"
 #include "CPP_PlayerState.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateScoreboardDelegate, FScoreboardData, ScoreboardData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateScoreboardDelegate, FScoreboardData, UpdatedScoreboardData);
 /**
  * 
  */
@@ -29,6 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	FName Name;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, ReplicatedUsing=UpdateScoreboard)
+	FScoreboardData ScoreboardData;
+	
 	UFUNCTION(BlueprintCallable)
 	void ResetKillsAndDeaths();
 
@@ -43,8 +47,8 @@ public:
 
 	void PrintStatsOnScreen();
 
-	UFUNCTION()
-	void OnUpdateEntries(FScoreboardData ScoreboardData);
+	UFUNCTION(NetMulticast, Unreliable)
+	void UpdateScoreboard(FScoreboardData UpdatedScoreboardData);
 	
 	UPROPERTY(BlueprintAssignable)
 	FUpdateScoreboardDelegate OnUpdateEntriesScoreboardDelegate;

@@ -16,6 +16,7 @@ void UScoreboardWidget::NativeConstruct()
 	Super::NativeConstruct();
 	ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(GetOwningPlayerState());
 	PlayerState->OnUpdateEntriesScoreboardDelegate.AddDynamic(this, &UScoreboardWidget::OnUpdateEntries);
+	OnUpdateEntries(PlayerState->ScoreboardData);
 }
 
 void UScoreboardWidget::NativeDestruct()

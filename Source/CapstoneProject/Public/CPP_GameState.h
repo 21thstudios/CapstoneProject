@@ -4,6 +4,7 @@
 
 #include "Misc/DateTime.h"
 #include "CoreMinimal.h"
+#include "ScoreboardWidget.h"
 #include "GameFramework/GameStateBase.h"
 #include "CPP_GameState.generated.h"
 

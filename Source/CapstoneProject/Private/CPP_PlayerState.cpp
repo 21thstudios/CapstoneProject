@@ -6,6 +6,7 @@
 #include "CPP_GameState.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 #define Dnum(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::FromInt(x));}
 #define DFstr(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, x);}
@@ -17,6 +18,7 @@ ACPP_PlayerState::ACPP_PlayerState()
 	// Replace with proper way to get player name once available 
 	this->Name = FName(*FString::FromInt(this->GetUniqueID()));
 	this->bReplicates = true;
+	// get reference to gamemode delegate
 }
 
 void ACPP_PlayerState::ResetKillsAndDeaths()
@@ -27,14 +29,12 @@ void ACPP_PlayerState::ResetKillsAndDeaths()
 
 ACPP_PlayerState::~ACPP_PlayerState()
 {
-	
 }
 
 void ACPP_PlayerState::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetGameState<ACPP_GameState>()->ResetAllPlayersStates();
-	
 }
 
 void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)
@@ -70,10 +70,10 @@ void ACPP_PlayerState::PrintStatsOnScreen()
 	this->PrintDeathsOnScreen();
 }
 
-void ACPP_PlayerState::OnUpdateEntries(FScoreboardData ScoreboardData)
+void ACPP_PlayerState::UpdateScoreboard_Implementation(FScoreboardData UpdatedScoreboardData)
 {
-	DFstr("EVENT TRIGGEREd");
-	UE_LOG(LogTemp, Error, TEXT("UpdateEntries event triggered"));
+	this->ScoreboardData = UpdatedScoreboardData;
+	OnUpdateEntriesScoreboardDelegate.Broadcast(ScoreboardData);
 }
 
 void ACPP_PlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
