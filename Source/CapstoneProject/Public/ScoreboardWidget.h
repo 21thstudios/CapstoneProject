@@ -9,8 +9,7 @@
 #include "ScoreboardWidget.generated.h"
 
 /**
- * Base user widget for scoreboards. Provided a list of PlayerState and visualizes the information within it to the
- * end user.
+ * Base user widget for scoreboards. Rebuilds once per second while it is open.
  */
 UCLASS()
 class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
