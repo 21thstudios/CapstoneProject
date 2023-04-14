@@ -5,10 +5,13 @@
 
 #include <chrono>
 
+#include "CPP_GameState.h"
+#include "CPP_PlayerState.h"
 #include "SessionGameInstance.h"
 #include "Chaos/ChaosPerfTest.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 void UScoreboardWidget::NativeConstruct()
 {
@@ -39,8 +42,11 @@ void UScoreboardWidget::NativeConstruct()
 	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
 	ScoreboardData.SecondsRemainingOfGame = 125;
 	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
-	
-	RefreshScoreboard();
+	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
+	SetMapName(FText::FromString(GetWorld()->GetMapName()));
+	ACPP_GameState* GameState = static_cast<ACPP_GameState*>(UGameplayStatics::GetGameState(GetWorld()));
+	SetRemainingTimeInSeconds(GameState->StartTime() + GameState->time_to_end - FDateTime::Now().ToUnixTimestamp());
+	RefreshScoreboardEntries();
 }
 
 void UScoreboardWidget::NativeDestruct()
@@ -154,9 +160,32 @@ void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
 	}
 }
 
-void UScoreboardWidget::RefreshScoreboard()
+void UScoreboardWidget::RefreshScoreboardEntries()
 {
-	
+	if (ScoreboardEntryScrollBox)
+	{
+		ClearEntries();
+		TArray<TObjectPtr<APlayerState>> PlayerArray = UGameplayStatics::GetGameState(GetWorld())->PlayerArray;
+		IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+		IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+		
+		for (APlayerState* PS : PlayerArray)
+		{
+			ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(PS);
+			FScoreboardEntryData ScoreboardEntryData = FScoreboardEntryData();
+			ScoreboardEntryData.NumDeaths = PlayerState->Deaths;
+			ScoreboardEntryData.NumKills = PlayerState->Kills;
+			ScoreboardEntryData.PingInMillis = PlayerState->GetCompressedPing() * 4;
+			ScoreboardEntryData.UniqueNetId = PlayerState->GetUniqueId().GetV1().Get();
+			ScoreboardEntryData.SteamDisplayName = FText::FromString(Identity->GetPlayerNickname(*PlayerState->GetUniqueId().GetV1()));
+			
+			AddEntry(&ScoreboardEntryData);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to update entries due to invalid ScoreboardEntryWidget!"));
+	}
 }
 
 void UScoreboardWidget::ClearEntries()

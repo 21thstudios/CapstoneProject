@@ -53,7 +53,7 @@ protected:
 
 	void OnUpdateEntries(FScoreboardData* ScoreboardData);
 	
-	void RefreshScoreboard();
+	void RefreshScoreboardEntries();
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearEntries();
