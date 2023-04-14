@@ -24,7 +24,7 @@ void UScoreboardWidget::NativeConstruct()
 	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
 	SetMapName(FText::FromString(GetWorld()->GetMapName()));
 
-	RefreshScoreboard();
+	OnRefreshScoreboard();
 }
 
 void UScoreboardWidget::NativeDestruct()
@@ -119,7 +119,7 @@ void UScoreboardWidget::InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidge
 	}
 }
 
-void UScoreboardWidget::RefreshScoreboard()
+void UScoreboardWidget::OnRefreshScoreboard()
 {
 	if (ScoreboardEntryScrollBox)
 	{

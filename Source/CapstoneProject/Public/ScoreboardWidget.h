@@ -33,13 +33,16 @@ protected:
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
 	
-	void RefreshScoreboard();
-	
 	UFUNCTION(BlueprintCallable)
 	void ClearEntries();
 
 	UFUNCTION(BlueprintCallable)
 	void ToggleViewport(bool ShouldAddToViewport);
+
+	UFUNCTION(BlueprintCallable)
+	void OnRefreshScoreboard();
+
+	FTimerHandle RefreshScoreboardTimerHandle;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;
@@ -58,4 +61,5 @@ protected:
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* RemainingTimeSecondsTextBlock;
+	
 };
