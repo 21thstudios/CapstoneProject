@@ -17,7 +17,6 @@ class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
-	UScoreboardWidget();
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 

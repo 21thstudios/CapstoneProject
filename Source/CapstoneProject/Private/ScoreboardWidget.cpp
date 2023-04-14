@@ -13,15 +13,10 @@
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
-UScoreboardWidget::UScoreboardWidget()
-{
-	this->ScoreboardDelayInSecondsPerRefresh = 1.f;
-}
-
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+	this->ScoreboardDelayInSecondsPerRefresh = 1.f;
 	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
 	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
 	FScoreboardEntryData ScoreboardEntryData;
