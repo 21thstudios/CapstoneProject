@@ -14,35 +14,6 @@
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	/*
-	// todo game state should call OnUpdateEntries 
-	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
-	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
-	FScoreboardEntryData ScoreboardEntryData;
-	FUniqueNetIdPtr UniqueNetId = GetOwningPlayerState()->GetUniqueId().GetV1();
-	
-	// Retrieve the Steam username. We should cache this on the server
-	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
-	IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
-	FString name = Identity->GetPlayerNickname(*UniqueNetId);
-	FText DisplayName = FText::FromString(name);
-
-	// Populate local player scoreboard entry. This should be managed by server
-	ScoreboardEntryData.NumDeaths = 0;
-	ScoreboardEntryData.NumKills = 0;
-	ScoreboardEntryData.PingInMillis = GetOwningPlayerState()->GetCompressedPing() * 4;
-	ScoreboardEntryData.SteamDisplayName = DisplayName;
-	ScoreboardEntryData.UniqueNetId = UniqueNetId.Get();
-	ScoreboardEntryDataArray.Add(&ScoreboardEntryData);
-	
-	FScoreboardData ScoreboardData;
-	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
-	ScoreboardData.SecondsRemainingOfGame = 125;
-	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
-	
-	OnUpdateEntries(&ScoreboardData);
-	*/
-	//OnUpdateEntriesScoreboardDelegate.AddDynamic(this, &ACPP_PlayerState::OnUpdateEntries);
 	ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(GetOwningPlayerState());
 	PlayerState->OnUpdateEntriesScoreboardDelegate.AddDynamic(this, &UScoreboardWidget::OnUpdateEntries);
 }

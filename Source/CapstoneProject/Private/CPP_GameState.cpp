@@ -75,7 +75,7 @@ void ACPP_GameState::BroadcastScoreboardUpdate()
 	
 	FScoreboardData ScoreboardData = {};
 	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
-	ScoreboardData.SecondsRemainingOfGame = this->time_to_end - FDateTime::Now().ToUnixTimestamp();
+	ScoreboardData.SecondsRemainingOfGame = this->StartTime() + this->time_to_end - FDateTime::Now().ToUnixTimestamp();
 	ScoreboardData.ScoreboardEntryData = TArray<FScoreboardEntryData>();
 	for (APlayerState* PS : this->PlayerArray)
 	{
@@ -90,8 +90,12 @@ void ACPP_GameState::BroadcastScoreboardUpdate()
 
 		ScoreboardData.ScoreboardEntryData.Add(ScoreboardEntryData);
 	}
-	ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(PlayerArray[0].Get());
-	PlayerState->OnUpdateEntriesScoreboardDelegate.Broadcast(ScoreboardData);
+	for (APlayerState* PS : this->PlayerArray)
+	{
+		ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(PS);
+		PlayerState->OnUpdateEntriesScoreboardDelegate.Broadcast(ScoreboardData);
+		
+	}
 }
 
 bool ACPP_GameState::ShouldEndGameByTime()
