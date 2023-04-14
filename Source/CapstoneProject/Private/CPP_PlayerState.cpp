@@ -72,7 +72,7 @@ void ACPP_PlayerState::PrintStatsOnScreen()
 
 void ACPP_PlayerState::UpdateScoreboard_Implementation(FScoreboardData UpdatedScoreboardData)
 {
-	this->ScoreboardData = UpdatedScoreboardData;
+	
 	OnUpdateEntriesScoreboardDelegate.Broadcast(ScoreboardData);
 }
 

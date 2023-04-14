@@ -10,6 +10,7 @@
 #include "Chaos/ChaosPerfTest.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 void UScoreboardWidget::NativeConstruct()
 {
@@ -117,11 +118,43 @@ void UScoreboardWidget::OnUpdateEntries(FScoreboardData ScoreboardData)
 {
 	if (ScoreboardEntryScrollBox)
 	{
+		ACPP_GameState* GameState = static_cast<ACPP_GameState*>(UGameplayStatics::GetGameState(GetWorld()));
+		TArray<TObjectPtr<APlayerState>> PlayerArray = UGameplayStatics::GetGameState(GetWorld())->PlayerArray;
+		if (PlayerArray.IsEmpty())
+		{
+			return;
+		}
+		const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
+		IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+		IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
+	
+		FScoreboardData ScoreboardDataa = {};
+		ScoreboardDataa.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
+		ScoreboardDataa.SecondsRemainingOfGame = GameState->StartTime() + GameState->time_to_end - FDateTime::Now().ToUnixTimestamp();
+		ScoreboardDataa.ScoreboardEntryData = TArray<FScoreboardEntryData>();
+		for (APlayerState* PS : PlayerArray)
+		{
+			ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(PS);
+		
+			FScoreboardEntryData ScoreboardEntryData = FScoreboardEntryData();
+			ScoreboardEntryData.NumDeaths = PlayerState->Deaths;
+			ScoreboardEntryData.NumKills = PlayerState->Kills;
+			ScoreboardEntryData.PingInMillis = PlayerState->GetCompressedPing() * 4;
+			ScoreboardEntryData.UniqueNetId = PlayerState->GetUniqueId().GetV1().Get();
+			ScoreboardEntryData.SteamDisplayName = FText::FromString(Identity->GetPlayerNickname(*PlayerState->GetUniqueId().GetV1()));
+
+			ScoreboardDataa.ScoreboardEntryData.Add(ScoreboardEntryData);
+		}
+
+
+
+
+		
 		SetMapName(FText::FromString(GetWorld()->GetMapName()));
-		SetServerName(ScoreboardData.ServerName);
-		SetRemainingTimeInSeconds(ScoreboardData.SecondsRemainingOfGame);
+		SetServerName(ScoreboardDataa.ServerName);
+		SetRemainingTimeInSeconds(ScoreboardDataa.SecondsRemainingOfGame);
 		ClearEntries(); // todo pre-build all widgets, then clear, then insert all the entries
-		for (FScoreboardEntryData ScoreboardEntryData : ScoreboardData.ScoreboardEntryData)
+		for (FScoreboardEntryData ScoreboardEntryData : ScoreboardDataa.ScoreboardEntryData)
 		{
 			AddEntry(&ScoreboardEntryData);
 		}

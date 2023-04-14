@@ -90,7 +90,6 @@ void ACPP_GameState::BroadcastScoreboardUpdate()
 
 		ScoreboardData.ScoreboardEntryData.Add(ScoreboardEntryData);
 	}
-	
 	for (APlayerState* PS : this->PlayerArray)
 	{
 		ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(PS);
