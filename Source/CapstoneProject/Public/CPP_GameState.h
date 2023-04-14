@@ -40,6 +40,9 @@ public:
 
 	void SetGameStartTimeToNow();
 
+	UFUNCTION()
+	void BroadcastScoreboardUpdate();
+
   bool ShouldEndGameByTime();
 
   bool ShouldEndGameByKills();

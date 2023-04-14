@@ -17,9 +17,6 @@ struct FScoreboardData
 	FText ServerName;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText MapName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 SecondsRemainingOfGame;
 	
 	TArray<FScoreboardEntryData*> ScoreboardEntryData;

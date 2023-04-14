@@ -35,7 +35,6 @@ void UScoreboardWidget::NativeConstruct()
 	ScoreboardEntryDataArray.Add(&ScoreboardEntryData);
 	
 	FScoreboardData ScoreboardData;
-	ScoreboardData.MapName = FText::FromString(GetWorld()->GetMapName());
 	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
 	ScoreboardData.SecondsRemainingOfGame = 125;
 	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
@@ -139,7 +138,7 @@ void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
 {
 	if (ScoreboardEntryScrollBox)
 	{
-		SetMapName(ScoreboardData->MapName);
+		SetMapName(FText::FromString(GetWorld()->GetMapName()));
 		SetServerName(ScoreboardData->ServerName);
 		SetRemainingTimeInSeconds(ScoreboardData->SecondsRemainingOfGame);
 		ClearEntries(); // todo pre-build all widgets, then clear, then insert all the entries

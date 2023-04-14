@@ -2,6 +2,9 @@
 
 #include "CPP_GameState.h"
 #include "CPP_PlayerState.h"
+#include "OnlineSubsystemUtils.h"
+#include "ScoreboardWidget.h"
+#include "SessionGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 // Debug print, with quotations. E.g., `D("Hello World");` 
@@ -60,6 +63,20 @@ void ACPP_GameState::SetGameStartTimeToNow()
   this->time_at_start = Now.ToUnixTimestamp();
 }
 
+void ACPP_GameState::BroadcastScoreboardUpdate()
+{
+	FScoreboardData ScoreboardData = {};
+	
+	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
+	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
+	ScoreboardData.SecondsRemainingOfGame = this->time_to_end - FDateTime::Now().ToUnixTimestamp();
+	ScoreboardData.ScoreboardEntryData = TArray<FScoreboardEntryData*>();
+	for (APlayerState* PlayerState : this->PlayerArray)
+	{
+		
+	}
+}
+
 bool ACPP_GameState::ShouldEndGameByTime()
 {
   return this->GetTimeSinceGameStart() >= this->time_to_end;
@@ -103,13 +120,14 @@ int ACPP_GameState::GetTimeSinceGameStart()
 
 void ACPP_GameState::HandleGameEnd() 
 {
-  if (this->mode == TEXT("time")) {
-    this->HandleGameEndByTime();
-  } else if (this->mode == TEXT("kills")) {
-    this->HandleGameEndByKills();
-  } else {
-    D("Invalid game mode.");
-  }
+	
+	if (this->mode == TEXT("time")) {
+		this->HandleGameEndByTime();
+	} else if (this->mode == TEXT("kills")) {
+		this->HandleGameEndByKills();
+	} else {
+		D("Invalid game mode.");
+	}
 }
 
 int ACPP_GameState::StartTime() {
