@@ -31,7 +31,6 @@ ACPP_PlayerState::~ACPP_PlayerState()
 void ACPP_PlayerState::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetGameState<ACPP_GameState>()->ResetAllPlayersStates();
 	this->Name = FName(this->GetPlayerName());
 }
 
@@ -43,11 +42,6 @@ void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)
 	FString DeathName = OtherPlayer->Name.ToString();
 	FString DisplayMessage = KillerName + " killed " + DeathName + "!";
 	DFstr(DisplayMessage);
-	ACPP_GameState* GameState = GetWorld()->GetGameState<ACPP_GameState>();
-	if (this->Kills > GameState->kills_to_end)
-	{
-		GameState->ResetAllPlayersStates();
-	}
 }
 
 void ACPP_PlayerState::PrintKillsOnScreen()

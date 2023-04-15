@@ -39,7 +39,6 @@ void ACPP_GameState::ResetStateForNewGame()
 
 		DFstr(DisplayMessage);
 		D("Resetting all player stats.");
-    this->ResetAllPlayersStates();
 		GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);
 	}
 }
