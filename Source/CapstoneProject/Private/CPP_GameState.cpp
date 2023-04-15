@@ -14,9 +14,9 @@
 
 ACPP_GameState::ACPP_GameState()
 {
-	this->mode = TEXT("kills");
+	this->mode = TEXT("time");
 	this->kills_to_end = 3;
-	this->GameEndTimeInSeconds = 20.f;
+	this->GameEndTimeInSeconds = 10.f;
 	this->bReplicates = true;
 }
 
@@ -40,6 +40,7 @@ void ACPP_GameState::ResetStateForNewGame()
 		DFstr(DisplayMessage);
 		D("Resetting all player stats.");
     this->ResetAllPlayersStates();
+		GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);
 	}
 }
 
@@ -93,13 +94,8 @@ void ACPP_GameState::HandleGameEndByTime()
 
 void ACPP_GameState::HandleGameEnd() 
 {
-  if (this->mode == TEXT("time")) {
-    this->HandleGameEndByTime();
-  } else if (this->mode == TEXT("kills")) {
-    this->HandleGameEndByKills();
-  } else {
-    D("Invalid game mode.");
-  }
+	HandleGameEndByTime();
+	HandleGameEndByKills();
 }
 
 void ACPP_GameState::BeginPlay() 
