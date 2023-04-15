@@ -28,9 +28,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int kills_to_end;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float InitialGameDurationSeconds;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FDateTime time_to_end;
+	float GameEndTimeInSeconds;
 	
 	UFUNCTION()
 	void ResetStateForNewGame();

@@ -126,7 +126,7 @@ void UScoreboardWidget::OnRefreshScoreboard()
 	{
 		ClearEntries();
 		ACPP_GameState* GameState = static_cast<ACPP_GameState*>(UGameplayStatics::GetGameState(GetWorld()));
-		SetRemainingTimeInSeconds(GameState->StartTime() + GameState->time_to_end - FDateTime::Now().ToUnixTimestamp());
+		SetRemainingTimeInSeconds(GameState->StartTime() + GameState->GameEndTimeInSeconds - FDateTime::Now().ToUnixTimestamp());
 		TArray<TObjectPtr<APlayerState>> PlayerArray = UGameplayStatics::GetGameState(GetWorld())->PlayerArray;
 		
 		for (APlayerState* PS : PlayerArray)
