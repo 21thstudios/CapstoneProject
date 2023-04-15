@@ -19,7 +19,6 @@ public:
 	ACPP_GameState();
 
 private:
-	int time_at_start;
   FTimerHandle GameEndTimer;
   FTimerDelegate Delegate;
 
@@ -31,14 +30,12 @@ public:
 	int kills_to_end;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int time_to_end;
+	FDateTime time_to_end;
 	
 	UFUNCTION()
 	void ResetStateForNewGame();
 
 	void ResetAllPlayersStates();
-
-	void SetGameStartTimeToNow();
 
   bool ShouldEndGameByTime();
 
@@ -51,8 +48,7 @@ public:
   int GetTimeSinceGameStart();
 
   void HandleGameEnd();
-
-  int StartTime();
+	
 
 	UFUNCTION()
 	void BeginPlay();

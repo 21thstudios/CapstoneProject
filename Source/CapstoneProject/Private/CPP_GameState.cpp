@@ -14,10 +14,9 @@
 
 ACPP_GameState::ACPP_GameState()
 {
-	this->SetGameStartTimeToNow();
 	this->mode = TEXT("kills");
 	this->kills_to_end = 3;
-	this->time_to_end = 20;
+	this->time_to_end = 60;
 	this->bReplicates = true;
 }
 
@@ -41,7 +40,6 @@ void ACPP_GameState::ResetStateForNewGame()
 		DFstr(DisplayMessage);
 		D("Resetting all player stats.");
     this->ResetAllPlayersStates();
-    this->SetGameStartTimeToNow();
 	}
 }
 
@@ -52,12 +50,6 @@ void ACPP_GameState::ResetAllPlayersStates()
 		ACPP_PlayerState* Stats = static_cast<ACPP_PlayerState*>(Player);
 		Stats->ResetKillsAndDeaths();
 	}
-}
-
-void ACPP_GameState::SetGameStartTimeToNow()
-{
-  FDateTime Now = FDateTime::Now();
-  this->time_at_start = Now.ToUnixTimestamp();
 }
 
 bool ACPP_GameState::ShouldEndGameByTime()
@@ -96,9 +88,7 @@ void ACPP_GameState::HandleGameEndByTime()
 
 int ACPP_GameState::GetTimeSinceGameStart()
 {
-  FDateTime NowDateTime = FDateTime::Now();
-  int Now = NowDateTime.ToUnixTimestamp();
-  return Now - this->StartTime();
+  return FDateTime::Now().ToUnixTimestamp() - this->GetServerWorldTimeSeconds();
 }
 
 void ACPP_GameState::HandleGameEnd() 
@@ -112,12 +102,9 @@ void ACPP_GameState::HandleGameEnd()
   }
 }
 
-int ACPP_GameState::StartTime() {
-  return this->time_at_start;
-}
-
 void ACPP_GameState::BeginPlay() 
 {
 	Super::BeginPlay();
-  GetWorldTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::HandleGameEnd, 1.0f, true);
+	this->time_to_end = GetServerWorldTimeSeconds() + 60.f;
+	GetWorldTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::HandleGameEnd, 1.0f, true);
 }
