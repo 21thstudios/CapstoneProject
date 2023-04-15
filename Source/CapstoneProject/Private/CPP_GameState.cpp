@@ -16,7 +16,7 @@ ACPP_GameState::ACPP_GameState()
 {
 	this->mode = TEXT("time");
 	this->kills_to_end = 3;
-	this->GameEndTimeInSeconds = 10.f;
+	this->GameEndTimeInSeconds = 90.f;
 	this->bReplicates = true;
 }
 
