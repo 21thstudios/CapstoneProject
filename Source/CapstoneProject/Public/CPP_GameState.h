@@ -40,6 +40,9 @@ public:
 
 	void ResetAllPlayersStates();
 
+	UFUNCTION()
+	float GetSecondsRemainingOfGame() const;
+
   bool ShouldEndGameByTime();
 
   bool ShouldEndGameByKills();

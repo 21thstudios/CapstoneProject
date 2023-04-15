@@ -52,6 +52,11 @@ void ACPP_GameState::ResetAllPlayersStates()
 	}
 }
 
+float ACPP_GameState::GetSecondsRemainingOfGame() const
+{
+	return GameEndTimeInSeconds - FDateTime::Now().ToUnixTimestamp();
+}
+
 bool ACPP_GameState::ShouldEndGameByTime()
 {
   return this->GetTimeSinceGameStart() >= this->GameEndTimeInSeconds;
