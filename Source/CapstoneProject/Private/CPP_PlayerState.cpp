@@ -14,8 +14,6 @@ ACPP_PlayerState::ACPP_PlayerState()
 {
 	this->Kills = 0;
 	this->Deaths = 0;
-	// Replace with proper way to get player name once available 
-	this->Name = FName(*FString::FromInt(this->GetUniqueID()));
 	this->bReplicates = true;
 }
 
@@ -34,7 +32,7 @@ void ACPP_PlayerState::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetGameState<ACPP_GameState>()->ResetAllPlayersStates();
-	
+	this->Name = FName(this->GetPlayerName());
 }
 
 void ACPP_PlayerState::KillOtherPlayer(ACPP_PlayerState* OtherPlayer)

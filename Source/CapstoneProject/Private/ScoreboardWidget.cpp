@@ -128,8 +128,6 @@ void UScoreboardWidget::OnRefreshScoreboard()
 		ACPP_GameState* GameState = static_cast<ACPP_GameState*>(UGameplayStatics::GetGameState(GetWorld()));
 		SetRemainingTimeInSeconds(GameState->StartTime() + GameState->time_to_end - FDateTime::Now().ToUnixTimestamp());
 		TArray<TObjectPtr<APlayerState>> PlayerArray = UGameplayStatics::GetGameState(GetWorld())->PlayerArray;
-		IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
-		IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
 		
 		for (APlayerState* PS : PlayerArray)
 		{
@@ -139,8 +137,7 @@ void UScoreboardWidget::OnRefreshScoreboard()
 			ScoreboardEntryData.NumKills = PlayerState->Kills;
 			ScoreboardEntryData.PingInMillis = PlayerState->GetCompressedPing() * 4;
 			ScoreboardEntryData.UniqueNetId = PlayerState->GetUniqueId().GetV1().Get();
-			ScoreboardEntryData.SteamDisplayName = FText::FromString(Identity->GetPlayerNickname(*PlayerState->GetUniqueId().GetV1()));
-			
+			ScoreboardEntryData.SteamDisplayName = FText::FromString(PS->GetPlayerName());
 			AddEntry(&ScoreboardEntryData);
 		}
 	}
