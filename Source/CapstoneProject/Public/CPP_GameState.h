@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Misc/DateTime.h"
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "CPP_GameState.generated.h"
@@ -28,9 +27,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int kills_to_end;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float InitialGameDurationSeconds;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float GameEndTimeInSeconds;
@@ -50,8 +46,6 @@ public:
   void HandleGameEndByKills();
 
   void HandleGameEndByTime();
-
-  int GetTimeSinceGameStart();
 
   void HandleGameEnd();
 	
