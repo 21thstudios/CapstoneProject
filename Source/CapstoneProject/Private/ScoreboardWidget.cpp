@@ -5,42 +5,27 @@
 
 #include <chrono>
 
+#include "CPP_GameState.h"
+#include "CPP_PlayerState.h"
 #include "SessionGameInstance.h"
 #include "Chaos/ChaosPerfTest.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	// todo game state should call OnUpdateEntries 
+	this->ScoreboardDelayInSecondsPerRefresh = 1.f;
 	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
 	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
 	FScoreboardEntryData ScoreboardEntryData;
-	FUniqueNetIdPtr UniqueNetId = GetOwningPlayerState()->GetUniqueId().GetV1();
 	
-	// Retrieve the Steam username. We should cache this on the server
-	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
-	IOnlineIdentityPtr Identity = OnlineSubsystem->GetIdentityInterface();
-	FString name = Identity->GetPlayerNickname(*UniqueNetId);
-	FText DisplayName = FText::FromString(name);
+	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
+	SetMapName(FText::FromString(GetWorld()->GetMapName()));
+	OnRefreshScoreboard();
 
-	// Populate local player scoreboard entry. This should be managed by server
-	ScoreboardEntryData.NumDeaths = 0;
-	ScoreboardEntryData.NumKills = 0;
-	ScoreboardEntryData.PingInMillis = GetOwningPlayerState()->GetCompressedPing() * 4;
-	ScoreboardEntryData.SteamDisplayName = DisplayName;
-	ScoreboardEntryData.UniqueNetId = UniqueNetId.Get();
-	ScoreboardEntryDataArray.Add(&ScoreboardEntryData);
-	
-	FScoreboardData ScoreboardData;
-	ScoreboardData.MapName = FText::FromString(GetWorld()->GetMapName());
-	ScoreboardData.ServerName = FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString());
-	ScoreboardData.SecondsRemainingOfGame = 125;
-	ScoreboardData.ScoreboardEntryData = ScoreboardEntryDataArray;
-	
-	OnUpdateEntries(&ScoreboardData);
+	GetWorld()->GetTimerManager().SetTimer(RefreshScoreboardTimerHandle, this, &UScoreboardWidget::OnRefreshScoreboard, ScoreboardDelayInSecondsPerRefresh, true);
 }
 
 void UScoreboardWidget::NativeDestruct()
@@ -135,17 +120,25 @@ void UScoreboardWidget::InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidge
 	}
 }
 
-void UScoreboardWidget::OnUpdateEntries(FScoreboardData* ScoreboardData)
+void UScoreboardWidget::OnRefreshScoreboard()
 {
 	if (ScoreboardEntryScrollBox)
 	{
-		SetMapName(ScoreboardData->MapName);
-		SetServerName(ScoreboardData->ServerName);
-		SetRemainingTimeInSeconds(ScoreboardData->SecondsRemainingOfGame);
-		ClearEntries(); // todo pre-build all widgets, then clear, then insert all the entries
-		for (FScoreboardEntryData* ScoreboardEntryData : ScoreboardData->ScoreboardEntryData)
+		ClearEntries();
+		ACPP_GameState* GameState = static_cast<ACPP_GameState*>(UGameplayStatics::GetGameState(GetWorld()));
+		SetRemainingTimeInSeconds(FMath::Max(GameState->GetSecondsRemainingOfGame(), 0.f));
+		TArray<TObjectPtr<APlayerState>> PlayerArray = UGameplayStatics::GetGameState(GetWorld())->PlayerArray;
+		
+		for (APlayerState* PS : PlayerArray)
 		{
-			AddEntry(ScoreboardEntryData);
+			ACPP_PlayerState* PlayerState = static_cast<ACPP_PlayerState*>(PS);
+			FScoreboardEntryData ScoreboardEntryData = FScoreboardEntryData();
+			ScoreboardEntryData.NumDeaths = PlayerState->Deaths;
+			ScoreboardEntryData.NumKills = PlayerState->Kills;
+			ScoreboardEntryData.PingInMillis = PlayerState->GetCompressedPing() * 4;
+			ScoreboardEntryData.UniqueNetId = PlayerState->GetUniqueId().GetV1().Get();
+			ScoreboardEntryData.SteamDisplayName = FText::FromString(PS->GetPlayerName());
+			AddEntry(&ScoreboardEntryData);
 		}
 	}
 	else

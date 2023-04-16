@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Misc/DateTime.h"
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "CPP_GameState.generated.h"
@@ -19,7 +18,6 @@ public:
 	ACPP_GameState();
 
 private:
-	int time_at_start;
   FTimerHandle GameEndTimer;
   FTimerDelegate Delegate;
 
@@ -31,14 +29,15 @@ public:
 	int kills_to_end;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int time_to_end;
+	float GameEndTimeInSeconds;
 	
 	UFUNCTION()
 	void ResetStateForNewGame();
 
 	void ResetAllPlayersStates();
 
-	void SetGameStartTimeToNow();
+	UFUNCTION()
+	float GetSecondsRemainingOfGame() const;
 
   bool ShouldEndGameByTime();
 
@@ -48,11 +47,8 @@ public:
 
   void HandleGameEndByTime();
 
-  int GetTimeSinceGameStart();
-
   void HandleGameEnd();
-
-  int StartTime();
+	
 
 	UFUNCTION()
 	void BeginPlay();

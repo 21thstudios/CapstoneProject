@@ -8,26 +8,8 @@
 #include "Components/ScrollBox.h"
 #include "ScoreboardWidget.generated.h"
 
-USTRUCT(BlueprintType)
-struct FScoreboardData
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText ServerName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText MapName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 SecondsRemainingOfGame;
-	
-	TArray<FScoreboardEntryData*> ScoreboardEntryData;
-};
-
 /**
- * Base user widget for scoreboards. Provided a list of PlayerState and visualizes the information within it to the
- * end user.
+ * Base user widget for scoreboards. Rebuilds once per second while it is open.
  */
 UCLASS()
 class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
@@ -50,14 +32,20 @@ protected:
 	void AddEntry(FScoreboardEntryData* ScoreboardEntryData);
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
-
-	void OnUpdateEntries(FScoreboardData* ScoreboardData);
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearEntries();
 
 	UFUNCTION(BlueprintCallable)
 	void ToggleViewport(bool ShouldAddToViewport);
+
+	UFUNCTION(BlueprintCallable)
+	void OnRefreshScoreboard();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FTimerHandle RefreshScoreboardTimerHandle;
+
+	float ScoreboardDelayInSecondsPerRefresh;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;
@@ -76,4 +64,5 @@ protected:
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* RemainingTimeSecondsTextBlock;
+	
 };

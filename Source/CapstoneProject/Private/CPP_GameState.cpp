@@ -14,10 +14,9 @@
 
 ACPP_GameState::ACPP_GameState()
 {
-	this->SetGameStartTimeToNow();
-	this->mode = TEXT("kills");
+	this->mode = TEXT("time");
 	this->kills_to_end = 3;
-	this->time_to_end = 20;
+	this->GameEndTimeInSeconds = 90.f;
 	this->bReplicates = true;
 }
 
@@ -40,8 +39,7 @@ void ACPP_GameState::ResetStateForNewGame()
 
 		DFstr(DisplayMessage);
 		D("Resetting all player stats.");
-    this->ResetAllPlayersStates();
-    this->SetGameStartTimeToNow();
+		GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);
 	}
 }
 
@@ -54,15 +52,14 @@ void ACPP_GameState::ResetAllPlayersStates()
 	}
 }
 
-void ACPP_GameState::SetGameStartTimeToNow()
+float ACPP_GameState::GetSecondsRemainingOfGame() const
 {
-  FDateTime Now = FDateTime::Now();
-  this->time_at_start = Now.ToUnixTimestamp();
+	return GameEndTimeInSeconds - GetServerWorldTimeSeconds();
 }
 
 bool ACPP_GameState::ShouldEndGameByTime()
 {
-  return this->GetTimeSinceGameStart() >= this->time_to_end;
+	return GetSecondsRemainingOfGame() <= 0;
 }
 
 bool ACPP_GameState::ShouldEndGameByKills()
@@ -94,30 +91,14 @@ void ACPP_GameState::HandleGameEndByTime()
   }
 }
 
-int ACPP_GameState::GetTimeSinceGameStart()
-{
-  FDateTime NowDateTime = FDateTime::Now();
-  int Now = NowDateTime.ToUnixTimestamp();
-  return Now - this->StartTime();
-}
-
 void ACPP_GameState::HandleGameEnd() 
 {
-  if (this->mode == TEXT("time")) {
-    this->HandleGameEndByTime();
-  } else if (this->mode == TEXT("kills")) {
-    this->HandleGameEndByKills();
-  } else {
-    D("Invalid game mode.");
-  }
-}
-
-int ACPP_GameState::StartTime() {
-  return this->time_at_start;
+	HandleGameEndByTime();
+	HandleGameEndByKills();
 }
 
 void ACPP_GameState::BeginPlay() 
 {
 	Super::BeginPlay();
-  GetWorldTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::HandleGameEnd, 1.0f, true);
+	GetWorldTimerManager().SetTimer(this->GameEndTimer, this, &ACPP_GameState::HandleGameEnd, 1.0f, true);
 }
