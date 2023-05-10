@@ -39,7 +39,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTimerHandle RefreshScoreboardTimerHandle;
 
-	float ScoreboardDelayInSecondsPerRefresh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ScoreboardDelayInSecondsPerRefresh = 1.f;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;

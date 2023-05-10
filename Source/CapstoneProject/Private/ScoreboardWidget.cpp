@@ -16,11 +16,6 @@
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	this->ScoreboardDelayInSecondsPerRefresh = 1.f;
-	const USessionGameInstance* SessionGameInstance = static_cast<USessionGameInstance*>(GetGameInstance());
-	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
-	FScoreboardEntryData ScoreboardEntryData;
-	
 	OnRefreshScoreboard();
 
 	GetWorld()->GetTimerManager().SetTimer(RefreshScoreboardTimerHandle, this, &UScoreboardWidget::OnRefreshScoreboard, ScoreboardDelayInSecondsPerRefresh, true);
