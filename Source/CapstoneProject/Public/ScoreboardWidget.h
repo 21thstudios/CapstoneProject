@@ -19,10 +19,7 @@ class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-
-	UFUNCTION(BlueprintCallable)
-	void SetMapName(FText MapName) const;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void SetRemainingTimeInSeconds(int32 RemainingTimeSeconds);
 	
@@ -52,9 +49,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Class Types")
 	TSubclassOf<UUserWidget> ScoreboardEntryBlueprintClass;
-
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UTextBlock* MapNameTextBlock;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* RemainingTimeSecondsTextBlock;

@@ -21,7 +21,6 @@ void UScoreboardWidget::NativeConstruct()
 	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
 	FScoreboardEntryData ScoreboardEntryData;
 	
-	SetMapName(FText::FromString(GetWorld()->GetMapName()));
 	OnRefreshScoreboard();
 
 	GetWorld()->GetTimerManager().SetTimer(RefreshScoreboardTimerHandle, this, &UScoreboardWidget::OnRefreshScoreboard, ScoreboardDelayInSecondsPerRefresh, true);
@@ -30,24 +29,6 @@ void UScoreboardWidget::NativeConstruct()
 void UScoreboardWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
-}
-
-void UScoreboardWidget::SetMapName(FText MapName) const
-{
-	if (MapNameTextBlock)
-	{
-		FFormatNamedArguments Args;
-		Args.Add("Prefix", FText::FromString("Map"));
-		Args.Add("MapName", MapName);
-		FText FormattedText = FText::Format(
-			NSLOCTEXT("Scoreboard", "MapNameWithPrefixFormat", "{Prefix}: {MapName}"),
-			Args);
-		MapNameTextBlock->SetText(FormattedText);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to set map name of scoreboard due to invalid MapNameTextBlock!"));
-	}
 }
 
 void UScoreboardWidget::SetRemainingTimeInSeconds(int32 RemainingTimeSeconds)
