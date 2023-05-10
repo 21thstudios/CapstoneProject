@@ -20,9 +20,6 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
-	UFUNCTION(BlueprintCallable)
-	void SetRemainingTimeInSeconds(int32 RemainingTimeSeconds);
-	
 	void AddEntry(FScoreboardEntryData* ScoreboardEntryData);
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
@@ -50,7 +47,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Class Types")
 	TSubclassOf<UUserWidget> ScoreboardEntryBlueprintClass;
-	
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UTextBlock* RemainingTimeSecondsTextBlock;
 };

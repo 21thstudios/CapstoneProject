@@ -59,7 +59,7 @@ float ACPP_GameState::GetSecondsRemainingOfGame() const
 
 FText ACPP_GameState::GetFormattedTimeRemainingOfGame()
 {
-	int32 RemainingTimeSeconds = GetSecondsRemainingOfGame();
+	int32 RemainingTimeSeconds = FMath::Max(GetSecondsRemainingOfGame(), 0.);
 	int32 RemainingTimeMinutes = RemainingTimeSeconds / 60;
 	int32 LeftoverSeconds = RemainingTimeSeconds % 60;
 	FString RemainingTimeMinutesString = RemainingTimeMinutes > 0 ? FString::FromInt(RemainingTimeMinutes) : "";
