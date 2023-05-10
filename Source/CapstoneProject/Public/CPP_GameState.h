@@ -36,8 +36,11 @@ public:
 
 	void ResetAllPlayersStates();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	float GetSecondsRemainingOfGame() const;
+
+	UFUNCTION(BlueprintCallable)
+	FText GetFormattedTimeRemainingOfGame();
 
   bool ShouldEndGameByTime();
 

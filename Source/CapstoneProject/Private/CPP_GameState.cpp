@@ -57,6 +57,23 @@ float ACPP_GameState::GetSecondsRemainingOfGame() const
 	return GameEndTimeInSeconds - GetServerWorldTimeSeconds();
 }
 
+FText ACPP_GameState::GetFormattedTimeRemainingOfGame()
+{
+	int32 RemainingTimeSeconds = GetSecondsRemainingOfGame();
+	int32 RemainingTimeMinutes = RemainingTimeSeconds / 60;
+	int32 LeftoverSeconds = RemainingTimeSeconds % 60;
+	FString RemainingTimeMinutesString = RemainingTimeMinutes > 0 ? FString::FromInt(RemainingTimeMinutes) : "";
+	FString RemainingTimeSecondsString = RemainingTimeMinutes > 0 && LeftoverSeconds < 10 ? FString("0").Append(FString::FromInt(LeftoverSeconds)) : FString::FromInt(LeftoverSeconds);
+		
+	FFormatNamedArguments Args;
+	Args.Add("MinutesRemaining", FText::FromString(RemainingTimeMinutesString));
+	Args.Add("MinutesRemainingDelimiter", RemainingTimeMinutes > 0 ? FText::FromString(":") : FText::FromString(""));
+	Args.Add("SecondsRemaining", FText::FromString(RemainingTimeSecondsString));
+	FText FormattedText = FText::Format(
+NSLOCTEXT("Scoreboard", "RemainingTimeFormat", "{MinutesRemaining}{MinutesRemainingDelimiter}{SecondsRemaining}"), Args);
+	return FormattedText;
+}
+
 bool ACPP_GameState::ShouldEndGameByTime()
 {
 	return GetSecondsRemainingOfGame() <= 0;
