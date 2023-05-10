@@ -19,31 +19,21 @@ class CAPSTONEPROJECT_API UScoreboardWidget : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	
+
+	/*
 	void AddEntry(FScoreboardEntryData* ScoreboardEntryData);
 	
 	void InsertEntry(UScoreboardEntryWidget* ScoreboardEntryWidget);
 	
 	UFUNCTION(BlueprintCallable)
 	void ClearEntries();
+	*/
 
 	UFUNCTION(BlueprintCallable)
 	void ToggleViewport(bool ShouldAddToViewport);
-
-	UFUNCTION(BlueprintCallable)
-	void OnRefreshScoreboard();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FTimerHandle RefreshScoreboardTimerHandle;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float ScoreboardDelayInSecondsPerRefresh = 1.f;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UScoreboardEntryWidget* ScoreboardEntryWidgetHeading;
-
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UScrollBox* ScoreboardEntryScrollBox;
 
 	UPROPERTY(EditAnywhere, Category="Class Types")
 	TSubclassOf<UUserWidget> ScoreboardEntryBlueprintClass;

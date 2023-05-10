@@ -3,21 +3,16 @@
 
 #include "ScoreboardWidget.h"
 
-#include <chrono>
-
-#include "CPP_GameState.h"
-#include "CPP_PlayerState.h"
 #include "SessionGameInstance.h"
 #include "Chaos/ChaosPerfTest.h"
-#include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
 void UScoreboardWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	OnRefreshScoreboard();
+	//OnRefreshScoreboard();
 
-	GetWorld()->GetTimerManager().SetTimer(RefreshScoreboardTimerHandle, this, &UScoreboardWidget::OnRefreshScoreboard, ScoreboardDelayInSecondsPerRefresh, true);
+	//GetWorld()->GetTimerManager().SetTimer(RefreshScoreboardTimerHandle, this, &UScoreboardWidget::OnRefreshScoreboard, ScoreboardDelayInSecondsPerRefresh, true);
 }
 
 void UScoreboardWidget::NativeDestruct()
@@ -25,6 +20,7 @@ void UScoreboardWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+/*
 void UScoreboardWidget::AddEntry(FScoreboardEntryData* ScoreboardEntryData)
 {
 	if (ScoreboardEntryScrollBox)
@@ -88,6 +84,7 @@ void UScoreboardWidget::ClearEntries()
 		UE_LOG(LogTemp, Error, TEXT("Failed to clear entries due to invalid ScoreboardEntryWidget!"));
 	}
 }
+*/
 
 void UScoreboardWidget::ToggleViewport(bool ShouldAddToViewport)
 {
