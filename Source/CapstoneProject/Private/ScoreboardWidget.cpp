@@ -7,16 +7,6 @@
 #include "Chaos/ChaosPerfTest.h"
 #include "Kismet/GameplayStatics.h"
 
-void UScoreboardWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-}
-
-void UScoreboardWidget::NativeDestruct()
-{
-	Super::NativeDestruct();
-}
-
 void UScoreboardWidget::ToggleViewport(bool ShouldAddToViewport)
 {
 	if (APlayerController* PlayerController = GetOwningPlayer(); IsValid(PlayerController))
