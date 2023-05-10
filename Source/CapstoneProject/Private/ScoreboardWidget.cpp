@@ -21,7 +21,6 @@ void UScoreboardWidget::NativeConstruct()
 	TArray<FScoreboardEntryData*> ScoreboardEntryDataArray;
 	FScoreboardEntryData ScoreboardEntryData;
 	
-	SetServerName(FText::FromString(SessionGameInstance->HostedSessionInfo.ServerName.ToString()));
 	SetMapName(FText::FromString(GetWorld()->GetMapName()));
 	OnRefreshScoreboard();
 
@@ -48,25 +47,6 @@ void UScoreboardWidget::SetMapName(FText MapName) const
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to set map name of scoreboard due to invalid MapNameTextBlock!"));
-	}
-}
-
-void UScoreboardWidget::SetServerName(FText ServerName) const
-{
-	if (ServerNameTextBlock)
-	{
-		FFormatNamedArguments Args;
-		Args.Add("Prefix", FText::FromString("Server"));
-		Args.Add("ServerName", ServerName);
-		FText FormattedText = FText::Format(
-			NSLOCTEXT("Scoreboard", "ServerNameWithPrefixFormat", "{Prefix}: {ServerName}"),
-			Args);
-		
-		ServerNameTextBlock->SetText(FormattedText);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to set server name of scoreboard due to invalid ServerNameTextBlock!"));
 	}
 }
 

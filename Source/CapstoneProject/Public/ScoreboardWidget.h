@@ -22,9 +22,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void SetMapName(FText MapName) const;
-	
-	UFUNCTION(BlueprintCallable)
-	void SetServerName(FText ServerName) const;
 
 	UFUNCTION(BlueprintCallable)
 	void SetRemainingTimeInSeconds(int32 RemainingTimeSeconds);
@@ -57,12 +54,8 @@ protected:
 	TSubclassOf<UUserWidget> ScoreboardEntryBlueprintClass;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UTextBlock* ServerNameTextBlock;
-
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* MapNameTextBlock;
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* RemainingTimeSecondsTextBlock;
-	
 };
