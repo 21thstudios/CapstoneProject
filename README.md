@@ -10,7 +10,11 @@ b) Install Visual Studio: https://visualstudio.microsoft.com/downloads/
 
 c) Install Visual Studio dependencies: https://docs.unrealengine.com/en-US/ProductionPipelines/DevelopmentSetup/VisualStudioSetup/index.html
 
-d) Clone this repo and open the project solution in Visual Studio
+d) Clone this repo and navigate to the project directory
+
+e) Right click on `CapstoneProject.uproject` and select **Generate Visual Studio project files**
+
+f) Open the solution in Visual Studio
 
 e) Build and run the solution
 
