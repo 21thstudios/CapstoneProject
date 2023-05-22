@@ -307,7 +307,7 @@ void USessionGameInstance::DestroySessionAndLeaveGame()
 void USessionGameInstance::PopulateWidgetWithOnlineGames(USessionList* SessionListWidget)
 {
 	MenuWidgetHandle = SessionListWidget; // update once finished
-	FindOnlineGames(SessionListWidget->LANCheckBox->IsChecked(), SessionListWidget->PresenceCheckBox->IsChecked(), SessionListWidget->SearchLobbiesCheckBox->IsChecked());
+	FindOnlineGames(SessionListWidget->LANCheckBox->IsChecked(), SessionListWidget->PresenceCheckBox->IsChecked(), false);
 }
 
 void USessionGameInstance::JoinOnlineGameProvidedSearchResult(FOnlineSessionSearchResult* SearchResult)

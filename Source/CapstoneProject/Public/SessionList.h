@@ -22,7 +22,6 @@ public:
 	
 	void ClearSessionListings();
 	void SetUsePresence(bool bUsePresence);
-	void SetSearchLobbies(bool bSearchLobbies);
 
 	USessionListing* USessionList::CreateAndInsertSessionListingWidget(FOnlineSessionSearchResult& SearchResult, FName SessionName);
 
@@ -40,9 +39,6 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCheckBox* PresenceCheckBox;
-
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UCheckBox* SearchLobbiesCheckBox;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* RefreshButton;
