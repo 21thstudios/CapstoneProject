@@ -1,6 +1,6 @@
 # CapstoneProject
 
-## Installation
+## Installation and setup
 
 ### Windows
 
@@ -99,3 +99,21 @@ d) Follow steps e) and f) from the **Setup** section above, using the virtual ma
 * If the joining player cannot see the host's game, ensure no requirements are being violated.
 * If attempting to host a game, ensure there isn't a firewall blocking the required ports.
 * A log file is generated from the packaged game and can be found at `CapstoneProject/Saved/Logs/CapstoneProject.log`.
+
+## Networking
+
+### General
+
+The project uses Unreal Engine's [Online Subsystem](https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/ProgrammingWithCPP/Online/).
+The subsystem is used to create a session, find a session, and join a session and destroy a session. Beyond this, Unreal
+Engine's built-in networking is used to replicate actors and components as well as broadcast events and other logic
+to all connected players.
+
+### Sessions
+
+All session logic is defined in the `SessionGameInstance` source files and is a child of the UGameInstance 
+class provided by Unreal Engine. Implementing Unreal Engine' Session Interface libraries, the `SessionGameInstance`
+is responsible for creating a session, finding a session, joining a session, and destroying a session. 
+SessionGameInstance is referenced throughout the project where session-related logic is required, such as
+the main menu and the game mode.
+
