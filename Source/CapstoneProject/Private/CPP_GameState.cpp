@@ -16,7 +16,7 @@
 ACPP_GameState::ACPP_GameState()
 {
 	this->mode = TEXT("time");
-	this->kills_to_end = 1;
+	this->kills_to_end = 3;
 	this->GameEndTimeInSeconds = 90.f;
 	this->bReplicates = true;
 }
@@ -39,7 +39,7 @@ void ACPP_GameState::ResetStateForNewGame()
 		FString DisplayMessage = WinnerName + " won the game with " + NumberOfKills + " kills!";
 
 		DFstr(DisplayMessage);
-		GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);
+		GetWorld()->ServerTravel("?Restart", true);
 	}
 }
 
