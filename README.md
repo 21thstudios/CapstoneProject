@@ -130,10 +130,19 @@ the main menu and the game mode.
 
 ## HUDs
 
-### General
-
 The project uses Unreal Engine's [Widget's system](https://docs.unrealengine.com/5.0/en-US/creating-widgets-in-unreal-engine/)
-to create HUDs. Widget's are created in both the editor and in C++ and are referenced throughout the project
-where HUD-related logic is required:
+to create HUDs. Widgets can all be found from within the project's `Content/UI` directory.
+The following is a list of the HUD blueprints implemented in the project:
 
-* `MainMenuScreen` is the main menu HUD. The blueprint
+* `WB_MainMenuScreen` is the widget used for the main menu. It contains the buttons for starting a game, joining a game, and exiting the game
+* `WB_SessionList` is the widget that structures the list of all available servers when searching for a game
+* `WB_SessionListing` is the widget that structures the layout of an individual listings when searching for a game
+* `WB_PauseMenuScreen` is a widget that is displayed when the player pauses the game. 
+* `WB_ScoreboardHUD` is a widget that structures the layout of game statistics. It displays a list of
+all players and their individual statistics, the map name, server name, and remaining time.
+* `WB_ScoreboardEntry` is a widget that structures the layout of an individual player's statistics
+which includes their name, kills, deaths, and ping.
+It contains the buttons for resuming the game and returning to the main menu
+* `FP_HUD` is the widget that displays the player's health, ammo, and score
+
+
