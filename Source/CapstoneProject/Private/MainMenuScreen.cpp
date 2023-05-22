@@ -43,7 +43,7 @@ void UMainMenuScreen::OnClickCreateGameButton()
 	const FName ServerName = ServerNameEditableTextBox ? FName(ServerNameEditableTextBox->GetText().ToString()) : DEFAULT_SERVER_NAME;
 	bool bIsLan = LanCheckBox ? LanCheckBox->IsChecked() : true;
 	bool bUsesPresence = PresenceCheckBox ? PresenceCheckBox->IsChecked() : true;
-	bool bUseLobbies = UseLobbiesCheckBox ? UseLobbiesCheckBox->IsChecked() : false;
+	bool bUseLobbies = false;
 	const int32 MaxPlayers = 20;
 	SessionGameInstance->StartOnlineGame(ServerName, bIsLan, bUsesPresence, MaxPlayers, bUseLobbies);
 }
@@ -80,14 +80,6 @@ void UMainMenuScreen::SetUsePresence(bool bUsePresence)
 	if (PresenceCheckBox)
 	{
 		PresenceCheckBox->SetIsChecked(bUsePresence);
-	}
-}
-
-void UMainMenuScreen::SetUseLobbies(bool bUseLobbies)
-{
-	if (UseLobbiesCheckBox)
-	{
-		UseLobbiesCheckBox->SetIsChecked(bUseLobbies);
 	}
 }
 

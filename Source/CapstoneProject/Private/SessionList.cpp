@@ -68,14 +68,6 @@ void USessionList::SetUsePresence(bool bUsePresence)
 	}
 }
 
-void USessionList::SetSearchLobbies(bool bSearchLobbies)
-{
-	if (SearchLobbiesCheckBox)
-	{
-		SearchLobbiesCheckBox->SetIsChecked(bSearchLobbies);
-	}
-}
-
 void USessionList::AddSessionListing(USessionListing* SessionListing)
 {
 	if (SessionListingsScrollBox)
