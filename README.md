@@ -104,10 +104,21 @@ d) Follow steps e) and f) from the **Setup** section above, using the virtual ma
 
 ### General
 
-The project uses Unreal Engine's [Online Subsystem](https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/ProgrammingWithCPP/Online/).
+The project uses Unreal Engine's [Online Subsystem](https://docs.unrealengine.com/5.0/en-US/online-subsystem-in-unreal-engine/).
 The subsystem is used to create a session, find a session, and join a session and destroy a session. Beyond this, Unreal
 Engine's built-in networking is used to replicate actors and components as well as broadcast events and other logic
 to all connected players.
+
+### Blueprints and C++
+
+It's important to note that the project is implemented using Unreal Engine's blueprint system. 
+Unreal Engine's blueprint system is a visual scripting language that is compiled into binaries, only 
+viewable from within the Unreal Engine editor. The blueprint files are located from within the project's
+`Content` directory. 
+
+C++ handles some of the more complex logic of the project, such as networking and session management, but
+the blueprints themselves are responsible for orchestrating the logic.
+
 
 ### Sessions
 
@@ -117,3 +128,12 @@ is responsible for creating a session, finding a session, joining a session, and
 SessionGameInstance is referenced throughout the project where session-related logic is required, such as
 the main menu and the game mode.
 
+## HUDs
+
+### General
+
+The project uses Unreal Engine's [Widget's system](https://docs.unrealengine.com/5.0/en-US/creating-widgets-in-unreal-engine/)
+to create HUDs. Widget's are created in both the editor and in C++ and are referenced throughout the project
+where HUD-related logic is required:
+
+* `MainMenuScreen` is the main menu HUD. The blueprint
