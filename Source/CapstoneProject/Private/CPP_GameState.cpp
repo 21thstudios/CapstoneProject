@@ -2,6 +2,7 @@
 
 #include "CPP_GameState.h"
 #include "CPP_PlayerState.h"
+#include "GameFramework/GameMode.h"
 #include "Kismet/GameplayStatics.h"
 
 // Debug print, with quotations. E.g., `D("Hello World");` 
@@ -15,7 +16,7 @@
 ACPP_GameState::ACPP_GameState()
 {
 	this->mode = TEXT("time");
-	this->kills_to_end = 3;
+	this->kills_to_end = 1;
 	this->GameEndTimeInSeconds = 90.f;
 	this->bReplicates = true;
 }
@@ -38,7 +39,6 @@ void ACPP_GameState::ResetStateForNewGame()
 		FString DisplayMessage = WinnerName + " won the game with " + NumberOfKills + " kills!";
 
 		DFstr(DisplayMessage);
-		D("Resetting all player stats.");
 		GetWorld()->ServerTravel("/Game/Maps/BloodGulch/BloodGulch?listen", true);
 	}
 }
