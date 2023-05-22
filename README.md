@@ -1,6 +1,6 @@
 # CapstoneProject
 
-## Installation
+## Installation and setup
 
 ### Windows
 
@@ -99,3 +99,50 @@ d) Follow steps e) and f) from the **Setup** section above, using the virtual ma
 * If the joining player cannot see the host's game, ensure no requirements are being violated.
 * If attempting to host a game, ensure there isn't a firewall blocking the required ports.
 * A log file is generated from the packaged game and can be found at `CapstoneProject/Saved/Logs/CapstoneProject.log`.
+
+## Networking
+
+### General
+
+The project uses Unreal Engine's [Online Subsystem](https://docs.unrealengine.com/5.0/en-US/online-subsystem-in-unreal-engine/).
+The subsystem is used to create a session, find a session, and join a session and destroy a session. Beyond this, Unreal
+Engine's built-in networking is used to replicate actors and components as well as broadcast events and other logic
+to all connected players.
+
+### Blueprints and C++
+
+It's important to note that the project is implemented using Unreal Engine's blueprint system. 
+Unreal Engine's blueprint system is a visual scripting language that is compiled into binaries, only 
+viewable from within the Unreal Engine editor. The blueprint files are located from within the project's
+`Content` directory. 
+
+C++ handles some of the more complex logic of the project, such as networking and session management, but
+the blueprints themselves are responsible for orchestrating the logic.
+
+
+### Sessions
+
+All session logic is defined in the `SessionGameInstance` source files and is a child of the UGameInstance 
+class provided by Unreal Engine. Implementing Unreal Engine' Session Interface libraries, the `SessionGameInstance`
+is responsible for creating a session, finding a session, joining a session, and destroying a session. 
+SessionGameInstance is referenced throughout the project where session-related logic is required, such as
+the main menu and the game mode.
+
+## HUDs
+
+The project uses Unreal Engine's [Widget's system](https://docs.unrealengine.com/5.0/en-US/creating-widgets-in-unreal-engine/)
+to create HUDs. Widgets can all be found from within the project's `Content/UI` directory.
+The following is a list of the HUD blueprints implemented in the project:
+
+* `WB_MainMenuScreen` is the widget used for the main menu. It contains the buttons for starting a game, joining a game, and exiting the game
+* `WB_SessionList` is the widget that structures the list of all available servers when searching for a game
+* `WB_SessionListing` is the widget that structures the layout of an individual listings when searching for a game
+* `WB_PauseMenuScreen` is a widget that is displayed when the player pauses the game. 
+* `WB_ScoreboardHUD` is a widget that structures the layout of game statistics. It displays a list of
+all players and their individual statistics, the map name, server name, and remaining time.
+* `WB_ScoreboardEntry` is a widget that structures the layout of an individual player's statistics
+which includes their name, kills, deaths, and ping.
+It contains the buttons for resuming the game and returning to the main menu
+* `FP_HUD` is the widget that displays the player's health, ammo, and score
+
+
