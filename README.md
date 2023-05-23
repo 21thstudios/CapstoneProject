@@ -20,6 +20,16 @@ e) Build and run the solution
 
 Each time the solution is built and ran from the editor, all source files will be compiled and the editor will be launched.
 
+## Contributing
+
+In order to contribute to the project, you must first fork the project and clone it to your local machine.
+Once you have cloned the project, you can make changes and push them to your fork. Once you are ready to
+merge your changes into the main project, you can create a pull request. The pull request will be reviewed
+and merged into the main project.
+
+When making changes to blueprints, please include a screenshot of the blueprint in your pull request. This
+will help reviewers understand the changes you have made.
+
 ## Packaging the game
 
 a) Open the project in the editor
