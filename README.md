@@ -145,6 +145,13 @@ which includes their name, kills, deaths, and ping.
 It contains the buttons for resuming the game and returning to the main menu
 * `FP_HUD` is the widget that displays the player's health, ammo, and score
 
+## BP_FirstPersonCharacter
+ * Intergral BluePrint that is responsible for or tangent to most things related to each player character including:
+ ** `Character` and `Camera` movement
+ ** `Gun` (under ownership of the respective player) related actions such as sprinting, aiming, firing, reloading, pickup 
+ ** Player health and death
+ * These operations are well organized within the BluePrint file and employ RPCs (Remote Procedure Calls) to ensure the server has total authority over all player actions. 
+
 ## Animations
 ### General
 * Animation suite is based off enhanced input actions from `BP_FirstPersonCharacter` variables are passed into the event graph to calculate direction, velocity and trigger simple booleans such as `IsAiming`.
