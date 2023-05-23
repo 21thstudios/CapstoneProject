@@ -145,4 +145,13 @@ which includes their name, kills, deaths, and ping.
 It contains the buttons for resuming the game and returning to the main menu
 * `FP_HUD` is the widget that displays the player's health, ammo, and score
 
+## Animations
+###General
+* Animation suite is based off enhanced input actions from `BP_FirstPersonCharacter` variables are passed into the event graph to calculate direction, velocity and trigger simple booleans such as `IsAiming`.
+* These variables are passed into `Locomotion` which determines anim state and blends between multiple BlendSpaces to achieve smooth transitions between animation types.
+### BlendSpaces 
+* `Idle/Walk/Run` `Aim` and `Crouching` all have their own BlendSpaces. 
+* `Dead` and `Jump` are simple animations but can be blended to from other BlendSpace states.
+### Retargeting 
+* Animations can be added from the included UE4 standard `Animation Starter Pack` but will need to be retargeted to UE5 to properly work.
 
