@@ -184,3 +184,13 @@ It contains the buttons for resuming the game and returning to the main menu
 ### Retargeting 
 * Animations can be added from the included UE4 standard `Animation Starter Pack` but will need to be retargeted to UE5 to properly work.
 
+## Game and player state 
+### Player State
+* Class that contains a player's number of kills, deaths, and name.
+* Contains hooks for adding and resetting deaths and kills, given another ACPP_PlayerState reference.
+* Contains debug display functions.
+
+### Game State
+* Class that contains game information like mode, number of kills to end the game, and time for the game to end.
+* Contains hooks for resetting the game, all players' states, and events for ending the game by kills and by time passed.
+* Further work could include optimizing the check for the game ending by kills by switching to RepNotify, which would trigger an event when a kill is updated, instead of brute force checking on interval. A downside of this could be code readability by having logic in many places.
