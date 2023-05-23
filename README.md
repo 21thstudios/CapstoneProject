@@ -20,6 +20,18 @@ e) Build and run the solution
 
 Each time the solution is built and ran from the editor, all source files will be compiled and the editor will be launched.
 
+## Packaging the game
+
+a) Open the project in the editor
+
+b) Navigate to **File** > **Package Project** > **Windows** > **Windows (64-bit)**
+
+c) Select a directory to package the game to
+
+d) Wait for the packaging process to complete
+
+e) Navigate to the packaged game directory and run the executable
+
 ## Configuring multiplayer
 
 ### General
@@ -146,7 +158,7 @@ It contains the buttons for resuming the game and returning to the main menu
 * `FP_HUD` is the widget that displays the player's health, ammo, and score
 
 ## BP_FirstPersonCharacter
- * Intergral BluePrint that is responsible for or tangent to most things related to each player character including:
+ * Integral Blueprint that is responsible for or tangent to most things related to each player character including:
     * `Character` and `Camera` movement
     * `Gun` (under ownership of the respective player) related actions such as sprinting, aiming, firing, reloading, pickup 
     * Player health and death
