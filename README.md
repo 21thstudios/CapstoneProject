@@ -147,9 +147,9 @@ It contains the buttons for resuming the game and returning to the main menu
 
 ## BP_FirstPersonCharacter
  * Intergral BluePrint that is responsible for or tangent to most things related to each player character including:
- ** `Character` and `Camera` movement
- ** `Gun` (under ownership of the respective player) related actions such as sprinting, aiming, firing, reloading, pickup 
- ** Player health and death
+    * `Character` and `Camera` movement
+    * `Gun` (under ownership of the respective player) related actions such as sprinting, aiming, firing, reloading, pickup 
+    * Player health and death
  * These operations are well organized within the BluePrint file and employ RPCs (Remote Procedure Calls) to ensure the server has total authority over all player actions. 
 
 ## Animations
